@@ -23,7 +23,11 @@ const v = (name: keyof typeof ALL) => ajv.getSchema(schemaUrl(name))!;
 
 describe("generated files", () => {
   test("schemas/ and public/ match scripts/schemas.ts (run `bun run gen`)", () => {
-    for (const [rel, body] of Object.entries(render())) expect(fs.readFileSync(path.join(root, rel), "utf8")).toBe(body);
+    for (const [rel, body] of Object.entries(render())) {
+      // Checkout on Windows may turn LF into CRLF; the generator always emits LF.
+      const disk = fs.readFileSync(path.join(root, rel), "utf8").replaceAll("\r\n", "\n");
+      expect(disk).toBe(body);
+    }
   });
   test("versions agree", () => {
     expect(pkg.codex.version).toBe(CODEX_VERSION);
