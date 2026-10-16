@@ -9,6 +9,7 @@ One neutral shape for every platform (WordPress, Slim/Flight, GoCMS/GoCRM, Svelt
 - Texts (`title`, `slug`, `content`, `excerpt`, menu labels) are **plain strings** in one `locale`. The record key is **`(id, locale)`**: a translation is another record with the same `id` and another `locale`. Short UI strings live in dictionaries (`{ locale, source_locale?, messages }`).
 - Entry: `id, locale, kind, status, visibility, slug, title` + optional `content, excerpt, author_id, parent_id, featured_media_id, template, terms, order, pinned, format, discussion{comments,pings}, origin[{system,id}], metadata{k:{value,private?}}, published_at, deleted_at`, and `version, created_at, updated_at`.
 - Entry status: `draft | pending | scheduled | published | archived | trashed`. New entities (review, lead, deal, media, user, settings) are a `kind` with typed fields in `metadata`, never a status.
+- Settings: `{ id, locale, title, language, description?, timezone?, logo_media_id?, icon_media_id?, front_page_id?, posts_page_id?, posts_per_page?, comments_open?, currency? }` + `version, created_at, updated_at` (validated in `settings: [...]` of the collection; unique `(id, locale)`).
 - Term: same `(id, locale)` key, `taxonomy_id, name, slug, description?, parent_id?`. Comment statuses: `approved | hold | spam | trash`. Menu: `{ id, location, locale, items[{ id, label, url, parent_id?, order?, target?{kind,id} }] }`.
 
 ```ts
@@ -25,6 +26,9 @@ Pass a manifest to check entry `metadata` against the resource of the entry's ki
 - Manifest fields whose id is a core entry key (`title`, `slug`, …) describe the core field and are not looked up in metadata.
 - Without a manifest, metadata is not checked at all.
 
+- **Money**: a field with the rule `fastygo.codex/money` holds **integer minor units** (cents, kopecks: `1250` = 12.50) and needs an ISO 4217 currency: the entry's own metadata field (`currency`, or the rule arg `currency_field`; declare it in the manifest) or the default `currency` of a `settings` record in the collection, or `{ currency }` in the options. Otherwise error `manifest.currency_missing` (one per entry).
+- Metadata keys equal to a core entry field (`status`, `excerpt`, `kind`, …) give the warning `core.metadata.core_key`, with or without a manifest.
+
 The WordPress adapter exports `wpManifest()` (post/page with the `footnotes` meta seen on the sample site; pass `extraFields` for more registered meta).
 
 The validator checks each record's shape (strict keys) and the set rules: `(id, locale)` unique; entry `slug` unique within `(kind, locale, parent_id)`; term `slug` unique within `(taxonomy_id, locale, parent_id)`; parent / term / comment references.
@@ -39,6 +43,7 @@ Schemas (draft 2020-12), stable unversioned URLs (no consumers yet; versioned UR
 | comment | `https://schema.buildy.tw/comment.schema.json` |
 | menu | `https://schema.buildy.tw/menu.schema.json` |
 | dictionary | `https://schema.buildy.tw/dictionary.schema.json` |
+| settings | `https://schema.buildy.tw/settings.schema.json` |
 | manifest | `https://schema.buildy.tw/manifest.schema.json` (shape unchanged from v0.3) |
 | revision | `https://schema.buildy.tw/revision.schema.json` |
 
@@ -54,10 +59,13 @@ const back = toWpPost(entry, sidecar);                            // equal to wp
 ```
 
 - Not exported from the package index. Mapping: `type→kind`, `status` (`publish→published`, `future→scheduled`, `pending→pending`, `private→published + visibility:private`, `trash→trashed`), `*.raw→title/content/excerpt`, `sticky→pinned`, `menu_order→order`, `comment_status/ping_status→discussion`, `categories/tags→terms` (`category`, `post_tag`), `meta→metadata` (keys with `_` are private), WP id → `origin[{system:"wordpress"}]`. Default core ids are `${kind}-${wpId}` (`post-4`, `user-1`, `media-20`, `category-2`); override with `idFor`/`wpId`.
-- The **sidecar** keeps WordPress-only values outside the contract: `password`, local `date`/`modified`, and whether `date_gmt` was null.
+- **All taxonomies** of a type become `terms` (`categories`→`category`, `tags`→`post_tag`, `project_type`, `product_cat`, …): by default every top-level array of integers is a taxonomy named after its REST field; pass `taxonomies: { restField: taxonomy }` to set them explicitly (from `/wp/v2/types/<type>`).
+- `metaPrefix` strips a meta prefix (`_shop_price` → `price`); typed REST meta stays typed; meta that is `null` in REST (not set) is left out of the core record.
+- The **sidecar** keeps WordPress-only values outside the contract: `password`, local `date`/`modified`, whether `date_gmt` was null, the original key set (so `toWpPost` writes back only keys the object had: a `project` gets no `author`/`comment_status`), the taxonomy fields, meta key names and null meta.
+- `fromWpSettings` / `toWpSettings`: `/wp/v2/settings` ↔ core `settings` (`language` en_US ↔ en-US, `site_logo`/`site_icon` → media ids, `show_on_front`+`page_on_front` → `front_page_id`, `default_comment_status` → `comments_open`, `wpfasty_currency` or `{ currency }` → `currency`). URL, admin email, date formats etc. stay in the sidecar.
 - Dropped computed fields: `link`, `guid`, `*.rendered`, `*.protected`, `content.block_version`, `class_list`, `generated_slug`, `permalink_template`, term `count`, `_links`, `_embedded`.
 - Not covered by WP REST: the site locale (pass `locale`), term timestamps (pass `at`), trash time (`deleted_at` = `modified_gmt`).
-- `fixtures/wordpress/*.json` are real `context=edit` responses from a local WordPress (host replaced with `http://localhost:8081`). The tests run WP → v0.4 → WP on each of them and validate the converted records with ajv and the validator.
+- `fixtures/wordpress/*.json` are real `context=edit` responses from local WordPress sites (hosts replaced with `http://localhost…`): posts, pages, categories, tags, settings (latte-press), projects + project_type (latte-folio), products + product_cat with typed meta in cents (latte-shop, wpfasty-types plugin). The tests run WP → v0.4 → WP on each of them and validate the converted records with ajv and the validator.
 
 ## Legacy v0.3
 

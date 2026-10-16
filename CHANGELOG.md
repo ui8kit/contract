@@ -7,6 +7,8 @@
 - WordPress adapter at `@ui8kit/contract/adapters/wordpress` (`fromWpPost`/`toWpPost`, `fromWpTerm`/`toWpTerm`, sidecar for password and local dates), with real REST fixtures and round-trip tests.
 - `validateCollectionV04(c, { manifest })` checks entry metadata against the manifest (required, types, select options, collections, objects, relations); unknown kind / unknown metadata key are warnings.
 - `wpManifest()` in the WordPress adapter.
+- `fastygo.codex/money`: integer minor units + ISO 4217 currency (entry field or settings default); `settings` schema (`https://schema.buildy.tw/settings.schema.json`), `checkSettingsV04`, `settings` in collections; warning `core.metadata.core_key`.
+- WordPress adapter: all taxonomies of a type → terms (`taxonomies` option), original key set kept (no foreign keys written back), `metaPrefix`, null meta, `fromWpSettings`/`toWpSettings`; real fixtures for projects, products, settings.
 - v0.3 types/validator kept as legacy.
 
 ## 0.1.0 (unreleased)
