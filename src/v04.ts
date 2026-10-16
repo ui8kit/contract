@@ -8,7 +8,7 @@ import { SCHEMA_BASE_URL } from "./codex.js";
 export const CODEX_V04_VERSION = "0.4.0";
 /** v0.4 is published at stable, unversioned URLs (no consumers yet); versioned URLs start at v0.5. */
 export const SCHEMA_LINE_V04 = "v0.4";
-export type SchemaNameV04 = "entry" | "term" | "taxonomy" | "comment" | "menu" | "dictionary" | "manifest" | "revision";
+export type SchemaNameV04 = "entry" | "term" | "taxonomy" | "comment" | "menu" | "dictionary" | "settings" | "manifest" | "revision";
 export const schemaUrlV04 = (name: SchemaNameV04) => `${SCHEMA_BASE_URL}/${name}.schema.json`;
 
 export const ENTRY_STATUSES_V04 = ["draft", "pending", "scheduled", "published", "archived", "trashed"] as const;
@@ -78,3 +78,34 @@ export type MenuV04 = { id: string; location: string; locale: string; items: Men
 export type DictionaryV04 = { locale: string; source_locale?: string; messages: Record<string, string> };
 
 export type RevisionV04 = { id: string; entry_id: string; locale: string; version: number; snapshot: EntryV04; author_id: string; reason?: string; created_at: string };
+
+/**
+ * Site settings (one record per site and locale, usually id "site"). Money fields of entries are integer minor units;
+ * `currency` here is the default when an entry has no own `currency` metadata.
+ */
+export type SettingsV04 = {
+  id: string;
+  locale: string;
+  title: string;
+  description?: string;
+  /** BCP 47 language of the site UI, e.g. "en-US". */
+  language: string;
+  /** IANA time zone, e.g. "Europe/Moscow". */
+  timezone?: string;
+  logo_media_id?: string;
+  icon_media_id?: string;
+  /** Entry shown on the front page; absent = latest posts. */
+  front_page_id?: string;
+  /** Entry that lists posts when the front page is static. */
+  posts_page_id?: string;
+  posts_per_page?: number;
+  /** Default for new entries: comments open. */
+  comments_open?: boolean;
+  /** ISO 4217 code, e.g. "USD". */
+  currency?: string;
+  origin?: Origin[];
+  metadata?: Record<string, MetaValueV04>;
+  version: number;
+  created_at: string;
+  updated_at: string;
+};

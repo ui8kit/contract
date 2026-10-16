@@ -102,6 +102,23 @@ export const dictionary = {
   properties: { locale, source_locale: locale, messages: { type: "object", additionalProperties: str } },
 };
 
+export const settings = {
+  ...meta("settings", "Codex v0.4 site settings (one record per site and locale)"),
+  type: "object", additionalProperties: false,
+  required: ["id", "locale", "title", "language", "version", "created_at", "updated_at"],
+  properties: {
+    ...common,
+    title: nonEmpty, description: str, language: locale,
+    timezone: { type: "string", description: "IANA time zone, e.g. Europe/Moscow" },
+    logo_media_id: str, icon_media_id: str,
+    front_page_id: { type: "string", description: "Entry shown on the front page; absent = latest posts" },
+    posts_page_id: str,
+    posts_per_page: { type: "integer", minimum: 1 },
+    comments_open: { type: "boolean", description: "Default for new entries" },
+    currency: { type: "string", pattern: "^[A-Z]{3}$", description: "ISO 4217; default currency of money fields (integer minor units)" },
+  },
+};
+
 /** The manifest shape is unchanged in v0.4; only the id moves to the v0.4 line. */
 export const manifest = { ...manifestV03, ...meta("manifest", "Codex v0.4 Manifest (unchanged from v0.3)") };
 
@@ -112,4 +129,4 @@ export const revision = {
   properties: { id: nonEmpty, entry_id: nonEmpty, locale, version, snapshot: { $ref: schemaUrlV04("entry") }, author_id: nonEmpty, reason: str, created_at: time },
 };
 
-export const ALL_V04 = { entry, term, taxonomy, comment, menu, dictionary, manifest, revision } as const;
+export const ALL_V04 = { entry, term, taxonomy, comment, menu, dictionary, settings, manifest, revision } as const;

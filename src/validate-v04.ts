@@ -3,16 +3,18 @@
 //   term slug unique within (taxonomy_id, locale, parent_id); entry/comment status enums.
 import { COMMENT_STATUSES_V04, ENTRY_STATUSES_V04 } from "./v04.js";
 import type { Field, Manifest, Relation } from "./codex.js";
-import { RULE_INTEGER, RULE_URI } from "./codex.js";
+import { RULE_INTEGER, RULE_MONEY, RULE_URI } from "./codex.js";
 
 /** `severity` is absent for errors; warnings carry `severity: "warning"` and do not make a record invalid. */
 export type IssueV04 = { code: string; path: string; message: string; severity?: "warning" };
 export type ValidateV04Options = {
   /** Manifest (same shape as v0.3, https://schema.buildy.tw/manifest.schema.json). When given, entry metadata is checked against the resource of the entry's kind. */
   manifest?: Manifest;
+  /** Default ISO 4217 currency for money fields when neither the entry nor a settings record has one. */
+  currency?: string;
 };
 export type RecordFile = { file: string; data: unknown };
-export type CollectionV04 = { entries?: RecordFile[]; terms?: RecordFile[]; comments?: RecordFile[]; menus?: RecordFile[]; dictionaries?: RecordFile[] };
+export type CollectionV04 = { entries?: RecordFile[]; terms?: RecordFile[]; comments?: RecordFile[]; menus?: RecordFile[]; dictionaries?: RecordFile[]; settings?: RecordFile[] };
 
 export const KEYS_V04 = {
   entry: ["id", "locale", "kind", "status", "visibility", "slug", "title", "content", "excerpt", "author_id", "parent_id", "featured_media_id", "template", "terms", "order", "pinned", "format", "discussion", "origin", "metadata", "version", "created_at", "updated_at", "published_at", "deleted_at"],
@@ -22,6 +24,7 @@ export const KEYS_V04 = {
   menu: ["id", "location", "locale", "items"],
   menuItem: ["id", "label", "url", "parent_id", "order", "target"],
   dictionary: ["locale", "source_locale", "messages"],
+  settings: ["id", "locale", "title", "description", "language", "timezone", "logo_media_id", "icon_media_id", "front_page_id", "posts_page_id", "posts_per_page", "comments_open", "currency", "origin", "metadata", "version", "created_at", "updated_at"],
   origin: ["system", "id"],
   metadata: ["value", "private"],
   termRef: ["taxonomy", "term_id"],
@@ -31,6 +34,7 @@ export const KEYS_V04 = {
 
 const IDENT = /^[a-z][a-z0-9_-]{0,62}$/;
 const LOCALE = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;
+const CURRENCY = /^[A-Z]{3}$/;
 const RFC3339 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 type Obj = Record<string, unknown>;
 type Add = (code: string, path: string, message: string) => void;
@@ -148,10 +152,23 @@ export function checkDictionaryV04(o: unknown, p: string, add: Add) {
   for (const [k, v] of Object.entries(o.messages)) if (typeof v !== "string") add("core.dictionary.value_invalid", `${p}.messages.${k}`, "message must be a string");
 }
 
+export function checkSettingsV04(o: unknown, p: string, add: Add) {
+  if (!isObj(o)) return add("decode.invalid", p, "settings must be an object");
+  closed(add, o, KEYS_V04.settings, p);
+  common(o, p, add);
+  if (blank(o.title)) add("core.settings.title_required", `${p}.title`, "title is required");
+  if (!LOCALE.test(str(o.language))) add("core.settings.language_invalid", `${p}.language`, "language must be a BCP 47 tag like \"en-US\"");
+  for (const k of ["description", "timezone", "logo_media_id", "icon_media_id", "front_page_id", "posts_page_id"]) if (o[k] !== undefined && typeof o[k] !== "string") add("core.settings.type", `${p}.${k}`, `${k} must be a string`);
+  if (o.timezone !== undefined && !/^[A-Za-z_]+(\/[A-Za-z0-9_+-]+)*$|^UTC$/.test(str(o.timezone))) add("core.settings.timezone_invalid", `${p}.timezone`, "timezone must be an IANA name like Europe/Moscow");
+  if (o.posts_per_page !== undefined && !(Number.isInteger(o.posts_per_page) && (o.posts_per_page as number) >= 1)) add("core.settings.type", `${p}.posts_per_page`, "posts_per_page must be an integer >= 1");
+  if (o.comments_open !== undefined && typeof o.comments_open !== "boolean") add("core.settings.type", `${p}.comments_open`, "comments_open must be boolean");
+  if (o.currency !== undefined && !CURRENCY.test(str(o.currency))) add("core.settings.currency_invalid", `${p}.currency`, "currency must be an ISO 4217 code like USD");
+}
+
 /** Validates a collection of v0.4 records: each record's shape, then the uniqueness rules and references. */
 export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options = {}): IssueV04[] {
   const issues: IssueV04[] = [];
-  const add: Add = (code, path, message) => issues.push({ code, path, message });
+  const add = (code: string, path: string, message: string, severity?: "warning") => issues.push(severity ? { code, path, message, severity } : { code, path, message });
   const run = (list: RecordFile[] | undefined, check: (o: unknown, p: string, add: Add) => void) => {
     const ok: { file: string; o: Obj }[] = [];
     for (const { file, data } of list ?? []) { const n = issues.length; check(data, file, add); if (issues.length === n) ok.push({ file, o: data as Obj }); }
@@ -166,6 +183,9 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
   const comments = run(c.comments, checkCommentV04);
   const menus = run(c.menus, checkMenuV04);
   run(c.dictionaries, checkDictionaryV04);
+  const settings = run(c.settings, checkSettingsV04);
+  unique(settings, "core.settings.key_duplicated", (o) => `(${o.id}, ${o.locale})`, "settings key");
+  for (const { file, o } of entries) for (const k of Object.keys(isObj(o.metadata) ? o.metadata : {})) if ((KEYS_V04.entry as string[]).includes(k)) add("core.metadata.core_key", `${file}.metadata.${k}`, `metadata key "${k}" is a core entry field; use the core field or rename it (e.g. "${k}_value")`, "warning");
 
   unique(entries, "core.entry.key_duplicated", (o) => `(${o.id}, ${o.locale})`, "entry key");
   unique(entries, "core.entry.slug_duplicated", (o) => `(${o.kind}, ${o.locale}, ${str(o.parent_id) || "-"}) slug "${o.slug}"`, "entry slug in");
@@ -183,7 +203,8 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
   const termById = new Map<string, Obj>(terms.map(({ o }) => [`${o.taxonomy_id}/${o.id}`, o]));
   for (const { file, o } of terms) if (o.parent_id && !termById.has(`${o.taxonomy_id}/${o.parent_id}`)) add("core.term.parent_missing", `${file}.parent_id`, `parent term "${o.parent_id}" does not exist`);
   if (entries.length) for (const { file, o } of comments) if (!entryById.has(str(o.entry_id))) add("core.comment.entry_missing", `${file}.entry_id`, `entry "${o.entry_id}" does not exist`);
-  if (opts.manifest) checkAgainstManifest(opts.manifest, entries, entryById, issues);
+  const defaultCurrency = settings.map(({ o }) => str(o.currency)).find((x) => CURRENCY.test(x)) ?? opts.currency;
+  if (opts.manifest) checkAgainstManifest(opts.manifest, entries, entryById, issues, defaultCurrency);
   return issues;
 }
 
@@ -191,7 +212,9 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
 // Core entry keys are never metadata; a manifest field with such an id describes the core field and is skipped.
 const CORE_KEYS = new Set(KEYS_V04.entry);
 
-function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Obj }[], byId: Map<string, Obj>, issues: IssueV04[]) {
+const hasMoney = (f: Field): boolean => (f.rules ?? []).some((r) => r.name === RULE_MONEY) || (f.items ? hasMoney(f.items) : false) || (f.fields ?? []).some(hasMoney);
+
+function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Obj }[], byId: Map<string, Obj>, issues: IssueV04[], defaultCurrency?: string) {
   const err: Add = (code, path, message) => issues.push({ code, path, message });
   const warn: Add = (code, path, message) => issues.push({ code, path, message, severity: "warning" });
   if (!isObj(manifest) || !Array.isArray(manifest.resources)) return err("manifest.invalid", "manifest", "manifest must be {name, version, resources[]}");
@@ -203,6 +226,7 @@ function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Ob
     const fields = (res.record.fields ?? []).filter((f) => !CORE_KEYS.has(f.id));
     const md = (isObj(o.metadata) ? o.metadata : {}) as Record<string, { value: unknown }>;
     for (const k of Object.keys(md)) if (!fields.some((f) => f.id === k)) warn("manifest.metadata_unknown", `${file}.metadata.${k}`, `metadata key "${k}" is not a field of kind "${kind}"`);
+    let currencyChecked = false; // one currency issue per entry, not per money field
     for (const f of fields) {
       const v = md[f.id]?.value;
       const p = `${file}.metadata.${f.id}`;
@@ -210,6 +234,15 @@ function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Ob
       const rel = (res.record.relations ?? []).find((r) => r.id === f.id);
       const bad = valueIssue(f, v, rel, byId);
       if (bad) err("manifest.field_invalid", p, bad);
+      if (hasMoney(f) && !currencyChecked) {
+        currencyChecked = true;
+        // Money = integer minor units + an ISO 4217 currency: the entry's own field (rule arg currency_field, default
+        // "currency") or the default from settings / options.
+        const cf = (f.rules ?? []).find((r) => r.name === RULE_MONEY)?.args?.currency_field ?? "currency";
+        const own = md[cf]?.value;
+        if (own !== undefined) { if (typeof own !== "string" || !CURRENCY.test(own)) err("manifest.currency_invalid", `${file}.metadata.${cf}`, `currency must be an ISO 4217 code like USD`); }
+        else if (!defaultCurrency) err("manifest.currency_missing", p, `money field "${f.id}" needs a currency: metadata "${cf}" on the entry or a default in settings`);
+      }
     }
   }
 }
@@ -251,6 +284,7 @@ function valueIssue(f: Field, v: unknown, rel: Relation | undefined, byId: Map<s
   }
   for (const r of f.rules ?? []) {
     if (r.name === RULE_INTEGER && !(typeof v === "number" && Number.isInteger(v))) return `"${f.id}" must be an integer`;
+    if (r.name === RULE_MONEY && !(typeof v === "number" && Number.isInteger(v))) return `"${f.id}" is money: an integer in minor units (cents), e.g. 1250 for 12.50`;
     if (r.name === RULE_URI) { try { new URL(String(v)); } catch { return `"${f.id}" must be a URI`; } }
   }
   return null;

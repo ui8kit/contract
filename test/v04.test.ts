@@ -6,7 +6,7 @@ import addFormats from "ajv-formats";
 import { ALL_V04 } from "../scripts/schemas-v04.ts";
 import { KEYS_V04, validateCollectionV04 } from "../src/validate-v04.ts";
 import { schemaUrlV04, type EntryV04 } from "../src/v04.ts";
-import { fromWpPost, fromWpTerm, stripWpComputed, toWpPost, toWpTerm, wpManifest, type WpPost, type WpTerm } from "../src/adapters/wordpress.ts";
+import { fromWpPost, fromWpSettings, fromWpTerm, stripWpComputed, toWpPost, toWpSettings, toWpTerm, wpManifest, type WpPost, type WpTerm } from "../src/adapters/wordpress.ts";
 import * as core from "../src/index.ts";
 
 const root = path.resolve(import.meta.dir, "..");
@@ -35,6 +35,7 @@ describe("v0.4 schemas agree with the validator's strict keys", () => {
     ["menu", ALL_V04.menu, KEYS_V04.menu],
     ["menu item", ALL_V04.menu.properties.items.items, KEYS_V04.menuItem],
     ["dictionary", ALL_V04.dictionary, KEYS_V04.dictionary],
+    ["settings", ALL_V04.settings, KEYS_V04.settings],
   ];
   for (const [n, s, keys] of pairs) test(n, () => { expect(props(s)).toEqual([...keys].sort()); expect(s.additionalProperties).toBe(false); });
 });
@@ -178,5 +179,98 @@ describe("v0.4 metadata against the manifest", () => {
     const issues = validateCollectionV04({ entries: files(entries.map((x) => x.entry), "entries"), terms: files(terms, "terms") }, { manifest: wpManifest() });
     expect(issues).toEqual([]);
     expect(warnings([{ ...entries[0].entry, metadata: { custom: { value: 1 } } }], wpManifest())).toEqual(["manifest.metadata_unknown"]);
+  });
+});
+
+describe("WordPress custom post types (real 8082 projects, 8083 products with typed REST meta)", () => {
+  const projects: WpPost[] = wpfx("projects"), products: WpPost[] = wpfx("products");
+  const ptypes: WpTerm[] = wpfx("project_type"), pcats: WpTerm[] = wpfx("product_cat");
+  const prefix = { project: "_folio_", product: "_shop_" } as Record<string, string>;
+  for (const p of [...projects, ...products]) test(`round trip ${p.type} ${p.id} (${p.slug}): 0 differences`, () => {
+    const { entry, sidecar } = fromWpPost(p, { metaPrefix: prefix[p.type] });
+    expect(stripWpComputed(toWpPost(entry, sidecar))).toEqual(stripWpComputed(p));
+  });
+  for (const t of [...ptypes, ...pcats]) test(`round trip term ${t.taxonomy} ${t.id}`, () => {
+    expect(stripWpComputed(toWpTerm(fromWpTerm(t, { at }), { hierarchical: true }))).toEqual(stripWpComputed(t));
+  });
+  test("all taxonomies of a type become terms; no keys the type does not have", () => {
+    const { entry, sidecar } = fromWpPost(projects[0], { metaPrefix: "_folio_" });
+    expect(entry.terms?.every((t) => t.taxonomy === "project_type")).toBe(true);
+    expect(entry.terms?.length).toBe((projects[0].project_type as number[]).length);
+    expect(entry.discussion).toBeUndefined();
+    const back = toWpPost(entry, sidecar);
+    for (const k of ["author", "comment_status", "ping_status", "parent", "categories", "tags"]) expect(k in back).toBe(false);
+    const prod = fromWpPost(products[0], { metaPrefix: "_shop_" }).entry;
+    expect(prod.terms?.map((t) => t.taxonomy)).toEqual((products[0].product_cat as number[]).map(() => "product_cat"));
+    expect(fromWpPost(products[0], { taxonomies: { product_cat: "shop_category" } }).entry.terms?.[0].taxonomy).toBe("shop_category");
+  });
+  test("unset REST meta (null) is left out of the core record", () => {
+    const unset = products.find((p) => (p.meta as any)._shop_stock === null)!;
+    const { entry } = fromWpPost(unset, { metaPrefix: "_shop_" });
+    expect(entry.metadata && "stock" in entry.metadata).toBe(false);
+    expect(typeof entry.metadata!.price.value).toBe("number");
+  });
+  const shopManifest: any = { name: "shop", version: "1", resources: [{ record: { id: "product", label: "Product", scope: "workspace", fields: [
+    { id: "price", label: "Price", type: "number", required: true, rules: [{ name: "fastygo.codex/money" }] },
+    { id: "sale_price", label: "Sale price", type: "number", rules: [{ name: "fastygo.codex/money" }] },
+    { id: "sku", label: "SKU", type: "string" },
+    { id: "stock", label: "Stock", type: "number", rules: [{ name: "fastygo.codex/integer" }] },
+    { id: "currency", label: "Currency", type: "string" },
+  ] }, taxonomies: ["product_cat"] }, { record: { id: "project", label: "Project", scope: "workspace", fields: [
+    { id: "client", label: "Client", type: "string" }, { id: "year", label: "Year", type: "string" }, { id: "role", label: "Role", type: "string" },
+    { id: "url", label: "URL", type: "string", rules: [{ name: "fastygo.codex/uri" }] },
+  ] }, taxonomies: ["project_type"] }] };
+  const site = { id: "site", locale: "en", title: "Latte Shop", language: "en-US", currency: "USD", version: 1, created_at: at, updated_at: at };
+  test("converted projects/products + terms + settings validate with a manifest (money with settings currency)", () => {
+    const es = [...projects.map((p) => fromWpPost(p, { metaPrefix: "_folio_" }).entry), ...products.map((p) => fromWpPost(p, { metaPrefix: "_shop_" }).entry)];
+    for (const e of es) expect([e.id, ok("entry", e)]).toEqual([e.id, true]);
+    const ts = [...ptypes, ...pcats].map((t) => fromWpTerm(t, { at }));
+    expect(validateCollectionV04({ entries: files(es, "e"), terms: files(ts, "t"), settings: files([site], "s") }, { manifest: shopManifest })).toEqual([]);
+    const noCurrency = validateCollectionV04({ entries: files(es, "e") }, { manifest: shopManifest }).map((i) => i.code);
+    expect(noCurrency).toContain("manifest.currency_missing");
+    expect(validateCollectionV04({ entries: files(es, "e") }, { manifest: shopManifest, currency: "EUR" })).toEqual([]);
+  });
+  test("money: integer minor units; own currency wins and must be ISO 4217", () => {
+    const e = fromWpPost(products[0], { metaPrefix: "_shop_" }).entry;
+    const run = (md: any, s: unknown[] = [site]) => validateCollectionV04({ entries: files([{ ...e, metadata: { ...e.metadata, ...md } }], "e"), settings: files(s, "s") }, { manifest: shopManifest }).map((i) => i.code);
+    expect(run({ price: { value: 48.5 } })).toEqual(["manifest.field_invalid"]);
+    expect(run({ currency: { value: "EUR" } }, [])).toEqual([]);
+    expect(run({ currency: { value: "euro" } }, [])).toEqual(["manifest.currency_invalid"]);
+  });
+});
+
+describe("settings", () => {
+  const wps = wpfx("settings");
+  test("real 8081 /wp/v2/settings -> core settings: ajv + validator, round trip equal", () => {
+    const { settings, sidecar } = fromWpSettings(wps, { at, currency: "USD" });
+    expect(ok("settings", settings)).toBe(true);
+    expect(validateCollectionV04({ settings: files([settings], "s") })).toEqual([]);
+    expect([settings.title, settings.language, settings.posts_per_page, settings.comments_open, settings.currency]).toEqual(["Latte Press", "en-US", 6, true, "USD"]);
+    expect(settings.front_page_id).toBeUndefined();
+    expect(toWpSettings(settings, sidecar)).toEqual(wps);
+    expect(JSON.stringify(settings)).not.toContain("admin@example.com");
+  });
+  test("static front page, logo, wpfasty_currency", () => {
+    const w = { ...wps, show_on_front: "page", page_on_front: 16, page_for_posts: 3, site_logo: 7, timezone: "Europe/Riga", wpfasty_currency: "EUR" };
+    const { settings, sidecar } = fromWpSettings(w, { at });
+    expect([settings.front_page_id, settings.posts_page_id, settings.logo_media_id, settings.timezone, settings.currency]).toEqual(["page-16", "page-3", "media-7", "Europe/Riga", "EUR"]);
+    expect(toWpSettings(settings, sidecar)).toEqual(w);
+  });
+  test("validator rules", () => {
+    const s = { id: "site", locale: "en", title: "X", language: "en-US", version: 1, created_at: at, updated_at: at };
+    const codes = (x: unknown[]) => validateCollectionV04({ settings: files(x, "s") }).map((i) => i.code);
+    expect(codes([{ ...s, currency: "usd" }])).toEqual(["core.settings.currency_invalid"]);
+    expect(codes([{ ...s, posts_per_page: 0 }])).toEqual(["core.settings.type"]);
+    expect(codes([s, { ...s }])).toEqual(["core.settings.key_duplicated"]);
+    expect(codes([{ ...s, timezone: "Moscow time" }])).toEqual(["core.settings.timezone_invalid"]);
+    expect(ok("settings", { ...s, currency: "usd" })).toBe(false);
+  });
+});
+
+describe("metadata keys equal to core field names", () => {
+  test("warning core.metadata.core_key", () => {
+    const e = entries[0].entry;
+    const issues = validateCollectionV04({ entries: files([{ ...e, metadata: { status: { value: "shipped" }, excerpt: { value: "x" } } }], "e") });
+    expect(issues.map((i) => [i.code, i.severity])).toEqual([["core.metadata.core_key", "warning"], ["core.metadata.core_key", "warning"]]);
   });
 });

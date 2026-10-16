@@ -371,4 +371,4 @@ function typeIssue(f: Field, v: unknown): string | null {
 }
 
 // Codex v0.4 core validator (current contract).
-export { validateCollectionV04, checkEntryV04, checkTermV04, checkCommentV04, checkMenuV04, checkDictionaryV04, KEYS_V04, type IssueV04, type ValidateV04Options, type RecordFile, type CollectionV04 } from "./validate-v04.js";
+export { validateCollectionV04, checkEntryV04, checkTermV04, checkCommentV04, checkMenuV04, checkDictionaryV04, checkSettingsV04, KEYS_V04, type IssueV04, type ValidateV04Options, type RecordFile, type CollectionV04 } from "./validate-v04.js";

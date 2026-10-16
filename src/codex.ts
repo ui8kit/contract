@@ -15,7 +15,7 @@ export const CODEX_REPOSITORY = "https://github.com/fastygo/codex";
 /** Base URL of the public schema site. Deployed from main on Vercel. */
 export const SCHEMA_BASE_URL = "https://schema.buildy.tw";
 /** Stable URL of a published v0.4 schema (unversioned until v0.5). */
-export const schemaUrl = (name: "entry" | "term" | "taxonomy" | "comment" | "menu" | "dictionary" | "manifest" | "revision") =>
+export const schemaUrl = (name: "entry" | "term" | "taxonomy" | "comment" | "menu" | "dictionary" | "settings" | "manifest" | "revision") =>
   `${SCHEMA_BASE_URL}/${name}.schema.json`;
 
 export type Status = "draft" | "scheduled" | "published" | "archived" | "trashed";
