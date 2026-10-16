@@ -1,6 +1,57 @@
 # @ui8kit/contract
 
-The [Codex](https://github.com/fastygo/codex) **v0.3.0** wire contract for TypeScript, framework-neutral:
+The [Codex](https://github.com/fastygo/codex) wire contract for TypeScript, framework-neutral. The current contract is the **Codex v0.4 core** (draft, agreed in [`docs/core-draft.md`](docs/core-draft.md)); the v0.3 types and validator stay in the package as legacy.
+
+## Codex v0.4 core
+
+One neutral shape for every platform (WordPress, Slim/Flight, GoCMS/GoCRM, Svelte/React/Vue apps, codegen-x fixtures). No platform fields in the contract.
+
+- Texts (`title`, `slug`, `content`, `excerpt`, menu labels) are **plain strings** in one `locale`. The record key is **`(id, locale)`**: a translation is another record with the same `id` and another `locale`. Short UI strings live in dictionaries (`{ locale, source_locale?, messages }`).
+- Entry: `id, locale, kind, status, visibility, slug, title` + optional `content, excerpt, author_id, parent_id, featured_media_id, template, terms, order, pinned, format, discussion{comments,pings}, origin[{system,id}], metadata{k:{value,private?}}, published_at, deleted_at`, and `version, created_at, updated_at`.
+- Entry status: `draft | pending | scheduled | published | archived | trashed`. New entities (review, lead, deal, media, user, settings) are a `kind` with typed fields in `metadata`, never a status.
+- Term: same `(id, locale)` key, `taxonomy_id, name, slug, description?, parent_id?`. Comment statuses: `approved | hold | spam | trash`. Menu: `{ id, location, locale, items[{ id, label, url, parent_id?, order?, target?{kind,id} }] }`.
+
+```ts
+import { validateCollectionV04, type EntryV04 } from "@ui8kit/contract";
+
+const issues = validateCollectionV04({ entries: [{ file: "post-4.json", data }], terms, comments, menus, dictionaries });
+```
+
+The validator checks each record's shape (strict keys) and the set rules: `(id, locale)` unique; entry `slug` unique within `(kind, locale, parent_id)`; term `slug` unique within `(taxonomy_id, locale, parent_id)`; parent / term / comment references.
+
+Schemas (draft 2020-12), stable unversioned URLs (no consumers yet; versioned URLs start at v0.5):
+
+| Schema | URL |
+|---|---|
+| entry | `https://schema.buildy.tw/entry.schema.json` |
+| term | `https://schema.buildy.tw/term.schema.json` |
+| taxonomy | `https://schema.buildy.tw/taxonomy.schema.json` |
+| comment | `https://schema.buildy.tw/comment.schema.json` |
+| menu | `https://schema.buildy.tw/menu.schema.json` |
+| dictionary | `https://schema.buildy.tw/dictionary.schema.json` |
+| manifest | `https://schema.buildy.tw/manifest.schema.json` (shape unchanged from v0.3) |
+| revision | `https://schema.buildy.tw/revision.schema.json` |
+
+The old `/v0.3/…` and `/latest/…` paths are removed.
+
+## WordPress adapter (outside the core)
+
+```ts
+import { fromWpPost, toWpPost, fromWpTerm, toWpTerm } from "@ui8kit/contract/adapters/wordpress";
+
+const { entry, sidecar } = fromWpPost(wpPost, { locale: "en" }); // REST v2 post/page, context=edit
+const back = toWpPost(entry, sidecar);                            // equal to wpPost minus computed fields
+```
+
+- Not exported from the package index. Mapping: `type→kind`, `status` (`publish→published`, `future→scheduled`, `pending→pending`, `private→published + visibility:private`, `trash→trashed`), `*.raw→title/content/excerpt`, `sticky→pinned`, `menu_order→order`, `comment_status/ping_status→discussion`, `categories/tags→terms` (`category`, `post_tag`), `meta→metadata` (keys with `_` are private), WP id → `origin[{system:"wordpress"}]`. Default core ids are `${kind}-${wpId}` (`post-4`, `user-1`, `media-20`, `category-2`); override with `idFor`/`wpId`.
+- The **sidecar** keeps WordPress-only values outside the contract: `password`, local `date`/`modified`, and whether `date_gmt` was null.
+- Dropped computed fields: `link`, `guid`, `*.rendered`, `*.protected`, `content.block_version`, `class_list`, `generated_slug`, `permalink_template`, term `count`, `_links`, `_embedded`.
+- Not covered by WP REST: the site locale (pass `locale`), term timestamps (pass `at`), trash time (`deleted_at` = `modified_gmt`).
+- `fixtures/wordpress/*.json` are real `context=edit` responses from a local WordPress (host replaced with `http://localhost:8081`). The tests run WP → v0.4 → WP on each of them and validate the converted records with ajv and the validator.
+
+## Legacy v0.3
+
+The v0.3 API is still exported:
 
 - types for `Entry`, `Manifest` (`Resource`, `RecordType`, `Field`, `Relation`), taxonomy (`TaxonomyDefinition`, `Term`, `TaxonomyAssignment`) and `Revision`, with the wire (snake_case) field names;
 - JSON Schemas (draft 2020-12) for entry, manifest, taxonomy and revision;
@@ -41,7 +92,7 @@ import entrySchema from "@ui8kit/contract/schemas/entry.schema.json" with { type
 ```
 
 ```json
-{ "$schema": "https://schema.buildy.tw/v0.3/entry.schema.json" }
+{ "$schema": "https://schema.buildy.tw/entry.schema.json" }
 ```
 
 ### Schemas and the validator
@@ -64,29 +115,17 @@ A document can pass ajv and still fail the validator. Use both.
 
 They are off by default.
 
-## Schema URLs
-
-| Path | Meaning |
-|---|---|
-| `/v0.3/<name>.schema.json` | Pinned to a Codex minor line. The `$id` always uses this URL. |
-| `/latest/<name>.schema.json` | The same bytes as the newest line. It moves when the Codex line moves. |
-
-`<name>` is one of `entry`, `manifest`, `taxonomy` and `revision`. The static site lives in `public/`, and `vercel.json` sets CORS (`*`) and `Content-Type: application/schema+json` on it.
-
-> Base URL: `https://schema.buildy.tw` (Vercel, auto-deployed from `main`). Every `$id` refers to it, and `SCHEMA_BASE_URL` in `src/codex.ts` holds it.
-
 ## Versioning
 
-- The package uses its own semver. `0.x` means the API can still change in a minor release.
-- The Codex version it follows is in `CODEX_VERSION`, in `package.json#codex` and in each schema's `x-codex-version`.
-- A new Codex minor (`0.4`) adds a new `/v0.4/` schema directory, moves `/latest/` and bumps the package minor (major after 1.0). Old `/vX.Y/` paths stay published.
-- A Codex patch that does not change the wire shape only bumps the package patch.
+- The package uses its own semver; `0.x` means the API can still change in a minor release.
+- `CODEX_VERSION` / `package.json#codex` = `0.4.0`. v0.3 JSON Schemas are no longer published (in-memory legacy copies in `scripts/schemas.ts` keep testing the v0.3 fixtures).
+- The static site is `public/` (Vercel, `vercel.json` sets CORS and `application/schema+json` on `*.schema.json`). From v0.5 schemas get versioned paths.
 
 ## Develop
 
 ```sh
 bun install
-bun run gen        # writes schemas/ and public/ from scripts/schemas.ts
+bun run gen        # writes schemas/ and public/ from scripts/schemas-v04.ts
 bun run check      # typecheck + tests + broken-snapshot self-test + build
 ```
 

@@ -1,6 +1,6 @@
 # Codex v0.4 — черновик общего ядра данных
 
-Статус: черновик Codex v0.4, ред. 3. Все решения разделов 1–6 **согласованы**, открытых вопросов нет. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Код (пока) не менялся. Код не менялся. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
+Статус: черновик Codex v0.4, ред. 3. Все решения разделов 1–6 **согласованы**, открытых вопросов нет. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Реализовано в `@ui8kit/contract` 0.2.0: `src/v04.ts`, `src/validate-v04.ts`, схемы `https://schema.buildy.tw/<name>.schema.json` (без версии в адресе до v0.5), адаптер WordPress — `src/adapters/wordpress.ts`. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
 
 ## 1. Зачем
 
