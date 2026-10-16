@@ -1,0 +1,1410 @@
+[
+    {
+        "id": 4,
+        "date": "2026-10-14T23:24:34",
+        "date_gmt": "2026-10-14T23:24:25",
+        "guid": {
+            "rendered": "http://localhost:8081/the-8px-grid/",
+            "raw": "http://localhost:8081/the-8px-grid/"
+        },
+        "modified": "2026-10-15T23:24:34",
+        "modified_gmt": "2026-10-15T23:24:34",
+        "password": "",
+        "slug": "the-8px-grid",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/the-8px-grid/",
+        "title": {
+            "raw": "Why we design on an 8px grid",
+            "rendered": "Why we design on an 8px grid"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 20,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            2
+        ],
+        "tags": [
+            6,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "why-we-design-on-an-8px-grid",
+        "class_list": [
+            "post-4",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-design",
+            "tag-design",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=4"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 19,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4/revisions/19"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/20"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=4"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=4"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=4"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/4"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "date": "2026-10-11T23:24:35",
+        "date_gmt": "2026-10-11T23:24:25",
+        "guid": {
+            "rendered": "http://localhost:8081/tokens-not-colors/",
+            "raw": "http://localhost:8081/tokens-not-colors/"
+        },
+        "modified": "2026-10-15T23:24:35",
+        "modified_gmt": "2026-10-15T23:24:35",
+        "password": "",
+        "slug": "tokens-not-colors",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/tokens-not-colors/",
+        "title": {
+            "raw": "Tokens, not colors",
+            "rendered": "Tokens, not colors"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 22,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            2
+        ],
+        "tags": [
+            6,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "tokens-not-colors",
+        "class_list": [
+            "post-5",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-design",
+            "tag-design",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=5"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 21,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5/revisions/21"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/22"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=5"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=5"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=5"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/5"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 6,
+        "date": "2026-10-08T23:24:35",
+        "date_gmt": "2026-10-08T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/latte-templates/",
+            "raw": "http://localhost:8081/latte-templates/"
+        },
+        "modified": "2026-10-15T23:24:35",
+        "modified_gmt": "2026-10-15T23:24:35",
+        "password": "",
+        "slug": "latte-templates",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/latte-templates/",
+        "title": {
+            "raw": "Latte templates for WordPress",
+            "rendered": "Latte templates for WordPress"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 24,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            3
+        ],
+        "tags": [
+            7,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "latte-templates-for-wordpress",
+        "class_list": [
+            "post-6",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-engineering",
+            "tag-engineering",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=6"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 23,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6/revisions/23"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/24"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=6"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=6"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=6"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/6"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 7,
+        "date": "2026-10-05T23:24:36",
+        "date_gmt": "2026-10-05T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/ui8kit-primitives/",
+            "raw": "http://localhost:8081/ui8kit-primitives/"
+        },
+        "modified": "2026-10-15T23:24:36",
+        "modified_gmt": "2026-10-15T23:24:36",
+        "password": "",
+        "slug": "ui8kit-primitives",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/ui8kit-primitives/",
+        "title": {
+            "raw": "Building with UI8Kit primitives",
+            "rendered": "Building with UI8Kit primitives"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 26,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            3
+        ],
+        "tags": [
+            7,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "building-with-ui8kit-primitives",
+        "class_list": [
+            "post-7",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-engineering",
+            "tag-engineering",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=7"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 25,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7/revisions/25"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/26"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=7"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=7"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=7"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/7"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 8,
+        "date": "2026-10-02T23:24:36",
+        "date_gmt": "2026-10-02T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/lucide-icons/",
+            "raw": "http://localhost:8081/lucide-icons/"
+        },
+        "modified": "2026-10-15T23:24:36",
+        "modified_gmt": "2026-10-15T23:24:36",
+        "password": "",
+        "slug": "lucide-icons",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/lucide-icons/",
+        "title": {
+            "raw": "Icons that inherit their color",
+            "rendered": "Icons that inherit their color"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 28,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            2
+        ],
+        "tags": [
+            6,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "icons-that-inherit-their-color",
+        "class_list": [
+            "post-8",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-design",
+            "tag-design",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=8"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 27,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8/revisions/27"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/28"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=8"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=8"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=8"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/8"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 9,
+        "date": "2026-09-29T23:24:37",
+        "date_gmt": "2026-09-29T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/fast-by-default/",
+            "raw": "http://localhost:8081/fast-by-default/"
+        },
+        "modified": "2026-10-15T23:24:37",
+        "modified_gmt": "2026-10-15T23:24:37",
+        "password": "",
+        "slug": "fast-by-default",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/fast-by-default/",
+        "title": {
+            "raw": "Fast by default",
+            "rendered": "Fast by default"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 30,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            3
+        ],
+        "tags": [
+            7,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "fast-by-default",
+        "class_list": [
+            "post-9",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-engineering",
+            "tag-engineering",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=9"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 29,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9/revisions/29"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/30"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=9"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=9"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=9"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/9"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 10,
+        "date": "2026-09-26T23:24:37",
+        "date_gmt": "2026-09-26T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/on-writing/",
+            "raw": "http://localhost:8081/on-writing/"
+        },
+        "modified": "2026-10-15T23:24:37",
+        "modified_gmt": "2026-10-15T23:24:37",
+        "password": "",
+        "slug": "on-writing",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/on-writing/",
+        "title": {
+            "raw": "On writing short posts",
+            "rendered": "On writing short posts"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 32,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            4
+        ],
+        "tags": [
+            8,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "on-writing-short-posts",
+        "class_list": [
+            "post-10",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-notes",
+            "tag-notes",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=10"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 31,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10/revisions/31"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/32"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=10"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=10"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=10"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/10"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 11,
+        "date": "2026-09-23T23:24:38",
+        "date_gmt": "2026-09-23T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/quiet-interfaces/",
+            "raw": "http://localhost:8081/quiet-interfaces/"
+        },
+        "modified": "2026-10-15T23:24:38",
+        "modified_gmt": "2026-10-15T23:24:38",
+        "password": "",
+        "slug": "quiet-interfaces",
+        "status": "publish",
+        "type": "post",
+        "link": "http://localhost:8081/quiet-interfaces/",
+        "title": {
+            "raw": "Quiet interfaces",
+            "rendered": "Quiet interfaces"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 34,
+        "comment_status": "open",
+        "ping_status": "open",
+        "sticky": false,
+        "template": "",
+        "format": "standard",
+        "meta": {
+            "footnotes": ""
+        },
+        "categories": [
+            4
+        ],
+        "tags": [
+            8,
+            5
+        ],
+        "permalink_template": "http://localhost:8081/%postname%/",
+        "generated_slug": "quiet-interfaces",
+        "class_list": [
+            "post-11",
+            "post",
+            "type-post",
+            "status-publish",
+            "format-standard",
+            "has-post-thumbnail",
+            "hentry",
+            "category-notes",
+            "tag-notes",
+            "tag-wordpress"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/post"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=11"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 33,
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11/revisions/33"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/34"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=11"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "category",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/categories?post=11"
+                },
+                {
+                    "taxonomy": "post_tag",
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags?post=11"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-sticky": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-create-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-assign-categories": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-create-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "wp:action-assign-tags": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts/11"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]

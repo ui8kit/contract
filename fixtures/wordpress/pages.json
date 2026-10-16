@@ -1,0 +1,123 @@
+[
+    {
+        "id": 12,
+        "date": "2026-10-15T23:24:26",
+        "date_gmt": "2026-10-15T23:24:26",
+        "guid": {
+            "rendered": "http://localhost:8081/about/",
+            "raw": "http://localhost:8081/about/"
+        },
+        "modified": "2026-10-15T23:24:39",
+        "modified_gmt": "2026-10-15T23:24:39",
+        "password": "",
+        "slug": "about",
+        "status": "publish",
+        "type": "page",
+        "link": "http://localhost:8081/about/",
+        "title": {
+            "raw": "About",
+            "rendered": "About"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "",
+            "rendered": "<p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load. Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across [&hellip;]</p>\n",
+            "protected": false
+        },
+        "author": 0,
+        "featured_media": 0,
+        "parent": 0,
+        "menu_order": 0,
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "template": "",
+        "meta": {
+            "footnotes": ""
+        },
+        "permalink_template": "http://localhost:8081/%pagename%/",
+        "generated_slug": "about",
+        "class_list": [
+            "post-12",
+            "page",
+            "type-page",
+            "status-publish",
+            "hentry"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages/12",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/page"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=12"
+                }
+            ],
+            "version-history": [
+                {
+                    "count": 1,
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages/12/revisions"
+                }
+            ],
+            "predecessor-version": [
+                {
+                    "id": 35,
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages/12/revisions/35"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media?parent=12"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages/12"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages/12"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/pages/12"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]

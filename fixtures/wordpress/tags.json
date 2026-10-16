@@ -1,0 +1,194 @@
+[
+    {
+        "id": 6,
+        "count": 3,
+        "description": "",
+        "link": "http://localhost:8081/tag/design/",
+        "name": "design",
+        "slug": "design",
+        "taxonomy": "post_tag",
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags/6",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/taxonomies/post_tag"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts?tags=6"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 7,
+        "count": 3,
+        "description": "",
+        "link": "http://localhost:8081/tag/engineering/",
+        "name": "engineering",
+        "slug": "engineering",
+        "taxonomy": "post_tag",
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags/7",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/taxonomies/post_tag"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts?tags=7"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 8,
+        "count": 2,
+        "description": "",
+        "link": "http://localhost:8081/tag/notes/",
+        "name": "notes",
+        "slug": "notes",
+        "taxonomy": "post_tag",
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags/8",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/taxonomies/post_tag"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts?tags=8"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "count": 8,
+        "description": "",
+        "link": "http://localhost:8081/tag/wordpress/",
+        "name": "wordpress",
+        "slug": "wordpress",
+        "taxonomy": "post_tag",
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags/5",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/tags"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/taxonomies/post_tag"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/posts?tags=5"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]
