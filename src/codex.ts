@@ -8,8 +8,8 @@ export const CODEX_VERSION = "0.3.0";
 export const SCHEMA_LINE = "v0.3";
 export const CODEX_MODULE = "github.com/fastygo/codex";
 export const CODEX_REPOSITORY = "https://github.com/fastygo/codex";
-/** Base URL of the public schema site. Placeholder: the domain is not configured yet. */
-export const SCHEMA_BASE_URL = "https://contract.ui8kit.com";
+/** Base URL of the public schema site. Deployed from main on Vercel. */
+export const SCHEMA_BASE_URL = "https://schema.buildy.tw";
 export const schemaUrl = (name: "entry" | "manifest" | "taxonomy" | "revision", line: string = SCHEMA_LINE) =>
   `${SCHEMA_BASE_URL}/${line}/${name}.schema.json`;
 

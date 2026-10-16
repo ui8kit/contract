@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://contract.ui8kit.com/v0.3/entry.schema.json",
+  "$id": "https://schema.buildy.tw/v0.3/entry.schema.json",
   "title": "Codex Entry (content.Entry)",
   "description": "Codex v0.3.0 wire contract (github.com/fastygo/codex). Structural check only; semantic rules (cross-references, field placement, timestamps order) are in the @ui8kit/contract validator.",
   "x-codex-version": "0.3.0",

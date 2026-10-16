@@ -41,7 +41,7 @@ import entrySchema from "@ui8kit/contract/schemas/entry.schema.json" with { type
 ```
 
 ```json
-{ "$schema": "https://contract.ui8kit.com/v0.3/entry.schema.json" }
+{ "$schema": "https://schema.buildy.tw/v0.3/entry.schema.json" }
 ```
 
 ### Schemas and the validator
@@ -73,7 +73,7 @@ They are off by default.
 
 `<name>` is one of `entry`, `manifest`, `taxonomy` and `revision`. The static site lives in `public/`, and `vercel.json` sets CORS (`*`) and `Content-Type: application/schema+json` on it.
 
-> **Not configured yet:** `https://contract.ui8kit.com` is a placeholder. The domain is not set up and nothing is deployed. Every `$id` refers to it, and `SCHEMA_BASE_URL` in `src/codex.ts` holds it.
+> Base URL: `https://schema.buildy.tw` (Vercel, auto-deployed from `main`). Every `$id` refers to it, and `SCHEMA_BASE_URL` in `src/codex.ts` holds it.
 
 ## Versioning
 

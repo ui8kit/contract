@@ -29,7 +29,7 @@ describe("generated files", () => {
     expect(pkg.codex.version).toBe(CODEX_VERSION);
     expect(pkg.codex.schemaLine).toBe(SCHEMA_LINE);
     expect(SCHEMA_LINE).toBe(`v${CODEX_VERSION.split(".").slice(0, 2).join(".")}`);
-    for (const [n, s] of Object.entries(ALL)) expect(s.$id).toBe(`https://contract.ui8kit.com/${SCHEMA_LINE}/${n}.schema.json`);
+    for (const [n, s] of Object.entries(ALL)) expect(s.$id).toBe(`https://schema.buildy.tw/${SCHEMA_LINE}/${n}.schema.json`);
   });
 });
 
