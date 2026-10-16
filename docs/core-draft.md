@@ -1,6 +1,6 @@
 # Codex v0.4 — черновик общего ядра данных
 
-Статус: черновик Codex v0.4, ред. 3. Решения разделов 1–6 **согласованы**. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Код (пока) не менялся. Код не менялся. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
+Статус: черновик Codex v0.4, ред. 3. Все решения разделов 1–6 **согласованы**, открытых вопросов нет. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Код (пока) не менялся. Код не менялся. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
 
 ## 1. Зачем
 
@@ -63,7 +63,7 @@
 - **comment**: `kind:"comment"`, `entry_id`, `parent_id?`, `author_id?` или `author_name?`, `content`, `status`: `approved` | `hold` | `spam` | `trash` (как в ядре WordPress; `hold` = ждёт модерации). Статусы комментария — свой набор, не путать со статусами Entry.
 - **menu** (по образцу `fastygo/app-gocms` `menu.schema.json`): `{id, location, locale, items:[{id, label, url, parent_id?, order?, target?}]}`. `label` — строка; переводы — в словаре. `target?: {kind, id}` — необязательная ссылка на запись (url остаётся основным).
 - **settings**: `kind:"settings"`, `scope` (`site`, `theme`, `module:<имя>`), `values` { ключ: типизированное значение }. Например `title`, `tagline`, `locale`, `timezone`.
-- **taxonomy / term** и **revision** — как в Codex v0.3.0, кроме языковых полей (тоже строки + словарь).
+- **taxonomy / term** и **revision** — как в Codex v0.3.0, кроме языковых полей: строки + `locale`. Перевод термина — отдельная запись `(id, locale)` со своим `slug` (согласовано).
 
 ## 4. Переводы (согласовано)
 
@@ -71,7 +71,7 @@
 
 **4.1. Перевод записи — отдельная запись.** Тот же `id`, другой `locale`; свои `title`, `slug`, `content`, `excerpt`, `status`, `version`, даты. Например `{id:"hello-world", locale:"ru", …}` и `{id:"hello-world", locale:"en", …}`. Нет версии на нужном языке — платформа решает, показать ли исходную (правило отката — забота платформы).
 
-**4.2. Словари — только для коротких строк** (подписи меню, названия рубрик, строки интерфейса). Один файл на язык, напр. `i18n/en.json`:
+**4.2. Словари — только подписи меню и строки интерфейса.** Термины таксономий переводятся как записи (п. 4.1): тот же `id`, другой `locale`, свой `slug`. Один файл на язык, напр. `i18n/en.json`:
 
 ```json
 {
@@ -79,7 +79,6 @@
   "source_locale": "ru",
   "messages": {
     "menu:primary:about:label": "About",
-    "term:topic-news:name": "News",
     "ui:read_more": "Read more"
   }
 }
@@ -90,7 +89,7 @@
 - Длинный текст (`content`) в словари не кладём.
 - Экспорт в `.po` возможен один к одному (`msgctxt` = ключ, `msgid` = исходник, `msgstr` = перевод) — **не проверено** на наших инструментах.
 
-**4.3. Проверки валидатора контракта.** Пара `(id, locale)` уникальна. `slug` уникален в паре `(kind, locale)` (для иерархических страниц — вопрос ниже). Проверяет валидатор `@ui8kit/contract` / Codex v0.4.
+**4.3. Проверки валидатора контракта.** Пара `(id, locale)` уникальна. `slug` уникален в тройке `(kind, locale, parent_id)`, как у иерархических страниц WordPress; у плоских видов `parent_id` пустой, то есть фактически `(kind, locale)`. Для терминов — в `(taxonomy_id, locale, parent_id)`. Проверяет валидатор `@ui8kit/contract` / Codex v0.4.
 
 ## 5. Соответствие WordPress REST v2 (post/page) → ядро
 
@@ -132,7 +131,6 @@
 - **CRM (GoCRM)**: лид и сделка — `kind:"lead"` и `kind:"deal"`. `title` — имя/название, `status` — общий жизненный цикл, этап воронки (`new`, `won`, `lost`…) — поле в `metadata` или таксономия `pipeline_stage`, но не статус. Связи (сделка → лид, ответственный → user) — `parent_id`/`author_id` или relation в Manifest.
 - **codegen-x фикстуры**: обычные JSON-записи ядра (плюс при нужде словари `i18n/*.json`), проходящие валидатор `@ui8kit/contract`. `origin` можно ставить `[{system:"fixture", id:"hello-world"}]`. Никаких особых полей для фикстур.
 
-## 7. Новые вопросы
+## 7. Открытые вопросы
 
-1. Уникальность `slug` у страниц: строго в `(kind, locale)` или в `(kind, locale, parent_id)`, если включены вложенные адреса (GoCMS это допускает: «Page slugs MAY be unique within parent scope»)?
-2. Где лежит `id` у таксономий/терминов при переводе: термин тоже становится записью `(id, locale)` или имя термина переводится только словарём (п. 4.2)?
+Нет — все вопросы закрыты (ред. 4).
