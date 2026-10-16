@@ -4,6 +4,7 @@
 // computed fields (link, guid, *.rendered, *.protected, block_version, class_list, generated_slug,
 // permalink_template, count, _links, _embedded) are dropped and not restored.
 import type { EntryStatusV04, EntryV04, MetaValueV04, TermV04 } from "../v04.js";
+import type { Manifest } from "../codex.js";
 
 export const WP_SYSTEM = "wordpress";
 
@@ -166,4 +167,20 @@ export function stripWpComputed<T extends Record<string, unknown>>(o: T): Record
     else out[k] = v;
   }
   return out;
+}
+
+/**
+ * Manifest for WordPress post/page as seen in fixtures/wordpress: the only registered meta key there is `footnotes`
+ * (a string, WordPress core). Sites with more registered meta extend `fields`.
+ */
+export function wpManifest(extraFields: { post?: Manifest["resources"][number]["record"]["fields"]; page?: Manifest["resources"][number]["record"]["fields"] } = {}): Manifest {
+  const footnotes = { id: "footnotes", label: "Footnotes", type: "string" };
+  return {
+    name: "wordpress",
+    version: "1",
+    resources: [
+      { record: { id: "post", label: "Post", scope: "workspace", fields: [footnotes, ...(extraFields.post ?? [])] }, taxonomies: ["category", "post_tag"] },
+      { record: { id: "page", label: "Page", scope: "workspace", fields: [footnotes, ...(extraFields.page ?? [])] } },
+    ],
+  };
 }

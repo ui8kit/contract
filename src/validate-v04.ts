@@ -2,8 +2,15 @@
 //   (id, locale) unique per record type; entry slug unique within (kind, locale, parent_id);
 //   term slug unique within (taxonomy_id, locale, parent_id); entry/comment status enums.
 import { COMMENT_STATUSES_V04, ENTRY_STATUSES_V04 } from "./v04.js";
+import type { Field, Manifest, Relation } from "./codex.js";
+import { RULE_INTEGER, RULE_URI } from "./codex.js";
 
-export type IssueV04 = { code: string; path: string; message: string };
+/** `severity` is absent for errors; warnings carry `severity: "warning"` and do not make a record invalid. */
+export type IssueV04 = { code: string; path: string; message: string; severity?: "warning" };
+export type ValidateV04Options = {
+  /** Manifest (same shape as v0.3, https://schema.buildy.tw/manifest.schema.json). When given, entry metadata is checked against the resource of the entry's kind. */
+  manifest?: Manifest;
+};
 export type RecordFile = { file: string; data: unknown };
 export type CollectionV04 = { entries?: RecordFile[]; terms?: RecordFile[]; comments?: RecordFile[]; menus?: RecordFile[]; dictionaries?: RecordFile[] };
 
@@ -142,7 +149,7 @@ export function checkDictionaryV04(o: unknown, p: string, add: Add) {
 }
 
 /** Validates a collection of v0.4 records: each record's shape, then the uniqueness rules and references. */
-export function validateCollectionV04(c: CollectionV04): IssueV04[] {
+export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options = {}): IssueV04[] {
   const issues: IssueV04[] = [];
   const add: Add = (code, path, message) => issues.push({ code, path, message });
   const run = (list: RecordFile[] | undefined, check: (o: unknown, p: string, add: Add) => void) => {
@@ -176,5 +183,75 @@ export function validateCollectionV04(c: CollectionV04): IssueV04[] {
   const termById = new Map<string, Obj>(terms.map(({ o }) => [`${o.taxonomy_id}/${o.id}`, o]));
   for (const { file, o } of terms) if (o.parent_id && !termById.has(`${o.taxonomy_id}/${o.parent_id}`)) add("core.term.parent_missing", `${file}.parent_id`, `parent term "${o.parent_id}" does not exist`);
   if (entries.length) for (const { file, o } of comments) if (!entryById.has(str(o.entry_id))) add("core.comment.entry_missing", `${file}.entry_id`, `entry "${o.entry_id}" does not exist`);
+  if (opts.manifest) checkAgainstManifest(opts.manifest, entries, entryById, issues);
   return issues;
+}
+
+// ---- metadata against the manifest
+// Core entry keys are never metadata; a manifest field with such an id describes the core field and is skipped.
+const CORE_KEYS = new Set(KEYS_V04.entry);
+
+function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Obj }[], byId: Map<string, Obj>, issues: IssueV04[]) {
+  const err: Add = (code, path, message) => issues.push({ code, path, message });
+  const warn: Add = (code, path, message) => issues.push({ code, path, message, severity: "warning" });
+  if (!isObj(manifest) || !Array.isArray(manifest.resources)) return err("manifest.invalid", "manifest", "manifest must be {name, version, resources[]}");
+  const byKind = new Map(manifest.resources.filter((r) => isObj(r) && isObj(r.record)).map((r) => [r.record.id, r]));
+  for (const { file, o } of entries) {
+    const kind = str(o.kind);
+    const res = byKind.get(kind);
+    if (!res) { warn("manifest.kind_unknown", `${file}.kind`, `kind "${kind}" is not in the manifest; metadata not checked`); continue; }
+    const fields = (res.record.fields ?? []).filter((f) => !CORE_KEYS.has(f.id));
+    const md = (isObj(o.metadata) ? o.metadata : {}) as Record<string, { value: unknown }>;
+    for (const k of Object.keys(md)) if (!fields.some((f) => f.id === k)) warn("manifest.metadata_unknown", `${file}.metadata.${k}`, `metadata key "${k}" is not a field of kind "${kind}"`);
+    for (const f of fields) {
+      const v = md[f.id]?.value;
+      const p = `${file}.metadata.${f.id}`;
+      if (v === undefined || v === null || v === "") { if (f.required) err("manifest.field_required", p, `field "${f.id}" is required for kind "${kind}"`); continue; }
+      const rel = (res.record.relations ?? []).find((r) => r.id === f.id);
+      const bad = valueIssue(f, v, rel, byId);
+      if (bad) err("manifest.field_invalid", p, bad);
+    }
+  }
+}
+
+function valueIssue(f: Field, v: unknown, rel: Relation | undefined, byId: Map<string, Obj>): string | null {
+  switch (f.type) {
+    case "number": if (typeof v !== "number" || !Number.isFinite(v)) return `"${f.id}" must be a number`; break;
+    case "boolean": if (typeof v !== "boolean") return `"${f.id}" must be a boolean`; break;
+    case "select": if (typeof v !== "string") return `"${f.id}" must be a string`; if (f.options?.length && !f.options.some((o) => o.value === v)) return `"${f.id}" must be one of ${f.options.map((o) => o.value).join(", ")}`; break;
+    case "datetime": if (typeof v !== "string" || Number.isNaN(ts(v))) return `"${f.id}" must be an RFC 3339 date-time`; break;
+    case "text": case "string": case "textarea": case "richtext": case "markdown": if (typeof v !== "string") return `"${f.id}" must be a string`; break;
+    case "object": {
+      if (!isObj(v)) return `"${f.id}" must be an object`;
+      for (const n of f.fields ?? []) {
+        const nv = v[n.id];
+        if (nv === undefined || nv === null || nv === "") { if (n.required) return `"${f.id}.${n.id}" is required`; continue; }
+        const b = valueIssue(n, nv, undefined, byId); if (b) return b.replace(`"${n.id}"`, `"${f.id}.${n.id}"`);
+      }
+      break;
+    }
+    case "collection": {
+      if (!Array.isArray(v)) return `"${f.id}" must be an array`;
+      if (f.items) for (const [i, x] of v.entries()) { const b = valueIssue(f.items, x, undefined, byId); if (b) return `"${f.id}[${i}]": ${b}`; }
+      break;
+    }
+    case "relation": {
+      const many = rel ? rel.cardinality !== "one-to-one" : Array.isArray(v);
+      const ids = many ? v : [v];
+      if (many && !Array.isArray(v)) return `"${f.id}" must be an array of ids`;
+      if ((ids as unknown[]).some((x) => typeof x !== "string" || !x.trim())) return `"${f.id}" must hold non-empty id strings`;
+      if (byId.size) for (const id of ids as string[]) {
+        const t = byId.get(id);
+        if (!t) return `"${f.id}" references missing entry "${id}"`;
+        if (rel && t.kind !== rel.target) return `"${f.id}" targets kind "${rel.target}", entry "${id}" has kind "${t.kind}"`;
+      }
+      break;
+    }
+    // json, computed, encrypted and unknown types: any value
+  }
+  for (const r of f.rules ?? []) {
+    if (r.name === RULE_INTEGER && !(typeof v === "number" && Number.isInteger(v))) return `"${f.id}" must be an integer`;
+    if (r.name === RULE_URI) { try { new URL(String(v)); } catch { return `"${f.id}" must be a URI`; } }
+  }
+  return null;
 }
