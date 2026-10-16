@@ -1,0 +1,33 @@
+{
+  "id": "comment-anna",
+  "kind": "comment",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "comment-anna"
+  },
+  "title": {
+    "en": "Anna"
+  },
+  "content": {
+    "en": "Thanks, this was useful for my project."
+  },
+  "metadata": {
+    "author_name": {
+      "value": "Anna"
+    },
+    "author_email": {
+      "value": "anna@mail.example"
+    },
+    "moderation": {
+      "value": "approved"
+    },
+    "comment_post": {
+      "value": "post-how-we-build-a-design-system-from-atoms"
+    }
+  },
+  "version": 1,
+  "created_at": "2026-10-01T00:00:00Z",
+  "updated_at": "2026-10-01T00:00:00Z",
+  "published_at": "2026-10-01T00:00:00Z"
+}

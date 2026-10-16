@@ -1,0 +1,15 @@
+# Proposed GitHub Actions workflow. Move to .github/workflows/ci.yml
+# (the token used for the initial push had no `workflow` scope).
+name: ci
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run gen && git diff --exit-code
+      - run: bun run check

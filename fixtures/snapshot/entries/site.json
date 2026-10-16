@@ -1,0 +1,55 @@
+{
+  "id": "site",
+  "kind": "setting",
+  "status": "published",
+  "visibility": "private",
+  "slug": {
+    "en": "site"
+  },
+  "title": {
+    "en": "Site settings"
+  },
+  "metadata": {
+    "url": {
+      "value": "https://studio.example"
+    },
+    "admin_email": {
+      "value": "owner@studio.example"
+    },
+    "language": {
+      "value": "en"
+    },
+    "timezone": {
+      "value": "Europe/Moscow"
+    },
+    "posts_per_page": {
+      "value": 10
+    },
+    "comments_open": {
+      "value": true
+    },
+    "moderate": {
+      "value": true
+    },
+    "indexing": {
+      "value": true
+    },
+    "default_role": {
+      "value": "subscriber"
+    }
+  },
+  "locales": {
+    "en": {
+      "data": {
+        "site_title": "Atom Studio",
+        "tagline": "Interfaces made of careful details"
+      },
+      "status": "published",
+      "updated_at": "2026-09-28T09:00:00Z"
+    }
+  },
+  "version": 1,
+  "created_at": "2026-03-15T09:00:00Z",
+  "updated_at": "2026-09-28T09:00:00Z",
+  "published_at": "2026-03-15T09:00:00Z"
+}

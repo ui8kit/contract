@@ -1,0 +1,30 @@
+{
+  "id": "kb-first-steps",
+  "kind": "kb-article",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "first-steps"
+  },
+  "title": {
+    "en": "First steps"
+  },
+  "content": {
+    "en": "### Menu on the left\n\nContent, media, structure, users and settings are grouped. The current section is highlighted.\n\n### Pages and posts\n\nPages are for permanent sections of the site (about, contacts). Posts are for the news feed and articles.\n\n### Saving\n\nChanges are stored in the browser. Save keeps your edits, Publish makes the material visible."
+  },
+  "excerpt": {
+    "en": "How the admin is laid out and where to start."
+  },
+  "metadata": {
+    "section": {
+      "value": "start"
+    },
+    "order": {
+      "value": 1
+    }
+  },
+  "version": 1,
+  "created_at": "2026-06-23T09:00:00Z",
+  "updated_at": "2026-09-11T09:00:00Z",
+  "published_at": "2026-06-23T09:00:00Z"
+}

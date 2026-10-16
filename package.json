@@ -1,0 +1,39 @@
+{
+  "name": "@ui8kit/contract",
+  "version": "0.1.0",
+  "description": "Codex v0.3.0 wire contract for TypeScript: types, JSON Schemas, a strict validator, snapshot loader, readers and the adapter pattern. Framework-neutral.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "repository": { "type": "git", "url": "git+https://github.com/ui8kit/contract.git" },
+  "homepage": "https://github.com/ui8kit/contract#readme",
+  "keywords": ["codex", "fastygo", "ui8kit", "json-schema", "content", "cms", "manifest"],
+  "codex": { "module": "github.com/fastygo/codex", "version": "0.3.0", "schemaLine": "v0.3" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./validate": { "types": "./dist/validate.d.ts", "import": "./dist/validate.js" },
+    "./adapter": { "types": "./dist/adapter.d.ts", "import": "./dist/adapter.js" },
+    "./schemas/*.json": "./schemas/*.json",
+    "./fixtures/*": "./fixtures/*",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "schemas", "fixtures", "README.md", "CHANGELOG.md", "LICENSE"],
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "gen": "bun scripts/gen.ts",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "bun test",
+    "self-test": "bun scripts/self-test.ts",
+    "check": "bun run typecheck && bun test && bun run self-test && bun run build",
+    "prepublishOnly": "bun run check"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "typescript": "^5.6.0"
+  }
+}

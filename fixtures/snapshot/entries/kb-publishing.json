@@ -1,0 +1,30 @@
+{
+  "id": "kb-publishing",
+  "kind": "kb-article",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "publishing"
+  },
+  "title": {
+    "en": "Publishing and drafts"
+  },
+  "content": {
+    "en": "### Draft\n\nA new material starts as a draft. Only you and colleagues with access see it.\n\n### Publishing\n\nChoose the status Published in the editor and save. The material appears in the published list.\n\n### Back to drafts\n\nChoose Move to drafts in the row menu to take a material off the site."
+  },
+  "excerpt": {
+    "en": "The life cycle of a material."
+  },
+  "metadata": {
+    "section": {
+      "value": "content"
+    },
+    "order": {
+      "value": 1
+    }
+  },
+  "version": 1,
+  "created_at": "2026-06-23T09:00:00Z",
+  "updated_at": "2026-09-11T09:00:00Z",
+  "published_at": "2026-06-23T09:00:00Z"
+}

@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contract.ui8kit.com/v0.3/entry.schema.json",
+  "title": "Codex Entry (content.Entry)",
+  "description": "Codex v0.3.0 wire contract (github.com/fastygo/codex). Structural check only; semantic rules (cross-references, field placement, timestamps order) are in the @ui8kit/contract validator.",
+  "x-codex-version": "0.3.0",
+  "$ref": "#/$defs/Entry",
+  "$defs": {
+    "LocalizedText": {
+      "description": "Locale -> text. Locale keys must be canonical (lower-case, trimmed); `und` is the neutral locale.",
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+([_-][a-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "Entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "status",
+        "visibility",
+        "slug",
+        "title",
+        "version",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,62}$"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "scheduled",
+            "published",
+            "archived",
+            "trashed"
+          ]
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "private"
+          ]
+        },
+        "slug": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "content": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "excerpt": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "author_id": {
+          "type": "string"
+        },
+        "parent_id": {
+          "type": "string"
+        },
+        "featured_media_id": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "value": {},
+              "private": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "locales": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z0-9]+([_-][a-z0-9]+)*$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "data",
+              "status"
+            ],
+            "properties": {
+              "data": {
+                "type": "object"
+              },
+              "status": {
+                "enum": [
+                  "draft",
+                  "scheduled",
+                  "published",
+                  "archived",
+                  "trashed"
+                ]
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "terms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "taxonomy",
+              "term_id"
+            ],
+            "properties": {
+              "taxonomy": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,62}$"
+              },
+              "term_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "published_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

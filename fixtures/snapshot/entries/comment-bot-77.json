@@ -1,0 +1,33 @@
+{
+  "id": "comment-bot-77",
+  "kind": "comment",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "comment-bot-77"
+  },
+  "title": {
+    "en": "bot-77"
+  },
+  "content": {
+    "en": "Cheap links, follow the address…"
+  },
+  "metadata": {
+    "author_name": {
+      "value": "bot-77"
+    },
+    "author_email": {
+      "value": "seo@spam.example"
+    },
+    "moderation": {
+      "value": "spam"
+    },
+    "comment_post": {
+      "value": "post-release-2-0-what-s-new"
+    }
+  },
+  "version": 1,
+  "created_at": "2026-09-30T13:00:00Z",
+  "updated_at": "2026-09-30T13:00:00Z",
+  "published_at": "2026-09-30T13:00:00Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "term-tag-svelte",
+  "kind": "term",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "svelte"
+  },
+  "title": {
+    "en": "Svelte"
+  },
+  "metadata": {
+    "taxonomy": {
+      "value": "tag"
+    }
+  },
+  "version": 1,
+  "created_at": "2026-06-23T09:00:00Z",
+  "updated_at": "2026-06-23T09:00:00Z",
+  "published_at": "2026-06-23T09:00:00Z"
+}

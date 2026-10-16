@@ -1,0 +1,30 @@
+{
+  "id": "kb-roles",
+  "kind": "kb-article",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "roles"
+  },
+  "title": {
+    "en": "User roles"
+  },
+  "content": {
+    "en": "### Administrator and editor\n\nThe administrator manages settings and people. The editor edits and publishes any material.\n\n### Author and contributor\n\nThe author publishes their own posts. The contributor writes drafts that the editor reviews.\n\n### Subscriber\n\nCan only read and leave comments."
+  },
+  "excerpt": {
+    "en": "What each team member can do."
+  },
+  "metadata": {
+    "section": {
+      "value": "start"
+    },
+    "order": {
+      "value": 2
+    }
+  },
+  "version": 1,
+  "created_at": "2026-06-23T09:00:00Z",
+  "updated_at": "2026-09-11T09:00:00Z",
+  "published_at": "2026-06-23T09:00:00Z"
+}

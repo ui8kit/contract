@@ -1,0 +1,33 @@
+{
+  "id": "user-alexey-kovalev",
+  "kind": "user",
+  "status": "published",
+  "visibility": "private",
+  "slug": {
+    "en": "alexey-kovalev"
+  },
+  "title": {
+    "en": "Alexey Kovalev"
+  },
+  "metadata": {
+    "email": {
+      "value": "alexey@studio.example"
+    },
+    "role": {
+      "value": "author"
+    }
+  },
+  "locales": {
+    "en": {
+      "data": {
+        "bio": "Developer, articles about markup."
+      },
+      "status": "published",
+      "updated_at": "2026-08-02T09:00:00Z"
+    }
+  },
+  "version": 1,
+  "created_at": "2026-08-02T09:00:00Z",
+  "updated_at": "2026-08-02T09:00:00Z",
+  "published_at": "2026-08-02T09:00:00Z"
+}

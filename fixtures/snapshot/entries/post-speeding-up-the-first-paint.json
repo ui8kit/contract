@@ -1,0 +1,37 @@
+{
+  "id": "post-speeding-up-the-first-paint",
+  "kind": "post",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "speeding-up-the-first-paint"
+  },
+  "title": {
+    "en": "Speeding up the first paint"
+  },
+  "content": {
+    "en": "This is demo text. The main material goes here: paragraphs, lists and notes. You can edit it in the editor, and saving happens in the browser.\n\nThe second paragraph continues the thought and shows how a long text looks in the preview."
+  },
+  "excerpt": {
+    "en": "In short: speeding up the first paint."
+  },
+  "author_id": "user-alexey-kovalev",
+  "terms": [
+    {
+      "taxonomy": "category",
+      "term_id": "term-category-guides"
+    },
+    {
+      "taxonomy": "tag",
+      "term_id": "term-tag-perf"
+    },
+    {
+      "taxonomy": "tag",
+      "term_id": "term-tag-markup"
+    }
+  ],
+  "version": 1,
+  "created_at": "2026-08-30T09:00:00Z",
+  "updated_at": "2026-09-01T09:00:00Z",
+  "published_at": "2026-09-01T09:00:00Z"
+}

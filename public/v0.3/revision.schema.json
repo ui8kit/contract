@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contract.ui8kit.com/v0.3/revision.schema.json",
+  "title": "Codex Revision (revision.Revision)",
+  "description": "Codex v0.3.0 wire contract (github.com/fastygo/codex). Structural check only; semantic rules (cross-references, field placement, timestamps order) are in the @ui8kit/contract validator.",
+  "x-codex-version": "0.3.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "entry_id",
+    "version",
+    "snapshot",
+    "author_id",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "entry_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "snapshot": {
+      "$ref": "https://contract.ui8kit.com/v0.3/entry.schema.json"
+    },
+    "author_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "post-draft-an-interview-with-a-client",
+  "kind": "post",
+  "status": "draft",
+  "visibility": "public",
+  "slug": {
+    "en": "draft-an-interview-with-a-client"
+  },
+  "title": {
+    "en": "Draft: an interview with a client"
+  },
+  "content": {
+    "en": "This is demo text. The main material goes here: paragraphs, lists and notes. You can edit it in the editor, and saving happens in the browser.\n\nThe second paragraph continues the thought and shows how a long text looks in the preview."
+  },
+  "excerpt": {
+    "en": "In short: draft: an interview with a client."
+  },
+  "author_id": "user-irina-orlova",
+  "terms": [
+    {
+      "taxonomy": "category",
+      "term_id": "term-category-cases"
+    }
+  ],
+  "version": 1,
+  "created_at": "2026-09-27T05:00:00Z",
+  "updated_at": "2026-09-29T05:00:00Z"
+}

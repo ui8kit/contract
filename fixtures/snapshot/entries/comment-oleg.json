@@ -1,0 +1,33 @@
+{
+  "id": "comment-oleg",
+  "kind": "comment",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "comment-oleg"
+  },
+  "title": {
+    "en": "Oleg"
+  },
+  "content": {
+    "en": "Nice breakdown. How do you store the state for the dark theme?"
+  },
+  "metadata": {
+    "author_name": {
+      "value": "Oleg"
+    },
+    "author_email": {
+      "value": "oleg@mail.example"
+    },
+    "moderation": {
+      "value": "pending"
+    },
+    "comment_post": {
+      "value": "post-how-we-build-a-design-system-from-atoms"
+    }
+  },
+  "version": 1,
+  "created_at": "2026-10-01T06:00:00Z",
+  "updated_at": "2026-10-01T06:00:00Z",
+  "published_at": "2026-10-01T06:00:00Z"
+}

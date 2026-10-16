@@ -1,0 +1,428 @@
+{
+  "name": "cms",
+  "version": "1",
+  "resources": [
+    {
+      "record": {
+        "id": "page",
+        "label": "Pages",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "public",
+        "fields": [
+          {
+            "id": "content",
+            "label": "Body",
+            "type": "markdown",
+            "localized": true,
+            "searchable": true
+          },
+          {
+            "id": "excerpt",
+            "label": "Excerpt",
+            "type": "text",
+            "localized": true
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "post",
+        "label": "Posts",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "public",
+        "fields": [
+          {
+            "id": "content",
+            "label": "Body",
+            "type": "markdown",
+            "localized": true,
+            "searchable": true
+          },
+          {
+            "id": "excerpt",
+            "label": "Excerpt",
+            "type": "text",
+            "localized": true
+          }
+        ]
+      },
+      "taxonomies": [
+        "category",
+        "tag"
+      ]
+    },
+    {
+      "record": {
+        "id": "media",
+        "label": "Media",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "public",
+        "fields": [
+          {
+            "id": "media_kind",
+            "label": "Kind",
+            "type": "select",
+            "required": true,
+            "options": [
+              {
+                "value": "image",
+                "label": "Image"
+              },
+              {
+                "value": "video",
+                "label": "Video"
+              },
+              {
+                "value": "audio",
+                "label": "Audio"
+              },
+              {
+                "value": "document",
+                "label": "Document"
+              }
+            ]
+          },
+          {
+            "id": "size",
+            "label": "Size in bytes",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "src",
+            "label": "Source path",
+            "type": "string"
+          },
+          {
+            "id": "alt",
+            "label": "Alternative text",
+            "type": "text",
+            "localized": true
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "user",
+        "label": "Users",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "private",
+        "fields": [
+          {
+            "id": "email",
+            "label": "Email",
+            "type": "string",
+            "required": true,
+            "indexed": true,
+            "unique": true
+          },
+          {
+            "id": "role",
+            "label": "Role",
+            "type": "select",
+            "required": true,
+            "options": [
+              {
+                "value": "admin",
+                "label": "Admin"
+              },
+              {
+                "value": "editor",
+                "label": "Editor"
+              },
+              {
+                "value": "author",
+                "label": "Author"
+              },
+              {
+                "value": "contributor",
+                "label": "Contributor"
+              },
+              {
+                "value": "subscriber",
+                "label": "Subscriber"
+              }
+            ]
+          },
+          {
+            "id": "avatar",
+            "label": "Avatar path",
+            "type": "string"
+          },
+          {
+            "id": "bio",
+            "label": "Bio",
+            "type": "text",
+            "localized": true
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "term",
+        "label": "Terms",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "public",
+        "fields": [
+          {
+            "id": "taxonomy",
+            "label": "Taxonomy",
+            "type": "select",
+            "required": true,
+            "options": [
+              {
+                "value": "category",
+                "label": "Category"
+              },
+              {
+                "value": "tag",
+                "label": "Tag"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "comment",
+        "label": "Comments",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "public",
+        "fields": [
+          {
+            "id": "content",
+            "label": "Text",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "author_name",
+            "label": "Author name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "id": "author_email",
+            "label": "Author email",
+            "type": "string"
+          },
+          {
+            "id": "moderation",
+            "label": "Moderation state",
+            "type": "select",
+            "required": true,
+            "options": [
+              {
+                "value": "pending",
+                "label": "Pending"
+              },
+              {
+                "value": "approved",
+                "label": "Approved"
+              },
+              {
+                "value": "spam",
+                "label": "Spam"
+              }
+            ]
+          },
+          {
+            "id": "comment_post",
+            "label": "Post",
+            "type": "relation",
+            "required": true
+          }
+        ],
+        "relations": [
+          {
+            "id": "comment_post",
+            "label": "Post",
+            "source": "comment",
+            "target": "post",
+            "cardinality": "one-to-one",
+            "inverse_name": "comments",
+            "policy": {},
+            "delete_behavior": "cascade"
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "setting",
+        "label": "Settings",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "private",
+        "fields": [
+          {
+            "id": "site_title",
+            "label": "Site title",
+            "type": "string",
+            "localized": true
+          },
+          {
+            "id": "tagline",
+            "label": "Tagline",
+            "type": "string",
+            "localized": true
+          },
+          {
+            "id": "url",
+            "label": "Site address",
+            "type": "string",
+            "rules": [
+              {
+                "name": "fastygo.codex/uri"
+              }
+            ]
+          },
+          {
+            "id": "admin_email",
+            "label": "Admin email",
+            "type": "string"
+          },
+          {
+            "id": "language",
+            "label": "Interface language",
+            "type": "select",
+            "options": [
+              {
+                "value": "en",
+                "label": "En"
+              },
+              {
+                "value": "ru",
+                "label": "Ru"
+              }
+            ]
+          },
+          {
+            "id": "timezone",
+            "label": "Time zone",
+            "type": "string"
+          },
+          {
+            "id": "posts_per_page",
+            "label": "Posts per page",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "comments_open",
+            "label": "Comments open",
+            "type": "boolean"
+          },
+          {
+            "id": "moderate",
+            "label": "Moderate comments",
+            "type": "boolean"
+          },
+          {
+            "id": "indexing",
+            "label": "Search engine indexing",
+            "type": "boolean"
+          },
+          {
+            "id": "default_role",
+            "label": "Default role",
+            "type": "select",
+            "options": [
+              {
+                "value": "admin",
+                "label": "Admin"
+              },
+              {
+                "value": "editor",
+                "label": "Editor"
+              },
+              {
+                "value": "author",
+                "label": "Author"
+              },
+              {
+                "value": "contributor",
+                "label": "Contributor"
+              },
+              {
+                "value": "subscriber",
+                "label": "Subscriber"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "kb-article",
+        "label": "Help articles",
+        "schema_version": "1",
+        "scope": "tenant",
+        "visibility": "public",
+        "fields": [
+          {
+            "id": "content",
+            "label": "Steps (markdown, ### per step)",
+            "type": "markdown",
+            "localized": true
+          },
+          {
+            "id": "excerpt",
+            "label": "Lead",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "section",
+            "label": "Section",
+            "type": "select",
+            "required": true,
+            "options": [
+              {
+                "value": "start",
+                "label": "Start"
+              },
+              {
+                "value": "content",
+                "label": "Content"
+              },
+              {
+                "value": "moderation",
+                "label": "Moderation"
+              }
+            ]
+          },
+          {
+            "id": "order",
+            "label": "Order",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

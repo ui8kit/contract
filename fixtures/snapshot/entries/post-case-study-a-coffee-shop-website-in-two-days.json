@@ -1,0 +1,33 @@
+{
+  "id": "post-case-study-a-coffee-shop-website-in-two-days",
+  "kind": "post",
+  "status": "published",
+  "visibility": "public",
+  "slug": {
+    "en": "case-study-a-coffee-shop-website-in-two-days"
+  },
+  "title": {
+    "en": "Case study: a coffee shop website in two days"
+  },
+  "content": {
+    "en": "This is demo text. The main material goes here: paragraphs, lists and notes. You can edit it in the editor, and saving happens in the browser.\n\nThe second paragraph continues the thought and shows how a long text looks in the preview."
+  },
+  "excerpt": {
+    "en": "In short: case study: a coffee shop website in two days."
+  },
+  "author_id": "user-dmitry-petrov",
+  "terms": [
+    {
+      "taxonomy": "category",
+      "term_id": "term-category-cases"
+    },
+    {
+      "taxonomy": "tag",
+      "term_id": "term-tag-design"
+    }
+  ],
+  "version": 1,
+  "created_at": "2026-09-21T09:00:00Z",
+  "updated_at": "2026-09-23T09:00:00Z",
+  "published_at": "2026-09-23T09:00:00Z"
+}
