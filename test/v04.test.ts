@@ -6,7 +6,7 @@ import addFormats from "ajv-formats";
 import { ALL_V04 } from "../scripts/schemas-v04.ts";
 import { KEYS_V04, validateCollectionV04 } from "../src/validate-v04.ts";
 import { schemaUrlV04, type EntryV04 } from "../src/v04.ts";
-import { fromWpPost, fromWpTerm, stripWpComputed, toWpPost, toWpTerm, type WpPost, type WpTerm } from "../src/adapters/wordpress.ts";
+import { fromWpPost, fromWpTerm, stripWpComputed, toWpPost, toWpTerm, wpManifest, type WpPost, type WpTerm } from "../src/adapters/wordpress.ts";
 import * as core from "../src/index.ts";
 
 const root = path.resolve(import.meta.dir, "..");
@@ -116,5 +116,67 @@ describe("v0.4 validator rules", () => {
   test("adapter is not exported from the core index", () => {
     expect("fromWpPost" in core).toBe(false);
     expect("validateCollectionV04" in core).toBe(true);
+  });
+});
+
+describe("v0.4 metadata against the manifest", () => {
+
+  const mk = (kind: string, metadata: Record<string, { value: unknown }> | undefined, id = `${kind}-1`): EntryV04 =>
+    ({ id, locale: "en", kind, status: "published", visibility: "public", slug: id, title: id, version: 1, created_at: at, updated_at: at, ...(metadata ? { metadata } : {}) });
+  const manifest: any = {
+    name: "shop-crm", version: "1",
+    resources: [
+      { record: { id: "product", label: "Product", scope: "workspace", fields: [
+        { id: "price", label: "Price", type: "number", required: true },
+        { id: "sku", label: "SKU", type: "string", required: true },
+        { id: "in_stock", label: "In stock", type: "boolean" },
+        { id: "qty", label: "Qty", type: "number", rules: [{ name: "fastygo.codex/integer" }] },
+        { id: "sizes", label: "Sizes", type: "collection", items: { id: "size", label: "Size", type: "select", options: [{ value: "s", label: "S" }, { value: "m", label: "M" }] } },
+        { id: "dims", label: "Dims", type: "object", fields: [{ id: "w", label: "W", type: "number", required: true }] },
+      ] } },
+      { record: { id: "user", label: "User", scope: "workspace" } },
+      { record: { id: "lead", label: "Lead", scope: "workspace", fields: [
+        { id: "email", label: "Email", type: "string", required: true },
+        { id: "stage", label: "Stage", type: "select", required: true, options: [{ value: "new", label: "New" }, { value: "won", label: "Won" }, { value: "lost", label: "Lost" }] },
+        { id: "next_call", label: "Next call", type: "datetime" },
+        { id: "owner", label: "Owner", type: "relation" },
+      ], relations: [{ id: "owner", source: "lead", target: "user", cardinality: "one-to-one" }] } },
+    ],
+  };
+  const check = (list: EntryV04[], m = manifest) => validateCollectionV04({ entries: files(list, "e") }, { manifest: m });
+  const errors = (l: EntryV04[], m?: any) => check(l, m).filter((i) => !i.severity).map((i) => i.code);
+  const warnings = (l: EntryV04[], m?: any) => check(l, m).filter((i) => i.severity === "warning").map((i) => i.code);
+  const user = mk("user", undefined);
+  const product = mk("product", { price: { value: 9.5 }, sku: { value: "A-1" }, in_stock: { value: true }, qty: { value: 3 }, sizes: { value: ["s", "m"] }, dims: { value: { w: 10 } } });
+  const lead = mk("lead", { email: { value: "a@b.c" }, stage: { value: "new" }, next_call: { value: "2026-10-20T10:00:00Z" }, owner: { value: "user-1" } });
+
+  test("manifest fixture passes the manifest schema", () => { expect(ok("manifest", manifest)).toBe(true); expect(ok("manifest", wpManifest())).toBe(true); });
+  test("valid product and lead: no issues", () => { expect(check([user, product, lead])).toEqual([]); });
+  test("product: price must be a number, required fields", () => {
+    expect(errors([{ ...product, metadata: { ...product.metadata, price: { value: "9.5" } } }])).toEqual(["manifest.field_invalid"]);
+    const { sku, ...rest } = product.metadata!;
+    expect(errors([{ ...product, metadata: rest }])).toEqual(["manifest.field_required"]);
+    expect(errors([{ ...product, metadata: { ...product.metadata, qty: { value: 1.5 } } }])).toEqual(["manifest.field_invalid"]);
+    expect(errors([{ ...product, metadata: { ...product.metadata, sizes: { value: ["xl"] } } }])).toEqual(["manifest.field_invalid"]);
+    expect(errors([{ ...product, metadata: { ...product.metadata, dims: { value: {} } } }])).toEqual(["manifest.field_invalid"]);
+    expect(errors([{ ...product, metadata: { ...product.metadata, in_stock: { value: "yes" } } }])).toEqual(["manifest.field_invalid"]);
+  });
+  test("lead: enum stage, datetime, relation to user", () => {
+    expect(errors([user, { ...lead, metadata: { ...lead.metadata, stage: { value: "maybe" } } }])).toEqual(["manifest.field_invalid"]);
+    expect(errors([user, { ...lead, metadata: { ...lead.metadata, next_call: { value: "tomorrow" } } }])).toEqual(["manifest.field_invalid"]);
+    expect(errors([user, product, { ...lead, metadata: { ...lead.metadata, owner: { value: "product-1" } } }])).toEqual(["manifest.field_invalid"]);
+    expect(errors([user, { ...lead, metadata: { ...lead.metadata, owner: { value: "user-404" } } }])).toEqual(["manifest.field_invalid"]);
+  });
+  test("unknown metadata key and unknown kind are warnings, not errors", () => {
+    expect(check([user, { ...product, metadata: { ...product.metadata, color: { value: "red" } } }]).map((i) => [i.code, i.severity])).toEqual([["manifest.metadata_unknown", "warning"]]);
+    expect(check([mk("deal", { amount: { value: 1 } })]).map((i) => [i.code, i.severity])).toEqual([["manifest.kind_unknown", "warning"]]);
+  });
+  test("without a manifest, metadata is not checked", () => {
+    expect(validateCollectionV04({ entries: files([mk("deal", { amount: { value: "x" } })], "e") })).toEqual([]);
+  });
+  test("WordPress fixtures validate against wpManifest() with no errors and no warnings", () => {
+    const issues = validateCollectionV04({ entries: files(entries.map((x) => x.entry), "entries"), terms: files(terms, "terms") }, { manifest: wpManifest() });
+    expect(issues).toEqual([]);
+    expect(warnings([{ ...entries[0].entry, metadata: { custom: { value: 1 } } }], wpManifest())).toEqual(["manifest.metadata_unknown"]);
   });
 });
