@@ -1,0 +1,138 @@
+# Codex v0.4 — черновик общего ядра данных
+
+Статус: черновик Codex v0.4, ред. 3. Решения разделов 1–6 **согласованы**. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Код (пока) не менялся. Код не менялся. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
+
+## 1. Зачем
+
+Один формат данных для всех наших систем: wpfasty (WordPress), phpfasty (Slim, Flight CMS), fastygo (GoCMS, GoCRM), appfasty (SvelteCMS, React, Vue) и фикстуры codegen-x.
+
+Принципы:
+- В контракте нет полей конкретной платформы (никаких `wp_*`, числовых id WordPress, паролей записей и т.п.). Такое остаётся внутри платформы и в её адаптере.
+- Адаптеры (WordPress, Slim, GoCMS…) живут **вне** контракта и приводят данные к ядру.
+- **«Думай как Codex WP»**: новая сущность (отзыв, testimonial, лид, сделка) — это новый `kind` со своими свободными типизированными полями (описаны в Manifest), а не новый статус. Статусы — только общий жизненный цикл записи.
+- **Языки не меняют контракт**: в записи все тексты — обычные строки на одном языке (поле `locale`). Переводы лежат отдельно, в словарях (см. раздел 4).
+- Источник истины — то, что согласуем сейчас для wpfasty + codegen-x. Остальные системы подтягиваются позже (UI8Kit 2.0).
+
+## 2. Поля ядра (запись Entry)
+
+Жирным — новые поля или изменения относительно Codex v0.3.0.
+
+| Поле | Тип | Обязательно | Смысл |
+|---|---|---|---|
+| id | string | да | Наш собственный id записи (строка, не число платформы). Общий для всех языковых версий одной записи |
+| kind | string | да | Вид записи: `post`, `page`, `review`, `lead`, `deal`, … |
+| status | `draft` \| **`pending`** \| `scheduled` \| `published` \| `archived` \| `trashed` | да | Жизненный цикл. `pending` — «ждёт проверки редактором» (как в WordPress) |
+| visibility | `public` \| `private` | да | Кто видит |
+| **locale** | string (BCP 47, напр. `ru`, `en-US`) | да | Язык этой версии записи. **Ключ записи = (id, locale)** |
+| slug | **string** | да | Адрес записи (на языке `locale`) |
+| title | **string** | да | Заголовок |
+| content | **string** | нет | Основной текст (исходный, не «отрисованный») |
+| excerpt | **string** | нет | Краткое описание |
+| author_id | string | нет | id пользователя (kind `user`) |
+| parent_id | string | нет | Родитель (страницы, вложенные записи) |
+| featured_media_id | string | нет | id медиа (kind `media`) |
+| template | string | нет | Имя шаблона вывода |
+| terms | [{taxonomy, term_id}] | нет | Привязка к рубрикам/меткам |
+| metadata | { ключ: {value, private?} } | нет | Доп. поля вида. **Значения типизированные** (число — числом, да/нет — boolean). Адаптер сам переводит строки WP в нужный тип |
+| **order** | integer | нет | Порядок вручную (меньше — выше). По умолчанию 0 |
+| **pinned** | boolean | нет | Закреплено вверху списка. По умолчанию false |
+| **format** | string | нет | Вид подачи: `standard`, `gallery`, `video`, `quote`, `link`, `audio`, `image`, `aside`, `status`, `chat`. Свободная строка |
+| **discussion** | {comments: boolean, pings: boolean} | нет | Открыты ли комментарии и упоминания (пинги) |
+| **origin** | [{system: string, id: string}] | нет | Откуда пришла запись: `[{"system":"wordpress","id":"42"}]`. Массив — запись может пройти через несколько систем при переездах. Заменяет числовые id платформ |
+| version | integer | да | Номер версии (правки, ревизии) |
+| created_at | дата RFC 3339 | да | Создано |
+| updated_at | дата RFC 3339 | да | Изменено |
+| published_at | дата RFC 3339 | нет | Опубликовано / запланировано на |
+| deleted_at | дата RFC 3339 | нет | Удалено в корзину |
+
+Почему так:
+- `order`, `pinned`, `format`, `discussion` нужны не только WordPress: порядок страниц и меню есть в любой CMS (GoCMS: «Pages SHOULD support custom ordering»), закрепление — в блоге и CRM, комментарии — везде, где есть обсуждение.
+- `origin` — без него при переезде теряется связь со старым id, а числовые id WordPress в ядро тащить нельзя.
+- `pending` — привычное имя из WordPress; одно общее «ждёт одобрения» для всех платформ.
+- Пароль записи (`access`) убран: это внутреннее дело WordPress и его адаптера, в ядро не попадает.
+
+> **Отличие от Codex v0.3.0.** В Codex `slug`, `title`, `content`, `excerpt` — объекты «язык → строка», и есть поле `locales`. В этом черновике они **плоские строки** + поле `locale`, а `locales` убрано; переводы вынесены в словари. Это ломающее изменение схемы Entry (и Term, где `name`/`slug`/`description` тоже по языкам), поэтому — v0.4. **Ключ записи меняется с `id` на пару `(id, locale)`**; ссылки (`parent_id`, `author_id`, `terms` и т.п.) указывают на `id`, а язык берётся из контекста (своя `locale` или исходная). Ревизии (Revision) тоже привязываются к паре `(id, locale)`.
+
+## 3. Виды (kind) — минимальные формы
+
+Все виды ниже используют общие `id`, `version`, `created_at`, `updated_at`, `locale?`, `origin?`, `metadata?`. Перечислены только свои поля. Формы — предложение: в Codex v0.3.0 их **нет** (кроме entry, taxonomy, revision).
+
+- **entry** (`post`, `page` и любые свои виды: `review`, `testimonial`, `lead`, `deal`…) — таблица выше. Свои поля вида — в `metadata`, их описание — в Manifest (RecordType/Field).
+- **media**: `kind:"media"`, `title`, `file` (url или путь), `mime`, `size?` (байты), `width?`, `height?`, `alt?`, `caption?` (строки), `parent_id?` (к какой записи приложено).
+- **user**: `kind:"user"`, `login` (или `slug`), `display_name`, `email?` (приватно), `roles` [string], `avatar_media_id?`. Пароли и токены — никогда.
+- **comment**: `kind:"comment"`, `entry_id`, `parent_id?`, `author_id?` или `author_name?`, `content`, `status`: `approved` | `hold` | `spam` | `trash` (как в ядре WordPress; `hold` = ждёт модерации). Статусы комментария — свой набор, не путать со статусами Entry.
+- **menu** (по образцу `fastygo/app-gocms` `menu.schema.json`): `{id, location, locale, items:[{id, label, url, parent_id?, order?, target?}]}`. `label` — строка; переводы — в словаре. `target?: {kind, id}` — необязательная ссылка на запись (url остаётся основным).
+- **settings**: `kind:"settings"`, `scope` (`site`, `theme`, `module:<имя>`), `values` { ключ: типизированное значение }. Например `title`, `tagline`, `locale`, `timezone`.
+- **taxonomy / term** и **revision** — как в Codex v0.3.0, кроме языковых полей (тоже строки + словарь).
+
+## 4. Переводы (согласовано)
+
+Две вещи, как в WPML/Polylang и gettext/i18n-каталогах:
+
+**4.1. Перевод записи — отдельная запись.** Тот же `id`, другой `locale`; свои `title`, `slug`, `content`, `excerpt`, `status`, `version`, даты. Например `{id:"hello-world", locale:"ru", …}` и `{id:"hello-world", locale:"en", …}`. Нет версии на нужном языке — платформа решает, показать ли исходную (правило отката — забота платформы).
+
+**4.2. Словари — только для коротких строк** (подписи меню, названия рубрик, строки интерфейса). Один файл на язык, напр. `i18n/en.json`:
+
+```json
+{
+  "locale": "en",
+  "source_locale": "ru",
+  "messages": {
+    "menu:primary:about:label": "About",
+    "term:topic-news:name": "News",
+    "ui:read_more": "Read more"
+  }
+}
+```
+
+- Ключ: `<вид>:<id>:<поле>` (пункт меню — `menu:<id меню>:<id пункта>:label`; строки интерфейса — `ui:<ключ>`).
+- Нет перевода — показываем исходную строку.
+- Длинный текст (`content`) в словари не кладём.
+- Экспорт в `.po` возможен один к одному (`msgctxt` = ключ, `msgid` = исходник, `msgstr` = перевод) — **не проверено** на наших инструментах.
+
+**4.3. Проверки валидатора контракта.** Пара `(id, locale)` уникальна. `slug` уникален в паре `(kind, locale)` (для иерархических страниц — вопрос ниже). Проверяет валидатор `@ui8kit/contract` / Codex v0.4.
+
+## 5. Соответствие WordPress REST v2 (post/page) → ядро
+
+| WP поле | Поле ядра | Примечание |
+|---|---|---|
+| id | origin[{system:"wordpress", id:"<id>"}] | Наш `id` — свой. Числовой id только в origin |
+| date / date_gmt | published_at (или created_at для черновиков) | Берём `_gmt`, пишем в UTC |
+| modified / modified_gmt | updated_at | Берём `_gmt` |
+| slug | slug | |
+| status: publish / future / draft / pending / private / trash | published / scheduled / draft / pending / published + visibility:private / trashed | |
+| type (post/page/свой тип) | kind | |
+| password | — | **не переносим**: остаётся в WordPress (забота адаптера) |
+| title.raw | title | title.rendered — **игнор** |
+| content.raw | content | content.rendered, content.protected — **игнор** |
+| excerpt.raw | excerpt | excerpt.rendered — **игнор** |
+| — (язык сайта / плагина переводов) | locale | Источник зависит от сайта (не проверено) |
+| author | author_id | Через origin пользователя |
+| featured_media | featured_media_id | 0 → поле отсутствует |
+| comment_status (open/closed) | discussion.comments | |
+| ping_status (open/closed) | discussion.pings | |
+| sticky (только post) | pinned | |
+| format (только post) | format | |
+| menu_order (только page) | order | |
+| parent (page) | parent_id | 0 → поле отсутствует |
+| template | template | Пустая строка → отсутствует |
+| meta | metadata | Адаптер приводит типы; ключи с `_` — private |
+| categories, tags (и свои таксономии) | terms[] | |
+| link, guid | — | **игнор** (вычисляются) |
+| _links, _embedded | — | **игнор** |
+| *.rendered | — | **игнор** |
+| поля плагинов (class_list, yoast_head и т.п.) | — | **игнор** или в metadata через адаптер (не проверено) |
+
+Комментарии WP (`/wp/v2/comments`): `status` approved / hold / spam / trash → те же значения в kind `comment` (имена статусов по памяти — **не проверено** на живом ответе).
+
+Названия полей WP взяты из документации REST v2 по памяти; при реализации адаптера сверить с живым ответом (`?context=edit`) — **не проверено** на нашем сайте.
+
+## 6. Как сюда ложатся CRM и codegen-x
+
+- **CRM (GoCRM)**: лид и сделка — `kind:"lead"` и `kind:"deal"`. `title` — имя/название, `status` — общий жизненный цикл, этап воронки (`new`, `won`, `lost`…) — поле в `metadata` или таксономия `pipeline_stage`, но не статус. Связи (сделка → лид, ответственный → user) — `parent_id`/`author_id` или relation в Manifest.
+- **codegen-x фикстуры**: обычные JSON-записи ядра (плюс при нужде словари `i18n/*.json`), проходящие валидатор `@ui8kit/contract`. `origin` можно ставить `[{system:"fixture", id:"hello-world"}]`. Никаких особых полей для фикстур.
+
+## 7. Новые вопросы
+
+1. Уникальность `slug` у страниц: строго в `(kind, locale)` или в `(kind, locale, parent_id)`, если включены вложенные адреса (GoCMS это допускает: «Page slugs MAY be unique within parent scope»)?
+2. Где лежит `id` у таксономий/терминов при переводе: термин тоже становится записью `(id, locale)` или имя термина переводится только словарём (п. 4.2)?
