@@ -7,7 +7,8 @@ import { ALL } from "../scripts/schemas.ts";
 import { render } from "../scripts/gen.ts";
 import { CASES, loadSnapshot, run } from "../scripts/self-test.ts";
 import { KEYS, REVISION_KEYS, TAXONOMY_KEYS, validateRevision, validateSnapshot, validateTaxonomy } from "../src/validate.ts";
-import { CODEX_VERSION, SCHEMA_LINE, schemaUrl } from "../src/codex.ts";
+import { CODEX_VERSION, SCHEMA_LINE, SCHEMA_BASE_URL } from "../src/codex.ts";
+import { ALL_V04 } from "../scripts/schemas-v04.ts";
 import { Library, loadLibrary, loadOrError, SnapshotError } from "../src/library.ts";
 import { localized, meta, pick, termIds } from "../src/access.ts";
 import { adaptAll, defineAdapter, KindMismatchError } from "../src/adapter.ts";
@@ -19,7 +20,8 @@ const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true }
 addFormats(ajv);
 ajv.addKeyword("x-codex-version");
 for (const s of Object.values(ALL)) ajv.addSchema(s);
-const v = (name: keyof typeof ALL) => ajv.getSchema(schemaUrl(name))!;
+// Legacy v0.3 schemas (in memory only, not published) to keep checking the v0.3 fixtures.
+const v = (name: keyof typeof ALL) => ajv.getSchema((ALL[name] as any).$id)!;
 
 describe("generated files", () => {
   test("schemas/ and public/ match scripts/schemas.ts (run `bun run gen`)", () => {
@@ -33,11 +35,12 @@ describe("generated files", () => {
     expect(pkg.codex.version).toBe(CODEX_VERSION);
     expect(pkg.codex.schemaLine).toBe(SCHEMA_LINE);
     expect(SCHEMA_LINE).toBe(`v${CODEX_VERSION.split(".").slice(0, 2).join(".")}`);
-    for (const [n, s] of Object.entries(ALL)) expect(s.$id).toBe(`https://schema.buildy.tw/${SCHEMA_LINE}/${n}.schema.json`);
+    // v0.4 is published at stable unversioned URLs; versioned URLs start at v0.5.
+    for (const [n, s] of Object.entries(ALL_V04)) expect(s.$id).toBe(`${SCHEMA_BASE_URL}/${n}.schema.json`);
   });
 });
 
-describe("schemas agree with the validator's strict keys", () => {
+describe("legacy v0.3 schemas agree with the validator's strict keys", () => {
   const props = (o: any) => Object.keys(o.properties).sort();
   const d = (s: any, k: string) => s.$defs[k];
   const m = ALL.manifest as any, e = ALL.entry as any, t = ALL.taxonomy as any;

@@ -1,6 +1,7 @@
-// Source of the JSON Schemas (draft 2020-12). `bun run gen` writes schemas/*.schema.json and the public/ site.
+// LEGACY v0.3 JSON Schema pieces. Not published any more; scripts/schemas-v04.ts reuses the manifest shape from here.
 // Kept in sync with src/codex.ts by test/schemas.test.ts (keys, required fields, fixtures through ajv and the TS validator).
-import { CODEX_VERSION, schemaUrl } from "../src/codex.ts";
+import { CODEX_V03_VERSION as CODEX_VERSION, SCHEMA_BASE_URL } from "../src/codex.ts";
+const schemaUrl = (name: string) => `${SCHEMA_BASE_URL}/legacy-v0.3/${name}.schema.json`;
 
 const S = "https://json-schema.org/draft/2020-12/schema";
 const str = { type: "string" };

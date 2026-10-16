@@ -1,8 +1,11 @@
 // Writes schemas/*.schema.json and the static schema site in public/ (served by Vercel as-is).
+// Only the Codex v0.4 core is published, at stable unversioned URLs: https://schema.buildy.tw/<name>.schema.json.
+// Versioned URLs start at v0.5.
 import fs from "node:fs";
 import path from "node:path";
-import { ALL } from "./schemas.ts";
-import { CODEX_VERSION, SCHEMA_LINE, SCHEMA_BASE_URL } from "../src/codex.ts";
+import { ALL_V04 } from "./schemas-v04.ts";
+import { SCHEMA_BASE_URL } from "../src/codex.ts";
+import { CODEX_V04_VERSION } from "../src/v04.ts";
 
 const root = path.resolve(import.meta.dir, "..");
 const json = (v: unknown) => JSON.stringify(v, null, 2) + "\n";
@@ -10,14 +13,12 @@ const write = (p: string, s: string) => { fs.mkdirSync(path.dirname(p), { recurs
 
 export function render(): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const [name, schema] of Object.entries(ALL)) {
+  for (const [name, schema] of Object.entries(ALL_V04)) {
     const body = json(schema);
     out[`schemas/${name}.schema.json`] = body;
-    out[`public/${SCHEMA_LINE}/${name}.schema.json`] = body;
-    out[`public/latest/${name}.schema.json`] = body; // same bytes: $id stays the versioned URL
+    out[`public/${name}.schema.json`] = body;
   }
-  const rows = Object.keys(ALL).map((n) =>
-    `      <tr><td>${n}</td><td><a href="/${SCHEMA_LINE}/${n}.schema.json">/${SCHEMA_LINE}/${n}.schema.json</a></td><td><a href="/latest/${n}.schema.json">/latest/${n}.schema.json</a></td></tr>`).join("\n");
+  const rows = Object.keys(ALL_V04).map((n) => `      <tr><td>${n}</td><td><a href="/${n}.schema.json">${SCHEMA_BASE_URL}/${n}.schema.json</a></td></tr>`).join("\n");
   out["public/index.html"] = `<!doctype html>
 <html lang="en">
 <head>
@@ -28,14 +29,14 @@ export function render(): Record<string, string> {
 </head>
 <body>
   <h1>@ui8kit/contract</h1>
-  <p>JSON Schemas (draft 2020-12) of the <a href="https://github.com/fastygo/codex">Codex</a> v${CODEX_VERSION} wire contract. Source: <a href="https://github.com/ui8kit/contract">github.com/ui8kit/contract</a>.</p>
+  <p>JSON Schemas (draft 2020-12) of the <a href="https://github.com/fastygo/codex">Codex</a> v${CODEX_V04_VERSION} core (draft). Source: <a href="https://github.com/ui8kit/contract">github.com/ui8kit/contract</a>.</p>
   <table>
-    <thead><tr><th>Schema</th><th>Pinned (${SCHEMA_LINE})</th><th>Latest</th></tr></thead>
+    <thead><tr><th>Schema</th><th>URL</th></tr></thead>
     <tbody>
 ${rows}
     </tbody>
   </table>
-  <p><code>$id</code> is always the pinned URL under <code>${SCHEMA_BASE_URL}</code>. <code>/latest/</code> moves with new Codex lines; pin <code>/${SCHEMA_LINE}/</code> in production.</p>
+  <p>URLs are stable and unversioned while there are no consumers; versioned URLs start at v0.5.</p>
 </body>
 </html>
 `;

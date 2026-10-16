@@ -8,16 +8,20 @@
 </head>
 <body>
   <h1>@ui8kit/contract</h1>
-  <p>JSON Schemas (draft 2020-12) of the <a href="https://github.com/fastygo/codex">Codex</a> v0.3.0 wire contract. Source: <a href="https://github.com/ui8kit/contract">github.com/ui8kit/contract</a>.</p>
+  <p>JSON Schemas (draft 2020-12) of the <a href="https://github.com/fastygo/codex">Codex</a> v0.4.0 core (draft). Source: <a href="https://github.com/ui8kit/contract">github.com/ui8kit/contract</a>.</p>
   <table>
-    <thead><tr><th>Schema</th><th>Pinned (v0.3)</th><th>Latest</th></tr></thead>
+    <thead><tr><th>Schema</th><th>URL</th></tr></thead>
     <tbody>
-      <tr><td>entry</td><td><a href="/v0.3/entry.schema.json">/v0.3/entry.schema.json</a></td><td><a href="/latest/entry.schema.json">/latest/entry.schema.json</a></td></tr>
-      <tr><td>manifest</td><td><a href="/v0.3/manifest.schema.json">/v0.3/manifest.schema.json</a></td><td><a href="/latest/manifest.schema.json">/latest/manifest.schema.json</a></td></tr>
-      <tr><td>taxonomy</td><td><a href="/v0.3/taxonomy.schema.json">/v0.3/taxonomy.schema.json</a></td><td><a href="/latest/taxonomy.schema.json">/latest/taxonomy.schema.json</a></td></tr>
-      <tr><td>revision</td><td><a href="/v0.3/revision.schema.json">/v0.3/revision.schema.json</a></td><td><a href="/latest/revision.schema.json">/latest/revision.schema.json</a></td></tr>
+      <tr><td>entry</td><td><a href="/entry.schema.json">https://schema.buildy.tw/entry.schema.json</a></td></tr>
+      <tr><td>term</td><td><a href="/term.schema.json">https://schema.buildy.tw/term.schema.json</a></td></tr>
+      <tr><td>taxonomy</td><td><a href="/taxonomy.schema.json">https://schema.buildy.tw/taxonomy.schema.json</a></td></tr>
+      <tr><td>comment</td><td><a href="/comment.schema.json">https://schema.buildy.tw/comment.schema.json</a></td></tr>
+      <tr><td>menu</td><td><a href="/menu.schema.json">https://schema.buildy.tw/menu.schema.json</a></td></tr>
+      <tr><td>dictionary</td><td><a href="/dictionary.schema.json">https://schema.buildy.tw/dictionary.schema.json</a></td></tr>
+      <tr><td>manifest</td><td><a href="/manifest.schema.json">https://schema.buildy.tw/manifest.schema.json</a></td></tr>
+      <tr><td>revision</td><td><a href="/revision.schema.json">https://schema.buildy.tw/revision.schema.json</a></td></tr>
     </tbody>
   </table>
-  <p><code>$id</code> is always the pinned URL under <code>https://schema.buildy.tw</code>. <code>/latest/</code> moves with new Codex lines; pin <code>/v0.3/</code> in production.</p>
+  <p>URLs are stable and unversioned while there are no consumers; versioned URLs start at v0.5.</p>
 </body>
 </html>
