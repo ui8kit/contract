@@ -98,8 +98,11 @@ function taxFields(p: Record<string, unknown>, opts: WpOptions): Record<string, 
 
 export function fromWpPost(p: WpPost, opts: WpOptions = {}): { entry: EntryV04; sidecar: WpPostSidecar } {
   const id = opts.idFor ?? defId;
-  const created = utc(p.date_gmt ?? p.modified_gmt);
+  // WP `date_gmt` is the publish time; for a scheduled (future) post it lies after `modified`, so the core
+  // created_at falls back to modified and the WP date lives in published_at.
+  const dated = utc(p.date_gmt ?? p.modified_gmt);
   const updated = utc(p.modified_gmt);
+  const created = dated > updated ? updated : dated;
   const status = STATUS_IN[p.status];
   if (!status) throw new Error(`wordpress: unknown post status "${p.status}" (post ${p.id})`);
   const e: EntryV04 = {
@@ -113,7 +116,7 @@ export function fromWpPost(p: WpPost, opts: WpOptions = {}): { entry: EntryV04; 
     origin: [{ system: WP_SYSTEM, id: String(p.id) }],
     version: 1,
     created_at: created,
-    updated_at: updated < created ? created : updated,
+    updated_at: updated,
   };
   if (p.content?.raw) e.content = p.content.raw;
   if (p.excerpt?.raw) e.excerpt = p.excerpt.raw;
@@ -130,7 +133,7 @@ export function fromWpPost(p: WpPost, opts: WpOptions = {}): { entry: EntryV04; 
   if (p.comment_status !== undefined || p.ping_status !== undefined) e.discussion = { comments: p.comment_status === "open", pings: p.ping_status === "open" };
   const { md, keys: metaKeys, nulls } = metaIn(p.meta, opts.metaPrefix);
   if (md) e.metadata = md;
-  if (status === "published" || status === "scheduled") e.published_at = created;
+  if (status === "published" || status === "scheduled") e.published_at = dated;
   if (status === "trashed") e.deleted_at = updated; // WP REST has no trash time; modified is the closest
   const keys = Object.keys(p).filter((k) => !(WP_COMPUTED as readonly string[]).includes(k));
   return { entry: e, sidecar: { password: p.password ?? "", date: p.date, date_gmt_null: p.date_gmt === null, modified: p.modified, keys, taxonomies, ...(Object.keys(metaKeys).length ? { metaKeys } : {}), ...(nulls.length ? { metaNull: nulls } : {}) } };
@@ -150,8 +153,8 @@ export function toWpPost(e: EntryV04, sidecar?: WpPostSidecar, opts: WpOptions =
     type: e.kind,
     slug: e.slug,
     status: e.visibility === "private" && e.status === "published" ? "private" : STATUS_OUT[e.status],
-    date: sidecar ? sidecar.date : gmtOut(e.created_at),
-    date_gmt: sidecar?.date_gmt_null ? null : gmtOut(e.created_at),
+    date: sidecar ? sidecar.date : gmtOut(e.published_at ?? e.created_at),
+    date_gmt: sidecar?.date_gmt_null ? null : gmtOut(e.published_at ?? e.created_at),
     modified: sidecar ? sidecar.modified : gmtOut(e.updated_at),
     modified_gmt: gmtOut(e.updated_at),
     password: sidecar?.password ?? "",
