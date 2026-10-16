@@ -1,17 +1,22 @@
+// LEGACY: Codex v0.3.0 shapes, kept so Library/readers/defineAdapter and the v0.3 validator keep working.
+// The current contract is Codex v0.4 (src/v04.ts); only v0.4 JSON Schemas are published.
 // TypeScript shapes of the Codex JSON wire contract (github.com/fastygo/codex, v0.3.0):
 // content.Entry, schema.Manifest, taxonomy.Definition/Term/Assignment, revision.Revision.
 // Field names are the wire names (snake_case) on purpose. Timestamps are RFC 3339 strings.
 
-/** Codex release these types and schemas are pinned to. */
-export const CODEX_VERSION = "0.3.0";
-/** Major.minor path segment of the public schema URLs. */
-export const SCHEMA_LINE = "v0.3";
+/** Codex release the published schemas follow (v0.4 core, see src/v04.ts). */
+export const CODEX_VERSION = "0.4.0";
+/** Codex line label. Schema URLs are unversioned until v0.5. */
+export const SCHEMA_LINE = "v0.4";
+/** Codex release of the legacy types in this file. */
+export const CODEX_V03_VERSION = "0.3.0";
 export const CODEX_MODULE = "github.com/fastygo/codex";
 export const CODEX_REPOSITORY = "https://github.com/fastygo/codex";
 /** Base URL of the public schema site. Deployed from main on Vercel. */
 export const SCHEMA_BASE_URL = "https://schema.buildy.tw";
-export const schemaUrl = (name: "entry" | "manifest" | "taxonomy" | "revision", line: string = SCHEMA_LINE) =>
-  `${SCHEMA_BASE_URL}/${line}/${name}.schema.json`;
+/** Stable URL of a published v0.4 schema (unversioned until v0.5). */
+export const schemaUrl = (name: "entry" | "term" | "taxonomy" | "comment" | "menu" | "dictionary" | "manifest" | "revision") =>
+  `${SCHEMA_BASE_URL}/${name}.schema.json`;
 
 export type Status = "draft" | "scheduled" | "published" | "archived" | "trashed";
 export type Visibility = "public" | "private";
