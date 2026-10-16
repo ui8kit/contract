@@ -17,6 +17,16 @@ import { validateCollectionV04, type EntryV04 } from "@ui8kit/contract";
 const issues = validateCollectionV04({ entries: [{ file: "post-4.json", data }], terms, comments, menus, dictionaries });
 ```
 
+Pass a manifest to check entry `metadata` against the resource of the entry's kind: `validateCollectionV04(collection, { manifest })`.
+
+- Field types are the manifest's own (`manifest.schema.json`, unchanged): `string/text/textarea/richtext/markdown` → string, `number` → finite number (`fastygo.codex/integer` rule → integer), `boolean`, `datetime` → RFC 3339, `select` → one of `options`, `collection` → array (each item checked against `items`), `object` → nested `fields`, `relation` → id (one-to-one) or id array, which must exist and have the relation's `target` kind. `json`, `computed`, `encrypted` and unknown types accept any value.
+- `required` fields missing, empty or null → error `manifest.field_required`; wrong type → error `manifest.field_invalid`.
+- Kind not in the manifest → **warning** `manifest.kind_unknown` (metadata not checked): new kinds can appear before their manifest. Metadata key not declared for the kind → **warning** `manifest.metadata_unknown`. Warnings carry `severity: "warning"`; errors have no `severity`.
+- Manifest fields whose id is a core entry key (`title`, `slug`, …) describe the core field and are not looked up in metadata.
+- Without a manifest, metadata is not checked at all.
+
+The WordPress adapter exports `wpManifest()` (post/page with the `footnotes` meta seen on the sample site; pass `extraFields` for more registered meta).
+
 The validator checks each record's shape (strict keys) and the set rules: `(id, locale)` unique; entry `slug` unique within `(kind, locale, parent_id)`; term `slug` unique within `(taxonomy_id, locale, parent_id)`; parent / term / comment references.
 
 Schemas (draft 2020-12), stable unversioned URLs (no consumers yet; versioned URLs start at v0.5):
