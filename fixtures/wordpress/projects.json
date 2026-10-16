@@ -1,0 +1,752 @@
+[
+    {
+        "id": 14,
+        "date": "2026-10-15T23:25:57",
+        "date_gmt": "2026-10-15T23:25:57",
+        "guid": {
+            "rendered": "http://localhost/work/project/kinfolk-studio/",
+            "raw": "http://localhost/work/project/kinfolk-studio/"
+        },
+        "modified": "2026-10-15T23:25:57",
+        "modified_gmt": "2026-10-15T23:25:57",
+        "password": "",
+        "slug": "kinfolk-studio",
+        "status": "publish",
+        "type": "project",
+        "link": "http://localhost/work/project/kinfolk-studio/",
+        "title": {
+            "raw": "Kinfolk Studio website",
+            "rendered": "Kinfolk Studio website"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A focused Web engagement for Kinfolk: research, system design and a calm, fast delivery.",
+            "rendered": "<p>A focused Web engagement for Kinfolk: research, system design and a calm, fast delivery.</p>\n",
+            "protected": false
+        },
+        "featured_media": 15,
+        "menu_order": 5,
+        "template": "",
+        "meta": {
+            "_folio_client": "Kinfolk",
+            "_folio_year": "2024",
+            "_folio_role": "WordPress build",
+            "_folio_url": "https://example.com/kinfolk-studio"
+        },
+        "project_type": [
+            3
+        ],
+        "permalink_template": "http://localhost/work/project/%pagename%/",
+        "generated_slug": "kinfolk-studio-website",
+        "class_list": [
+            "post-14",
+            "project",
+            "type-project",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "project_type-web"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/14",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/project"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/15"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=14"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "project_type",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/project_type?post=14"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/14"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/14"
+                }
+            ],
+            "wp:action-create-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/14"
+                }
+            ],
+            "wp:action-assign-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/14"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 12,
+        "date": "2026-10-15T23:25:57",
+        "date_gmt": "2026-10-15T23:25:57",
+        "guid": {
+            "rendered": "http://localhost/work/project/orbit-app/",
+            "raw": "http://localhost/work/project/orbit-app/"
+        },
+        "modified": "2026-10-15T23:25:57",
+        "modified_gmt": "2026-10-15T23:25:57",
+        "password": "",
+        "slug": "orbit-app",
+        "status": "publish",
+        "type": "project",
+        "link": "http://localhost/work/project/orbit-app/",
+        "title": {
+            "raw": "Orbit mobile app",
+            "rendered": "Orbit mobile app"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A focused Product engagement for Orbit Health: research, system design and a calm, fast delivery.",
+            "rendered": "<p>A focused Product engagement for Orbit Health: research, system design and a calm, fast delivery.</p>\n",
+            "protected": false
+        },
+        "featured_media": 13,
+        "menu_order": 4,
+        "template": "",
+        "meta": {
+            "_folio_client": "Orbit Health",
+            "_folio_year": "2025",
+            "_folio_role": "UX lead",
+            "_folio_url": "https://example.com/orbit-app"
+        },
+        "project_type": [
+            4
+        ],
+        "permalink_template": "http://localhost/work/project/%pagename%/",
+        "generated_slug": "orbit-mobile-app",
+        "class_list": [
+            "post-12",
+            "project",
+            "type-project",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "project_type-product"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/12",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/project"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/13"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=12"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "project_type",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/project_type?post=12"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/12"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/12"
+                }
+            ],
+            "wp:action-create-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/12"
+                }
+            ],
+            "wp:action-assign-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/12"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 10,
+        "date": "2026-10-15T23:25:56",
+        "date_gmt": "2026-10-15T23:25:56",
+        "guid": {
+            "rendered": "http://localhost/work/project/ember-coffee/",
+            "raw": "http://localhost/work/project/ember-coffee/"
+        },
+        "modified": "2026-10-15T23:25:56",
+        "modified_gmt": "2026-10-15T23:25:56",
+        "password": "",
+        "slug": "ember-coffee",
+        "status": "publish",
+        "type": "project",
+        "link": "http://localhost/work/project/ember-coffee/",
+        "title": {
+            "raw": "Ember Coffee e-commerce",
+            "rendered": "Ember Coffee e-commerce"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A focused Web engagement for Ember Roasters: research, system design and a calm, fast delivery.",
+            "rendered": "<p>A focused Web engagement for Ember Roasters: research, system design and a calm, fast delivery.</p>\n",
+            "protected": false
+        },
+        "featured_media": 11,
+        "menu_order": 3,
+        "template": "",
+        "meta": {
+            "_folio_client": "Ember Roasters",
+            "_folio_year": "2025",
+            "_folio_role": "Design & build",
+            "_folio_url": "https://example.com/ember-coffee"
+        },
+        "project_type": [
+            3
+        ],
+        "permalink_template": "http://localhost/work/project/%pagename%/",
+        "generated_slug": "ember-coffee-e-commerce",
+        "class_list": [
+            "post-10",
+            "project",
+            "type-project",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "project_type-web"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/10",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/project"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/11"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=10"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "project_type",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/project_type?post=10"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/10"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/10"
+                }
+            ],
+            "wp:action-create-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/10"
+                }
+            ],
+            "wp:action-assign-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/10"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 8,
+        "date": "2026-10-15T23:25:55",
+        "date_gmt": "2026-10-15T23:25:55",
+        "guid": {
+            "rendered": "http://localhost/work/project/field-notes-magazine/",
+            "raw": "http://localhost/work/project/field-notes-magazine/"
+        },
+        "modified": "2026-10-15T23:25:55",
+        "modified_gmt": "2026-10-15T23:25:55",
+        "password": "",
+        "slug": "field-notes-magazine",
+        "status": "publish",
+        "type": "project",
+        "link": "http://localhost/work/project/field-notes-magazine/",
+        "title": {
+            "raw": "Field Notes magazine",
+            "rendered": "Field Notes magazine"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A focused Editorial engagement for Field Notes: research, system design and a calm, fast delivery.",
+            "rendered": "<p>A focused Editorial engagement for Field Notes: research, system design and a calm, fast delivery.</p>\n",
+            "protected": false
+        },
+        "featured_media": 9,
+        "menu_order": 2,
+        "template": "",
+        "meta": {
+            "_folio_client": "Field Notes",
+            "_folio_year": "2025",
+            "_folio_role": "Layout & type",
+            "_folio_url": "https://example.com/field-notes-magazine"
+        },
+        "project_type": [
+            5
+        ],
+        "permalink_template": "http://localhost/work/project/%pagename%/",
+        "generated_slug": "field-notes-magazine",
+        "class_list": [
+            "post-8",
+            "project",
+            "type-project",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "project_type-editorial"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/8",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/project"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/9"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=8"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "project_type",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/project_type?post=8"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/8"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/8"
+                }
+            ],
+            "wp:action-create-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/8"
+                }
+            ],
+            "wp:action-assign-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/8"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 6,
+        "date": "2026-10-15T23:25:54",
+        "date_gmt": "2026-10-15T23:25:54",
+        "guid": {
+            "rendered": "http://localhost/work/project/atlas-dashboard/",
+            "raw": "http://localhost/work/project/atlas-dashboard/"
+        },
+        "modified": "2026-10-15T23:25:54",
+        "modified_gmt": "2026-10-15T23:25:54",
+        "password": "",
+        "slug": "atlas-dashboard",
+        "status": "publish",
+        "type": "project",
+        "link": "http://localhost/work/project/atlas-dashboard/",
+        "title": {
+            "raw": "Atlas analytics dashboard",
+            "rendered": "Atlas analytics dashboard"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A focused Product engagement for Atlas Labs: research, system design and a calm, fast delivery.",
+            "rendered": "<p>A focused Product engagement for Atlas Labs: research, system design and a calm, fast delivery.</p>\n",
+            "protected": false
+        },
+        "featured_media": 7,
+        "menu_order": 1,
+        "template": "",
+        "meta": {
+            "_folio_client": "Atlas Labs",
+            "_folio_year": "2026",
+            "_folio_role": "Product design",
+            "_folio_url": "https://example.com/atlas-dashboard"
+        },
+        "project_type": [
+            4
+        ],
+        "permalink_template": "http://localhost/work/project/%pagename%/",
+        "generated_slug": "atlas-analytics-dashboard",
+        "class_list": [
+            "post-6",
+            "project",
+            "type-project",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "project_type-product"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/6",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/project"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/7"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=6"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "project_type",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/project_type?post=6"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/6"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/6"
+                }
+            ],
+            "wp:action-create-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/6"
+                }
+            ],
+            "wp:action-assign-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/6"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "date": "2026-10-15T23:25:54",
+        "date_gmt": "2026-10-15T23:25:54",
+        "guid": {
+            "rendered": "http://localhost/work/project/northwind-rebrand/",
+            "raw": "http://localhost/work/project/northwind-rebrand/"
+        },
+        "modified": "2026-10-15T23:25:54",
+        "modified_gmt": "2026-10-15T23:25:54",
+        "password": "",
+        "slug": "northwind-rebrand",
+        "status": "publish",
+        "type": "project",
+        "link": "http://localhost/work/project/northwind-rebrand/",
+        "title": {
+            "raw": "Northwind rebrand",
+            "rendered": "Northwind rebrand"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n<!-- wp:paragraph --><p>Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<h2 class=\"wp-block-heading\">Why it matters</h2>\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\"><p>Simplicity is the ultimate sophistication.</p></blockquote>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n<ul class=\"wp-block-list\"><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul>\n<p class=\"wp-block-paragraph\">Templates are written in Latte and composed from UI8Kit primitives: Box, Stack, Card, Button, Badge. The same contract renders identically in PHP, React or Go.</p>\n<p class=\"wp-block-paragraph\">Icons come from Lucide and are inlined as SVG with proper aria attributes, so they inherit the current text color and scale with the type.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A focused Branding engagement for Northwind Co.: research, system design and a calm, fast delivery.",
+            "rendered": "<p>A focused Branding engagement for Northwind Co.: research, system design and a calm, fast delivery.</p>\n",
+            "protected": false
+        },
+        "featured_media": 5,
+        "menu_order": 0,
+        "template": "",
+        "meta": {
+            "_folio_client": "Northwind Co.",
+            "_folio_year": "2026",
+            "_folio_role": "Art direction",
+            "_folio_url": "https://example.com/northwind-rebrand"
+        },
+        "project_type": [
+            2
+        ],
+        "permalink_template": "http://localhost/work/project/%pagename%/",
+        "generated_slug": "northwind-rebrand",
+        "class_list": [
+            "post-4",
+            "project",
+            "type-project",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "project_type-branding"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/4",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/project"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/5"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=4"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "project_type",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/project_type?post=4"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/4"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/4"
+                }
+            ],
+            "wp:action-create-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/4"
+                }
+            ],
+            "wp:action-assign-project_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project/4"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]

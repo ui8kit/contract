@@ -1,0 +1,198 @@
+[
+    {
+        "id": 2,
+        "count": 1,
+        "description": "",
+        "link": "http://localhost/work/type/branding/",
+        "name": "Branding",
+        "slug": "branding",
+        "taxonomy": "project_type",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type/2",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/project_type"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project?project_type=2"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "count": 1,
+        "description": "",
+        "link": "http://localhost/work/type/editorial/",
+        "name": "Editorial",
+        "slug": "editorial",
+        "taxonomy": "project_type",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type/5",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/project_type"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project?project_type=5"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "count": 2,
+        "description": "",
+        "link": "http://localhost/work/type/product/",
+        "name": "Product",
+        "slug": "product",
+        "taxonomy": "project_type",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type/4",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/project_type"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project?project_type=4"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "count": 2,
+        "description": "",
+        "link": "http://localhost/work/type/web/",
+        "name": "Web",
+        "slug": "web",
+        "taxonomy": "project_type",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type/3",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project_type"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/project_type"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/project?project_type=3"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]

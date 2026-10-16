@@ -1,0 +1,149 @@
+[
+    {
+        "id": 4,
+        "count": 2,
+        "description": "",
+        "link": "http://localhost/shop/category/accessories/",
+        "name": "Accessories",
+        "slug": "accessories",
+        "taxonomy": "product_cat",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product_cat/4",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product_cat"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/product_cat"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product?product_cat=4"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "count": 3,
+        "description": "",
+        "link": "http://localhost/shop/category/home/",
+        "name": "Home",
+        "slug": "home",
+        "taxonomy": "product_cat",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product_cat/3",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product_cat"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/product_cat"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product?product_cat=3"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "count": 3,
+        "description": "",
+        "link": "http://localhost/shop/category/kitchen/",
+        "name": "Kitchen",
+        "slug": "kitchen",
+        "taxonomy": "product_cat",
+        "parent": 0,
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product_cat/2",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product_cat"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/taxonomies/product_cat"
+                }
+            ],
+            "wp:post_type": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product?product_cat=2"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]

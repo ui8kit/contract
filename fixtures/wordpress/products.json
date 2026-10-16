@@ -1,0 +1,1002 @@
+[
+    {
+        "id": 20,
+        "date": "2026-10-15T23:28:07",
+        "date_gmt": "2026-10-15T23:28:07",
+        "guid": {
+            "rendered": "http://localhost/product/leather-wallet/",
+            "raw": "http://localhost/product/leather-wallet/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "leather-wallet",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/leather-wallet/",
+        "title": {
+            "raw": "Leather card wallet",
+            "rendered": "Leather card wallet"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Accessories-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Accessories-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 21,
+        "menu_order": 7,
+        "template": "",
+        "meta": {
+            "_shop_price": 4800,
+            "_shop_sale_price": 3900,
+            "_shop_sku": "WAL-08",
+            "_shop_stock": 20
+        },
+        "product_cat": [
+            4
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "leather-card-wallet",
+        "class_list": [
+            "post-20",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-accessories"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/20",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/21"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=20"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=20"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/20"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/20"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/20"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/20"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 18,
+        "date": "2026-10-15T23:28:07",
+        "date_gmt": "2026-10-15T23:28:07",
+        "guid": {
+            "rendered": "http://localhost/product/canvas-tote/",
+            "raw": "http://localhost/product/canvas-tote/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "canvas-tote",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/canvas-tote/",
+        "title": {
+            "raw": "Canvas tote bag",
+            "rendered": "Canvas tote bag"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Accessories-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Accessories-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 19,
+        "menu_order": 6,
+        "template": "",
+        "meta": {
+            "_shop_price": 2800,
+            "_shop_sale_price": null,
+            "_shop_sku": "TOT-07",
+            "_shop_stock": null
+        },
+        "product_cat": [
+            4
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "canvas-tote-bag",
+        "class_list": [
+            "post-18",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-accessories"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/18",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/19"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=18"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=18"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/18"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/18"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/18"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/18"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 16,
+        "date": "2026-10-15T23:28:06",
+        "date_gmt": "2026-10-15T23:28:06",
+        "guid": {
+            "rendered": "http://localhost/product/oak-tray/",
+            "raw": "http://localhost/product/oak-tray/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "oak-tray",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/oak-tray/",
+        "title": {
+            "raw": "Oak serving tray",
+            "rendered": "Oak serving tray"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Home-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Home-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 17,
+        "menu_order": 5,
+        "template": "",
+        "meta": {
+            "_shop_price": 6400,
+            "_shop_sale_price": null,
+            "_shop_sku": "TRY-06",
+            "_shop_stock": 0
+        },
+        "product_cat": [
+            3
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "oak-serving-tray",
+        "class_list": [
+            "post-16",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-home"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/16",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/17"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=16"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=16"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/16"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/16"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/16"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/16"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 14,
+        "date": "2026-10-15T23:28:06",
+        "date_gmt": "2026-10-15T23:28:06",
+        "guid": {
+            "rendered": "http://localhost/product/stoneware-vase/",
+            "raw": "http://localhost/product/stoneware-vase/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "stoneware-vase",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/stoneware-vase/",
+        "title": {
+            "raw": "Stoneware vase",
+            "rendered": "Stoneware vase"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Home-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Home-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 15,
+        "menu_order": 4,
+        "template": "",
+        "meta": {
+            "_shop_price": 4200,
+            "_shop_sale_price": null,
+            "_shop_sku": "VAS-05",
+            "_shop_stock": null
+        },
+        "product_cat": [
+            3
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "stoneware-vase",
+        "class_list": [
+            "post-14",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-home"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/14",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/15"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=14"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=14"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/14"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/14"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/14"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/14"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 12,
+        "date": "2026-10-15T23:28:05",
+        "date_gmt": "2026-10-15T23:28:05",
+        "guid": {
+            "rendered": "http://localhost/product/wool-throw/",
+            "raw": "http://localhost/product/wool-throw/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "wool-throw",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/wool-throw/",
+        "title": {
+            "raw": "Wool throw blanket",
+            "rendered": "Wool throw blanket"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Home-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Home-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 13,
+        "menu_order": 3,
+        "template": "",
+        "meta": {
+            "_shop_price": 12000,
+            "_shop_sale_price": 9600,
+            "_shop_sku": "THR-04",
+            "_shop_stock": 5
+        },
+        "product_cat": [
+            3
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "wool-throw-blanket",
+        "class_list": [
+            "post-12",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-home"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/12",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/13"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=12"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=12"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/12"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/12"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/12"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/12"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 10,
+        "date": "2026-10-15T23:28:05",
+        "date_gmt": "2026-10-15T23:28:05",
+        "guid": {
+            "rendered": "http://localhost/product/linen-apron/",
+            "raw": "http://localhost/product/linen-apron/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "linen-apron",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/linen-apron/",
+        "title": {
+            "raw": "Linen apron",
+            "rendered": "Linen apron"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Kitchen-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Kitchen-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 11,
+        "menu_order": 2,
+        "template": "",
+        "meta": {
+            "_shop_price": 3600,
+            "_shop_sale_price": null,
+            "_shop_sku": "APR-03",
+            "_shop_stock": null
+        },
+        "product_cat": [
+            2
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "linen-apron",
+        "class_list": [
+            "post-10",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-kitchen"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/10",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/11"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=10"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=10"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/10"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/10"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/10"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/10"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 8,
+        "date": "2026-10-15T23:28:04",
+        "date_gmt": "2026-10-15T23:28:04",
+        "guid": {
+            "rendered": "http://localhost/product/pour-over-set/",
+            "raw": "http://localhost/product/pour-over-set/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "pour-over-set",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/pour-over-set/",
+        "title": {
+            "raw": "Pour-over coffee set",
+            "rendered": "Pour-over coffee set"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Kitchen-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Kitchen-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 9,
+        "menu_order": 1,
+        "template": "",
+        "meta": {
+            "_shop_price": 5400,
+            "_shop_sale_price": 4500,
+            "_shop_sku": "POUR-02",
+            "_shop_stock": 12
+        },
+        "product_cat": [
+            2
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "pour-over-coffee-set",
+        "class_list": [
+            "post-8",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-kitchen"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/8",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/9"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=8"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=8"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/8"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/8"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/8"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/8"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 6,
+        "date": "2026-10-15T23:28:04",
+        "date_gmt": "2026-10-15T23:28:04",
+        "guid": {
+            "rendered": "http://localhost/product/ceramic-mug/",
+            "raw": "http://localhost/product/ceramic-mug/"
+        },
+        "modified": "2026-10-16T20:56:48",
+        "modified_gmt": "2026-10-16T20:56:48",
+        "password": "",
+        "slug": "ceramic-mug",
+        "status": "publish",
+        "type": "product",
+        "link": "http://localhost/product/ceramic-mug/",
+        "title": {
+            "raw": "Ceramic mug",
+            "rendered": "Ceramic mug"
+        },
+        "content": {
+            "raw": "<!-- wp:paragraph --><p>Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p><!-- /wp:paragraph -->\n<!-- wp:paragraph --><p>Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p><!-- /wp:paragraph -->\n",
+            "rendered": "<p class=\"wp-block-paragraph\">Good design is as little design as possible. We strip away everything that does not serve the reader, and what remains is calm, legible and quick to load.</p>\n<p class=\"wp-block-paragraph\">Every layout here sits on an 8px grid. Spacing inside controls may use 4px steps; everything else moves in multiples of eight, which keeps rhythm consistent across pages.</p>\n<p class=\"wp-block-paragraph\">Colors are never hard-coded. Each theme ships a small set of CSS variable tokens — background, foreground, primary, muted, border — and every component reads from them.</p>\n",
+            "protected": false,
+            "block_version": 1
+        },
+        "excerpt": {
+            "raw": "A Kitchen-ready essential, made to last and designed to be used every day.",
+            "rendered": "<p>A Kitchen-ready essential, made to last and designed to be used every day.</p>\n",
+            "protected": false
+        },
+        "featured_media": 7,
+        "menu_order": 0,
+        "template": "",
+        "meta": {
+            "_shop_price": 1800,
+            "_shop_sale_price": null,
+            "_shop_sku": "MUG-01",
+            "_shop_stock": null
+        },
+        "product_cat": [
+            2
+        ],
+        "permalink_template": "http://localhost/product/%pagename%/",
+        "generated_slug": "ceramic-mug",
+        "class_list": [
+            "post-6",
+            "product",
+            "type-product",
+            "status-publish",
+            "has-post-thumbnail",
+            "hentry",
+            "product_cat-kitchen"
+        ],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/6",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/types/product"
+                }
+            ],
+            "wp:featuredmedia": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/media/7"
+                }
+            ],
+            "wp:attachment": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/media?parent=6"
+                }
+            ],
+            "wp:term": [
+                {
+                    "taxonomy": "product_cat",
+                    "embeddable": true,
+                    "href": "http://localhost/wp-json/wp/v2/product_cat?post=6"
+                }
+            ],
+            "wp:action-publish": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/6"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/6"
+                }
+            ],
+            "wp:action-create-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/6"
+                }
+            ],
+            "wp:action-assign-product_cat": [
+                {
+                    "href": "http://localhost/wp-json/wp/v2/product/6"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]
