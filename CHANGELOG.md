@@ -2,12 +2,26 @@
 
 ## 0.2.0 (unreleased)
 
+Hardening:
+
+- Issue code registry `ISSUE_CODES_V04` / `WARNING_CODES_V04` / `IssueCodeV04`, documented in the README with the code grammar; a test keeps the registry, the validator and the README in sync.
+- Single source: `REQUIRED_V04`, `VISIBILITIES_V04`, `TAXONOMY_MODES_V04` in `src/v04.ts` feed the JSON Schemas; `KEYS_V04` is `as const`. `test/agreement.test.ts` checks types ↔ keys ↔ required lists at compile time and schemas ↔ validator verdicts at run time (generated schemas are byte-identical).
+- New checks: `core.entry.parent_cycle` (per locale), `core.term.parent_cycle` (per taxonomy and locale), `core.menu.parent_cycle`.
+- Money: amounts must be safe integers; one currency per entry, shared by money in nested collections / objects (order lines), resolved from any money rule's `currency_field`.
+- WordPress adapter fix: a scheduled (future) post keeps `modified_gmt` on the round trip (core `created_at` = modified, WP date in `published_at`).
+- `test/edge.test.ts`: statuses (pending, private, sticky, draft with null `date_gmt`, future, trash round trips), null dates, nested pages and terms, six locales, dictionaries, money edge cases, nested menus, comments.
+- README: extension points, public API and the 0.x semver policy.
+
+Breaking (vs earlier 0.2.0 snapshots): `core.entry.type` / `core.term.type` / `core.settings.type` → `*.type_invalid`; `core.entry.parent_kind` → `core.entry.parent_kind_invalid`; `core.metadata.core_key` → `core.metadata_key_shadowed`.
+
+Features:
+
 - Codex v0.4 core (docs/core-draft.md): `EntryV04`, `TermV04`, `CommentV04`, `MenuV04`, `DictionaryV04`, `RevisionV04`; `validateCollectionV04` with (id, locale), slug and term-slug uniqueness.
 - JSON Schemas for v0.4 at stable unversioned URLs (`https://schema.buildy.tw/<name>.schema.json`); `/v0.3/` and `/latest/` removed.
 - WordPress adapter at `@ui8kit/contract/adapters/wordpress` (`fromWpPost`/`toWpPost`, `fromWpTerm`/`toWpTerm`, sidecar for password and local dates), with real REST fixtures and round-trip tests.
 - `validateCollectionV04(c, { manifest })` checks entry metadata against the manifest (required, types, select options, collections, objects, relations); unknown kind / unknown metadata key are warnings.
 - `wpManifest()` in the WordPress adapter.
-- `fastygo.codex/money`: integer minor units + ISO 4217 currency (entry field or settings default); `settings` schema (`https://schema.buildy.tw/settings.schema.json`), `checkSettingsV04`, `settings` in collections; warning `core.metadata.core_key`.
+- `fastygo.codex/money`: integer minor units + ISO 4217 currency (entry field or settings default); `settings` schema (`https://schema.buildy.tw/settings.schema.json`), `checkSettingsV04`, `settings` in collections; warning `core.metadata_key_shadowed`.
 - WordPress adapter: all taxonomies of a type → terms (`taxonomies` option), original key set kept (no foreign keys written back), `metaPrefix`, null meta, `fromWpSettings`/`toWpSettings`; real fixtures for projects, products, settings.
 - v0.3 types/validator kept as legacy.
 
