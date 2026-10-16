@@ -30,7 +30,7 @@ export const KEYS_V04 = {
   termRef: ["taxonomy", "term_id"],
   discussion: ["comments", "pings"],
   target: ["kind", "id"],
-};
+} as const;
 
 const IDENT = /^[a-z][a-z0-9_-]{0,62}$/;
 const LOCALE = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;
@@ -42,7 +42,16 @@ const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 const blank = (v: unknown) => str(v).trim() === "";
 const ts = (v: unknown) => (typeof v === "string" && RFC3339.test(v) ? Date.parse(v) : NaN);
-const closed = (add: Add, o: Obj, keys: string[], p: string) => { for (const k of Object.keys(o)) if (!keys.includes(k)) add("decode.unknown_field", `${p}.${k}`, `unknown field "${k}"`); };
+/** Ids whose parent chain loops back (a -> b -> a). Self-parents are reported separately as *_parent_self. */
+const cyclic = (parentOf: Map<string, string>): Set<string> => {
+  const bad = new Set<string>();
+  for (const start of parentOf.keys()) {
+    const seen = new Set<string>();
+    for (let cur = parentOf.get(start); cur !== undefined && !seen.has(cur); cur = parentOf.get(cur)) { if (cur === start) { bad.add(start); break; } seen.add(cur); }
+  }
+  return bad;
+};
+const closed = (add: Add, o: Obj, keys: readonly string[], p: string) => { for (const k of Object.keys(o)) if (!keys.includes(k)) add("decode.unknown_field", `${p}.${k}`, `unknown field "${k}"`); };
 
 function common(o: Obj, p: string, add: Add, localeRequired = true) {
   if (blank(o.id)) add("core.id_required", `${p}.id`, "id is required");
@@ -77,12 +86,12 @@ export function checkEntryV04(o: unknown, p: string, add: Add) {
   if (o.visibility !== "public" && o.visibility !== "private") add("core.entry.visibility_invalid", `${p}.visibility`, "visibility must be public or private");
   if (blank(o.slug)) add("core.entry.slug_required", `${p}.slug`, "slug is required (string)");
   if (typeof o.title !== "string") add("core.entry.title_required", `${p}.title`, "title is required (string, may be empty)");
-  for (const k of ["content", "excerpt", "author_id", "parent_id", "featured_media_id", "template", "format"]) if (o[k] !== undefined && typeof o[k] !== "string") add("core.entry.type", `${p}.${k}`, `${k} must be a string`);
+  for (const k of ["content", "excerpt", "author_id", "parent_id", "featured_media_id", "template", "format"]) if (o[k] !== undefined && typeof o[k] !== "string") add("core.entry.type_invalid", `${p}.${k}`, `${k} must be a string`);
   if (o.parent_id && o.parent_id === o.id) add("core.entry.parent_self", `${p}.parent_id`, "entry cannot be its own parent");
-  if (o.order !== undefined && !Number.isInteger(o.order)) add("core.entry.type", `${p}.order`, "order must be an integer");
-  if (o.pinned !== undefined && typeof o.pinned !== "boolean") add("core.entry.type", `${p}.pinned`, "pinned must be boolean");
+  if (o.order !== undefined && !Number.isInteger(o.order)) add("core.entry.type_invalid", `${p}.order`, "order must be an integer");
+  if (o.pinned !== undefined && typeof o.pinned !== "boolean") add("core.entry.type_invalid", `${p}.pinned`, "pinned must be boolean");
   if (o.discussion !== undefined) {
-    if (!isObj(o.discussion) || typeof o.discussion.comments !== "boolean" || typeof o.discussion.pings !== "boolean") add("core.entry.type", `${p}.discussion`, "discussion must be {comments: boolean, pings: boolean}");
+    if (!isObj(o.discussion) || typeof o.discussion.comments !== "boolean" || typeof o.discussion.pings !== "boolean") add("core.entry.type_invalid", `${p}.discussion`, "discussion must be {comments: boolean, pings: boolean}");
     else closed(add, o.discussion, KEYS_V04.discussion, `${p}.discussion`);
   }
   if (o.status === "scheduled" && !o.published_at) add("core.entry.published_at_required", `${p}.published_at`, "scheduled entry requires published_at");
@@ -110,7 +119,7 @@ export function checkTermV04(o: unknown, p: string, add: Add) {
   if (!IDENT.test(str(o.taxonomy_id))) add("core.term.taxonomy_invalid", `${p}.taxonomy_id`, "taxonomy_id is invalid");
   if (blank(o.name)) add("core.term.name_required", `${p}.name`, "name is required");
   if (blank(o.slug)) add("core.term.slug_required", `${p}.slug`, "slug is required");
-  if (o.description !== undefined && typeof o.description !== "string") add("core.term.type", `${p}.description`, "description must be a string");
+  if (o.description !== undefined && typeof o.description !== "string") add("core.term.type_invalid", `${p}.description`, "description must be a string");
   if (o.parent_id && o.parent_id === o.id) add("core.term.parent_self", `${p}.parent_id`, "term cannot be its own parent");
 }
 
@@ -141,6 +150,8 @@ export function checkMenuV04(o: unknown, p: string, add: Add) {
     if (it.target !== undefined) { if (!isObj(it.target) || blank(it.target.kind) || blank(it.target.id)) add("core.menu.target_invalid", `${ip}.target`, "target must be {kind, id}"); else closed(add, it.target, KEYS_V04.target, `${ip}.target`); }
   }
   for (const it of o.items) if (isObj(it) && it.parent_id && !ids.has(str(it.parent_id))) add("core.menu.parent_missing", p, `menu item parent "${str(it.parent_id)}" does not exist`);
+  const parents = new Map(o.items.filter((it): it is Obj => isObj(it) && !blank(it.parent_id) && it.parent_id !== it.id).map((it) => [str(it.id), str(it.parent_id)]));
+  for (const id of cyclic(parents)) add("core.menu.parent_cycle", p, `menu item "${id}" is its own ancestor`);
 }
 
 export function checkDictionaryV04(o: unknown, p: string, add: Add) {
@@ -158,10 +169,10 @@ export function checkSettingsV04(o: unknown, p: string, add: Add) {
   common(o, p, add);
   if (blank(o.title)) add("core.settings.title_required", `${p}.title`, "title is required");
   if (!LOCALE.test(str(o.language))) add("core.settings.language_invalid", `${p}.language`, "language must be a BCP 47 tag like \"en-US\"");
-  for (const k of ["description", "timezone", "logo_media_id", "icon_media_id", "front_page_id", "posts_page_id"]) if (o[k] !== undefined && typeof o[k] !== "string") add("core.settings.type", `${p}.${k}`, `${k} must be a string`);
+  for (const k of ["description", "timezone", "logo_media_id", "icon_media_id", "front_page_id", "posts_page_id"]) if (o[k] !== undefined && typeof o[k] !== "string") add("core.settings.type_invalid", `${p}.${k}`, `${k} must be a string`);
   if (o.timezone !== undefined && !/^[A-Za-z_]+(\/[A-Za-z0-9_+-]+)*$|^UTC$/.test(str(o.timezone))) add("core.settings.timezone_invalid", `${p}.timezone`, "timezone must be an IANA name like Europe/Moscow");
-  if (o.posts_per_page !== undefined && !(Number.isInteger(o.posts_per_page) && (o.posts_per_page as number) >= 1)) add("core.settings.type", `${p}.posts_per_page`, "posts_per_page must be an integer >= 1");
-  if (o.comments_open !== undefined && typeof o.comments_open !== "boolean") add("core.settings.type", `${p}.comments_open`, "comments_open must be boolean");
+  if (o.posts_per_page !== undefined && !(Number.isInteger(o.posts_per_page) && (o.posts_per_page as number) >= 1)) add("core.settings.type_invalid", `${p}.posts_per_page`, "posts_per_page must be an integer >= 1");
+  if (o.comments_open !== undefined && typeof o.comments_open !== "boolean") add("core.settings.type_invalid", `${p}.comments_open`, "comments_open must be boolean");
   if (o.currency !== undefined && !CURRENCY.test(str(o.currency))) add("core.settings.currency_invalid", `${p}.currency`, "currency must be an ISO 4217 code like USD");
 }
 
@@ -185,7 +196,7 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
   run(c.dictionaries, checkDictionaryV04);
   const settings = run(c.settings, checkSettingsV04);
   unique(settings, "core.settings.key_duplicated", (o) => `(${o.id}, ${o.locale})`, "settings key");
-  for (const { file, o } of entries) for (const k of Object.keys(isObj(o.metadata) ? o.metadata : {})) if ((KEYS_V04.entry as string[]).includes(k)) add("core.metadata.core_key", `${file}.metadata.${k}`, `metadata key "${k}" is a core entry field; use the core field or rename it (e.g. "${k}_value")`, "warning");
+  for (const { file, o } of entries) for (const k of Object.keys(isObj(o.metadata) ? o.metadata : {})) if ((KEYS_V04.entry as readonly string[]).includes(k)) add("core.metadata_key_shadowed", `${file}.metadata.${k}`, `metadata key "${k}" is a core entry field; use the core field or rename it (e.g. "${k}_value")`, "warning");
 
   unique(entries, "core.entry.key_duplicated", (o) => `(${o.id}, ${o.locale})`, "entry key");
   unique(entries, "core.entry.slug_duplicated", (o) => `(${o.kind}, ${o.locale}, ${str(o.parent_id) || "-"}) slug "${o.slug}"`, "entry slug in");
@@ -197,8 +208,15 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
   const entryById = new Map<string, Obj>(entries.map(({ o }) => [str(o.id), o]));
   const termIds = new Set(terms.map(({ o }) => `${o.taxonomy_id}/${o.id}`));
   for (const { file, o } of entries) {
-    if (o.parent_id) { const par = entryById.get(str(o.parent_id)); if (!par) add("core.entry.parent_missing", `${file}.parent_id`, `parent "${o.parent_id}" does not exist`); else if (par.kind !== o.kind) add("core.entry.parent_kind", `${file}.parent_id`, `parent "${o.parent_id}" has another kind`); }
+    if (o.parent_id) { const par = entryById.get(str(o.parent_id)); if (!par) add("core.entry.parent_missing", `${file}.parent_id`, `parent "${o.parent_id}" does not exist`); else if (par.kind !== o.kind) add("core.entry.parent_kind_invalid", `${file}.parent_id`, `parent "${o.parent_id}" has another kind`); }
     if (terms.length) for (const t of (o.terms as Obj[] | undefined) ?? []) if (!termIds.has(`${t.taxonomy}/${t.term_id}`)) add("core.term_ref.missing", `${file}.terms`, `term ${t.taxonomy}/${t.term_id} does not exist`);
+  }
+  // nested pages / terms: the parent chain must end. Translations share the id, so the chain is checked per locale.
+  for (const [list, code] of [[entries, "core.entry.parent_cycle"], [terms, "core.term.parent_cycle"]] as const) {
+    const scope = (o: Obj) => `${list === terms ? `${o.taxonomy_id}/` : ""}${o.locale}`;
+    const parents = new Map<string, string>();
+    for (const { o } of list) if (!blank(o.parent_id) && o.parent_id !== o.id) parents.set(`${scope(o)}|${o.id}`, `${scope(o)}|${o.parent_id}`);
+    for (const k of cyclic(parents)) { const at = list.find(({ o }) => `${scope(o)}|${o.id}` === k)!; add(code, `${at.file}.parent_id`, `"${str(at.o.id)}" is its own ancestor`); }
   }
   const termById = new Map<string, Obj>(terms.map(({ o }) => [`${o.taxonomy_id}/${o.id}`, o]));
   for (const { file, o } of terms) if (o.parent_id && !termById.has(`${o.taxonomy_id}/${o.parent_id}`)) add("core.term.parent_missing", `${file}.parent_id`, `parent term "${o.parent_id}" does not exist`);
@@ -210,9 +228,10 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
 
 // ---- metadata against the manifest
 // Core entry keys are never metadata; a manifest field with such an id describes the core field and is skipped.
-const CORE_KEYS = new Set(KEYS_V04.entry);
+const CORE_KEYS = new Set<string>(KEYS_V04.entry);
 
-const hasMoney = (f: Field): boolean => (f.rules ?? []).some((r) => r.name === RULE_MONEY) || (f.items ? hasMoney(f.items) : false) || (f.fields ?? []).some(hasMoney);
+/** Money rules of a field and its nested items / fields (order lines carry money too). */
+const moneyRules = (f: Field): NonNullable<Field["rules"]> => [...(f.rules ?? []).filter((r) => r.name === RULE_MONEY), ...(f.items ? moneyRules(f.items) : []), ...(f.fields ?? []).flatMap(moneyRules)];
 
 function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Obj }[], byId: Map<string, Obj>, issues: IssueV04[], defaultCurrency?: string) {
   const err: Add = (code, path, message) => issues.push({ code, path, message });
@@ -226,7 +245,6 @@ function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Ob
     const fields = (res.record.fields ?? []).filter((f) => !CORE_KEYS.has(f.id));
     const md = (isObj(o.metadata) ? o.metadata : {}) as Record<string, { value: unknown }>;
     for (const k of Object.keys(md)) if (!fields.some((f) => f.id === k)) warn("manifest.metadata_unknown", `${file}.metadata.${k}`, `metadata key "${k}" is not a field of kind "${kind}"`);
-    let currencyChecked = false; // one currency issue per entry, not per money field
     for (const f of fields) {
       const v = md[f.id]?.value;
       const p = `${file}.metadata.${f.id}`;
@@ -234,15 +252,15 @@ function checkAgainstManifest(manifest: Manifest, entries: { file: string; o: Ob
       const rel = (res.record.relations ?? []).find((r) => r.id === f.id);
       const bad = valueIssue(f, v, rel, byId);
       if (bad) err("manifest.field_invalid", p, bad);
-      if (hasMoney(f) && !currencyChecked) {
-        currencyChecked = true;
-        // Money = integer minor units + an ISO 4217 currency: the entry's own field (rule arg currency_field, default
-        // "currency") or the default from settings / options.
-        const cf = (f.rules ?? []).find((r) => r.name === RULE_MONEY)?.args?.currency_field ?? "currency";
-        const own = md[cf]?.value;
-        if (own !== undefined) { if (typeof own !== "string" || !CURRENCY.test(own)) err("manifest.currency_invalid", `${file}.metadata.${cf}`, `currency must be an ISO 4217 code like USD`); }
-        else if (!defaultCurrency) err("manifest.currency_missing", p, `money field "${f.id}" needs a currency: metadata "${cf}" on the entry or a default in settings`);
-      }
+    }
+    // Money = integer minor units + one ISO 4217 currency per entry: the entry's own field (rule arg currency_field,
+    // default "currency"; nested order lines share it) or the default from settings / options. One issue per entry.
+    const money = fields.filter((f) => moneyRules(f).length && md[f.id]?.value !== undefined && md[f.id]?.value !== null);
+    if (money.length) {
+      const cfs = [...new Set(money.flatMap(moneyRules).map((r) => String(r.args?.currency_field ?? "currency")))];
+      const cf = cfs.find((k) => md[k]?.value !== undefined);
+      if (cf !== undefined) { const own = md[cf].value; if (typeof own !== "string" || !CURRENCY.test(own)) err("manifest.currency_invalid", `${file}.metadata.${cf}`, "currency must be an ISO 4217 code like USD"); }
+      else if (!defaultCurrency) err("manifest.currency_missing", `${file}.metadata.${money[0].id}`, `money field "${money[0].id}" needs a currency: metadata "${cfs.join("\" or \"")}" on the entry or a default in settings`);
     }
   }
 }
@@ -283,8 +301,9 @@ function valueIssue(f: Field, v: unknown, rel: Relation | undefined, byId: Map<s
     // json, computed, encrypted and unknown types: any value
   }
   for (const r of f.rules ?? []) {
-    if (r.name === RULE_INTEGER && !(typeof v === "number" && Number.isInteger(v))) return `"${f.id}" must be an integer`;
-    if (r.name === RULE_MONEY && !(typeof v === "number" && Number.isInteger(v))) return `"${f.id}" is money: an integer in minor units (cents), e.g. 1250 for 12.50`;
+    // safe integers only: beyond 2^53 a JSON number silently loses precision in JS, Go float64 and PHP float
+    if (r.name === RULE_INTEGER && !(typeof v === "number" && Number.isSafeInteger(v))) return `"${f.id}" must be a safe integer (|n| <= 2^53 - 1)`;
+    if (r.name === RULE_MONEY && !(typeof v === "number" && Number.isSafeInteger(v))) return `"${f.id}" is money: an integer in minor units (cents), e.g. 1250 for 12.50`;
     if (r.name === RULE_URI) { try { new URL(String(v)); } catch { return `"${f.id}" must be a URI`; } }
   }
   return null;

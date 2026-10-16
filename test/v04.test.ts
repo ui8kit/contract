@@ -27,7 +27,7 @@ const files = (list: unknown[], prefix: string) => list.map((data, i) => ({ file
 
 describe("v0.4 schemas agree with the validator's strict keys", () => {
   const props = (o: any) => Object.keys(o.properties).sort();
-  const pairs: [string, any, string[]][] = [
+  const pairs: [string, any, readonly string[]][] = [
     ["entry", ALL_V04.entry, KEYS_V04.entry],
     ["term", ALL_V04.term, KEYS_V04.term],
     ["taxonomy definition", ALL_V04.taxonomy.$defs.Definition, KEYS_V04.definition],
@@ -260,7 +260,7 @@ describe("settings", () => {
     const s = { id: "site", locale: "en", title: "X", language: "en-US", version: 1, created_at: at, updated_at: at };
     const codes = (x: unknown[]) => validateCollectionV04({ settings: files(x, "s") }).map((i) => i.code);
     expect(codes([{ ...s, currency: "usd" }])).toEqual(["core.settings.currency_invalid"]);
-    expect(codes([{ ...s, posts_per_page: 0 }])).toEqual(["core.settings.type"]);
+    expect(codes([{ ...s, posts_per_page: 0 }])).toEqual(["core.settings.type_invalid"]);
     expect(codes([s, { ...s }])).toEqual(["core.settings.key_duplicated"]);
     expect(codes([{ ...s, timezone: "Moscow time" }])).toEqual(["core.settings.timezone_invalid"]);
     expect(ok("settings", { ...s, currency: "usd" })).toBe(false);
@@ -268,9 +268,9 @@ describe("settings", () => {
 });
 
 describe("metadata keys equal to core field names", () => {
-  test("warning core.metadata.core_key", () => {
+  test("warning core.metadata_key_shadowed", () => {
     const e = entries[0].entry;
     const issues = validateCollectionV04({ entries: files([{ ...e, metadata: { status: { value: "shipped" }, excerpt: { value: "x" } } }], "e") });
-    expect(issues.map((i) => [i.code, i.severity])).toEqual([["core.metadata.core_key", "warning"], ["core.metadata.core_key", "warning"]]);
+    expect(issues.map((i) => [i.code, i.severity])).toEqual([["core.metadata_key_shadowed", "warning"], ["core.metadata_key_shadowed", "warning"]]);
   });
 });

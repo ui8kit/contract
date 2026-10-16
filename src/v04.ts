@@ -15,7 +15,25 @@ export const ENTRY_STATUSES_V04 = ["draft", "pending", "scheduled", "published",
 export const COMMENT_STATUSES_V04 = ["approved", "hold", "spam", "trash"] as const;
 export type EntryStatusV04 = (typeof ENTRY_STATUSES_V04)[number];
 export type CommentStatusV04 = (typeof COMMENT_STATUSES_V04)[number];
-export type VisibilityV04 = "public" | "private";
+export const VISIBILITIES_V04 = ["public", "private"] as const;
+export type VisibilityV04 = (typeof VISIBILITIES_V04)[number];
+export const TAXONOMY_MODES_V04 = ["flat", "hierarchical"] as const;
+
+/**
+ * Required fields of each record type. Single source for the JSON Schemas (scripts/schemas-v04.ts) and the TS types:
+ * test/agreement.test.ts proves the schemas, the types and the validator agree.
+ */
+export const REQUIRED_V04 = {
+  entry: ["id", "locale", "kind", "status", "visibility", "slug", "title", "version", "created_at", "updated_at"],
+  term: ["id", "locale", "taxonomy_id", "name", "slug", "version", "created_at", "updated_at"],
+  definition: ["id", "locale", "label", "mode", "assigned_to_kinds", "version"],
+  comment: ["id", "entry_id", "content", "status", "version", "created_at", "updated_at"],
+  menu: ["id", "location", "locale", "items"],
+  menuItem: ["id", "label", "url"],
+  dictionary: ["locale", "messages"],
+  settings: ["id", "locale", "title", "language", "version", "created_at", "updated_at"],
+  revision: ["id", "entry_id", "locale", "version", "snapshot", "author_id", "created_at"],
+} as const;
 
 /** Where a record came from (migrations). `id` is always a string, even for numeric platform ids. */
 export type Origin = { system: string; id: string };
@@ -58,7 +76,7 @@ export type EntryV04 = Common & {
 };
 
 export type TaxonomyDefinitionV04 = {
-  id: string; locale: string; label: string; mode: "flat" | "hierarchical"; assigned_to_kinds: string[]; public?: boolean; version: number;
+  id: string; locale: string; label: string; mode: (typeof TAXONOMY_MODES_V04)[number]; assigned_to_kinds: string[]; public?: boolean; version: number;
 };
 /** A term; its translation is another TermV04 with the same id and another locale. */
 export type TermV04 = Common & {

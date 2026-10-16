@@ -1,6 +1,6 @@
-// Source of the Codex v0.4 JSON Schemas (draft 2020-12). `bun run gen` writes schemas/v0.4/ and public/v0.4/ (+ /latest/).
-// Kept in sync with src/validate-v04.ts (KEYS_V04) by test/v04.test.ts.
-import { CODEX_V04_VERSION, COMMENT_STATUSES_V04, ENTRY_STATUSES_V04, schemaUrlV04, type SchemaNameV04 } from "../src/v04.ts";
+// Source of the Codex v0.4 JSON Schemas (draft 2020-12). `bun run gen` writes schemas/*.schema.json and public/*.schema.json.
+// Enums and required lists come from src/v04.ts; test/agreement.test.ts keeps keys in sync with src/validate-v04.ts (KEYS_V04) and the TS types.
+import { CODEX_V04_VERSION, COMMENT_STATUSES_V04, ENTRY_STATUSES_V04, REQUIRED_V04, TAXONOMY_MODES_V04, VISIBILITIES_V04, schemaUrlV04, type SchemaNameV04 } from "../src/v04.ts";
 import { manifest as manifestV03 } from "./schemas.ts";
 
 const S = "https://json-schema.org/draft/2020-12/schema";
@@ -34,12 +34,12 @@ const meta = (name: SchemaNameV04, title: string) => ({
 export const entry = {
   ...meta("entry", "Codex v0.4 Entry"),
   type: "object", additionalProperties: false,
-  required: ["id", "locale", "kind", "status", "visibility", "slug", "title", "version", "created_at", "updated_at"],
+  required: [...REQUIRED_V04.entry],
   properties: {
     ...common,
     kind: ident,
     status: { enum: [...ENTRY_STATUSES_V04] },
-    visibility: { enum: ["public", "private"] },
+    visibility: { enum: [...VISIBILITIES_V04] },
     slug: nonEmpty, title: str, content: str, excerpt: str,
     author_id: str, parent_id: str, featured_media_id: str, template: str,
     terms: { type: "array", items: { type: "object", additionalProperties: false, required: ["taxonomy", "term_id"], properties: { taxonomy: ident, term_id: nonEmpty } } },
@@ -52,7 +52,7 @@ export const entry = {
 export const term = {
   ...meta("term", "Codex v0.4 Term (a translation is another term with the same id and another locale)"),
   type: "object", additionalProperties: false,
-  required: ["id", "locale", "taxonomy_id", "name", "slug", "version", "created_at", "updated_at"],
+  required: [...REQUIRED_V04.term],
   properties: { ...common, taxonomy_id: ident, name: nonEmpty, slug: nonEmpty, description: str, parent_id: str },
 };
 
@@ -65,8 +65,8 @@ export const taxonomy = {
       properties: { definition: { $ref: "#/$defs/Definition" }, terms: { type: "array", items: { $ref: schemaUrlV04("term") } } },
     },
     Definition: {
-      type: "object", additionalProperties: false, required: ["id", "locale", "label", "mode", "assigned_to_kinds", "version"],
-      properties: { id: ident, locale, label: nonEmpty, mode: { enum: ["flat", "hierarchical"] }, assigned_to_kinds: { type: "array", minItems: 1, uniqueItems: true, items: ident }, public: bool, version },
+      type: "object", additionalProperties: false, required: [...REQUIRED_V04.definition],
+      properties: { id: ident, locale, label: nonEmpty, mode: { enum: [...TAXONOMY_MODES_V04] }, assigned_to_kinds: { type: "array", minItems: 1, uniqueItems: true, items: ident }, public: bool, version },
     },
   },
 };
@@ -74,19 +74,19 @@ export const taxonomy = {
 export const comment = {
   ...meta("comment", "Codex v0.4 Comment (statuses as in WordPress core)"),
   type: "object", additionalProperties: false,
-  required: ["id", "entry_id", "content", "status", "version", "created_at", "updated_at"],
+  required: [...REQUIRED_V04.comment],
   properties: { ...common, entry_id: nonEmpty, parent_id: str, author_id: str, author_name: str, content: str, status: { enum: [...COMMENT_STATUSES_V04] } },
 };
 
 export const menu = {
   ...meta("menu", "Codex v0.4 Menu (labels are plain strings; translations live in dictionaries)"),
-  type: "object", additionalProperties: false, required: ["id", "location", "locale", "items"],
+  type: "object", additionalProperties: false, required: [...REQUIRED_V04.menu],
   properties: {
     id: nonEmpty, location: nonEmpty, locale,
     items: {
       type: "array",
       items: {
-        type: "object", additionalProperties: false, required: ["id", "label", "url"],
+        type: "object", additionalProperties: false, required: [...REQUIRED_V04.menuItem],
         properties: {
           id: nonEmpty, label: nonEmpty, url: nonEmpty, parent_id: str, order: { type: "integer" },
           target: { type: "object", additionalProperties: false, required: ["kind", "id"], properties: { kind: ident, id: nonEmpty } },
@@ -98,14 +98,14 @@ export const menu = {
 
 export const dictionary = {
   ...meta("dictionary", "Codex v0.4 dictionary (short strings only: menu labels, UI)"),
-  type: "object", additionalProperties: false, required: ["locale", "messages"],
+  type: "object", additionalProperties: false, required: [...REQUIRED_V04.dictionary],
   properties: { locale, source_locale: locale, messages: { type: "object", additionalProperties: str } },
 };
 
 export const settings = {
   ...meta("settings", "Codex v0.4 site settings (one record per site and locale)"),
   type: "object", additionalProperties: false,
-  required: ["id", "locale", "title", "language", "version", "created_at", "updated_at"],
+  required: [...REQUIRED_V04.settings],
   properties: {
     ...common,
     title: nonEmpty, description: str, language: locale,
@@ -125,7 +125,7 @@ export const manifest = { ...manifestV03, ...meta("manifest", "Codex v0.4 Manife
 export const revision = {
   ...meta("revision", "Codex v0.4 Revision (bound to (entry_id, locale))"),
   type: "object", additionalProperties: false,
-  required: ["id", "entry_id", "locale", "version", "snapshot", "author_id", "created_at"],
+  required: [...REQUIRED_V04.revision],
   properties: { id: nonEmpty, entry_id: nonEmpty, locale, version, snapshot: { $ref: schemaUrlV04("entry") }, author_id: nonEmpty, reason: str, created_at: time },
 };
 
