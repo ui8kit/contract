@@ -1,6 +1,6 @@
 # Codex v0.4 — черновик общего ядра данных
 
-Статус: черновик Codex v0.4, ред. 3. Все решения разделов 1–6 **согласованы**, открытых вопросов нет. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Реализовано в `@ui8kit/contract` 0.2.0: `src/v04.ts`, `src/validate-v04.ts`, схемы `https://schema.buildy.tw/<name>.schema.json` (без версии в адресе до v0.5), адаптер WordPress — `src/adapters/wordpress.ts`. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
+Статус: черновик Codex v0.4, ред. 5 (сверено с реализацией `@ui8kit/contract` 0.2.0: деньги, настройки, коды проверок). Все решения разделов 1–6 **согласованы**, открытых вопросов нет. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Реализовано в `@ui8kit/contract` 0.2.0: `src/v04.ts`, `src/validate-v04.ts`, схемы `https://schema.buildy.tw/<name>.schema.json` (без версии в адресе до v0.5), адаптер WordPress — `src/adapters/wordpress.ts`. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
 
 ## 1. Зачем
 
@@ -62,7 +62,7 @@
 - **user**: `kind:"user"`, `login` (или `slug`), `display_name`, `email?` (приватно), `roles` [string], `avatar_media_id?`. Пароли и токены — никогда.
 - **comment**: `kind:"comment"`, `entry_id`, `parent_id?`, `author_id?` или `author_name?`, `content`, `status`: `approved` | `hold` | `spam` | `trash` (как в ядре WordPress; `hold` = ждёт модерации). Статусы комментария — свой набор, не путать со статусами Entry.
 - **menu** (по образцу `fastygo/app-gocms` `menu.schema.json`): `{id, location, locale, items:[{id, label, url, parent_id?, order?, target?}]}`. `label` — строка; переводы — в словаре. `target?: {kind, id}` — необязательная ссылка на запись (url остаётся основным).
-- **settings**: `kind:"settings"`, `scope` (`site`, `theme`, `module:<имя>`), `values` { ключ: типизированное значение }. Например `title`, `tagline`, `locale`, `timezone`.
+- **settings** — отдельный тип записи (не entry), одна запись на сайт и язык, обычно `id:"site"`: `{id, locale, title, language, description?, timezone?, logo_media_id?, icon_media_id?, front_page_id?, posts_page_id?, posts_per_page?, comments_open?, currency?, origin?, metadata?}` + `version`, `created_at`, `updated_at`. `language` — BCP 47 (`en-US`), `timezone` — IANA (`Europe/Moscow`), `currency` — ISO 4217, валюта по умолчанию для денег. Схема `https://schema.buildy.tw/settings.schema.json`; ключ `(id, locale)` уникален. Из WordPress: `/wp/v2/settings` (`language` `en_US` ↔ `en-US`, `wpfasty_currency` ↔ `currency`; поля без пары в ядре — в sidecar адаптера).
 - **taxonomy / term** и **revision** — как в Codex v0.3.0, кроме языковых полей: строки + `locale`. Перевод термина — отдельная запись `(id, locale)` со своим `slug` (согласовано).
 
 ## 4. Переводы (согласовано)
@@ -91,17 +91,21 @@
 
 **4.3. Проверки валидатора контракта.** Пара `(id, locale)` уникальна. `slug` уникален в тройке `(kind, locale, parent_id)`, как у иерархических страниц WordPress; у плоских видов `parent_id` пустой, то есть фактически `(kind, locale)`. Для терминов — в `(taxonomy_id, locale, parent_id)`. Проверяет валидатор `@ui8kit/contract` / Codex v0.4.
 
+**4.4. Деньги.** Поле с правилом `fastygo.codex/money` хранит **целое число в минимальных единицах** (центы, копейки: `1250` = 12.50) — без дробей и строк, только безопасные целые (|n| ≤ 2^53 − 1, чтобы JS, Go и PHP читали точно). Ноль и отрицательные суммы (возвраты, скидки) допустимы. Валюта — ISO 4217 (`USD`, `EUR`), **одна на запись**: своё поле записи (`currency` или имя из аргумента правила `currency_field`), иначе `currency` из записи settings, иначе значение по умолчанию у валидатора. Деньги во вложенных полях (строки заказа: `collection` из `object`) используют ту же валюту. Нет валюты — ошибка `manifest.currency_missing`, неверный код — `manifest.currency_invalid` (одна ошибка на запись). Форматирование (символ, разделители, `Intl.NumberFormat` / `number_format_i18n`) — забота представления, не ядра.
+
+**4.5. Проверки и коды.** Валидатор возвращает `{code, path, message, severity?}`; у ошибок `severity` нет, предупреждения — `severity:"warning"` и запись не делают невалидной. Код — стабильная часть API (сообщения могут меняться). Грамматика: `<слой>.<область>.<проблема>` или `<слой>.<поле>_<проблема>` для общих полей; слои `decode` (не объект, лишнее поле), `core` (правила ядра), `manifest` (metadata против манифеста, только если он передан). Окончания: `_required`, `_invalid`, `_duplicated`, `_missing`, `_unknown`, `_cycle`, `_self`, `_order`, `_shadowed`, `_incomplete`. Помимо уникальности (4.3) проверяются ссылки (родитель, термины, запись комментария), циклы родителей (`core.entry.parent_cycle` — в пределах языка, `core.term.parent_cycle`, `core.menu.parent_cycle`), родитель того же `kind`. Предупреждения: `manifest.kind_unknown` (вид не описан — metadata не проверяется), `manifest.metadata_unknown`, `core.metadata_key_shadowed` (ключ metadata совпадает с полем ядра, например `status` — используйте `<kind>_status`). Полный список — `ISSUE_CODES_V04` и таблица в README.
+
 ## 5. Соответствие WordPress REST v2 (post/page) → ядро
 
 | WP поле | Поле ядра | Примечание |
 |---|---|---|
 | id | origin[{system:"wordpress", id:"<id>"}] | Наш `id` — свой. Числовой id только в origin |
-| date / date_gmt | published_at (или created_at для черновиков) | Берём `_gmt`, пишем в UTC |
+| date / date_gmt | published_at (опубликованные и запланированные), created_at | Берём `_gmt`, пишем в UTC. У черновика `date_gmt` = null → поля нет, null хранит sidecar. У запланированного `date_gmt` позже `modified`, поэтому created_at = modified |
 | modified / modified_gmt | updated_at | Берём `_gmt` |
 | slug | slug | |
 | status: publish / future / draft / pending / private / trash | published / scheduled / draft / pending / published + visibility:private / trashed | |
 | type (post/page/свой тип) | kind | |
-| password | — | **не переносим**: остаётся в WordPress (забота адаптера) |
+| password | — | **не переносим**: остаётся в sidecar адаптера |
 | title.raw | title | title.rendered — **игнор** |
 | content.raw | content | content.rendered, content.protected — **игнор** |
 | excerpt.raw | excerpt | excerpt.rendered — **игнор** |
@@ -115,7 +119,7 @@
 | menu_order (только page) | order | |
 | parent (page) | parent_id | 0 → поле отсутствует |
 | template | template | Пустая строка → отсутствует |
-| meta | metadata | Адаптер приводит типы; ключи с `_` — private |
+| meta | metadata | Типы из `register_post_meta` (деньги — целые центы); ключи с `_` — private; null (не задано) → ключа нет |
 | categories, tags (и свои таксономии) | terms[] | |
 | link, guid | — | **игнор** (вычисляются) |
 | _links, _embedded | — | **игнор** |
@@ -124,7 +128,7 @@
 
 Комментарии WP (`/wp/v2/comments`): `status` approved / hold / spam / trash → те же значения в kind `comment` (имена статусов по памяти — **не проверено** на живом ответе).
 
-Названия полей WP взяты из документации REST v2 по памяти; при реализации адаптера сверить с живым ответом (`?context=edit`) — **не проверено** на нашем сайте.
+Поля записей, терминов и настроек сверены с живыми ответами `context=edit` трёх сайтов wpfasty (8081–8083, фикстуры в `fixtures/wordpress/`); круговой перевод WP → ядро → WP даёт 0 различий. Комментарии WP на живом ответе не сверялись — **не проверено**.
 
 ## 6. Как сюда ложатся CRM и codegen-x
 
@@ -133,4 +137,4 @@
 
 ## 7. Открытые вопросы
 
-Нет — все вопросы закрыты (ред. 4).
+Нет — все вопросы закрыты (ред. 5).
