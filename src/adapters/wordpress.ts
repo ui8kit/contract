@@ -411,9 +411,17 @@ export function fromWpMedia(m: WpMedia, opts: WpMediaOptions = {}): EntryV04 {
  * name -> title (display name), slug -> slug, description -> content, url -> metadata.url, meta -> metadata.
  * Edit-only (non-public) data is private: username -> metadata.login and roles -> metadata.roles with private:true;
  * email, first_name, last_name, nickname only with `personal: true`, and then private:true.
- * Never carried: password, capabilities, extra_capabilities, avatar_urls (Gravatar hash of the email), link, locale (UI preference).
+ * Never carried: password, capabilities, extra_capabilities, avatar_urls (Gravatar hash of the email), link, locale (UI preference),
+ * WP meta `persisted_preferences` (the user's editor settings), whatever `personal` is.
  * WP REST has one user timestamp, registered_date (edit): it fills created_at and updated_at; without it `at` (default epoch).
  */
+/** WP user meta never carried into the core entry (editor UI settings, not content). */
+const USER_META_DROPPED = ["persisted_preferences"];
+function withoutUserMeta(meta: WpUser["meta"]): WpUser["meta"] {
+  if (!meta || Array.isArray(meta)) return meta;
+  return Object.fromEntries(Object.entries(meta).filter(([k]) => !USER_META_DROPPED.includes(k)));
+}
+
 export function fromWpUser(u: WpUser, opts: WpOptions & { at?: string; personal?: boolean } = {}): EntryV04 {
   const id = idMaker(opts);
   const at = u.registered_date ? utc(u.registered_date) : opts.at ?? "1970-01-01T00:00:00Z";
@@ -437,7 +445,7 @@ export function fromWpUser(u: WpUser, opts: WpOptions & { at?: string; personal?
   if (u.username) f.login = { value: u.username, private: true };
   if (Array.isArray(u.roles)) f.roles = { value: [...u.roles], private: true };
   if (opts.personal) for (const k of ["email", "first_name", "last_name", "nickname"] as const) if (u[k]) f[k] = { value: u[k], private: true };
-  const md = withMeta(f, u.meta, `user ${u.id}`);
+  const md = withMeta(f, withoutUserMeta(u.meta), `user ${u.id}`);
   if (md) e.metadata = md;
   return e;
 }

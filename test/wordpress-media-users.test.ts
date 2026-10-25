@@ -150,22 +150,32 @@ describe("fromWpMedia (live /wp/v2/media, context=view)", () => {
 
 describe("fromWpUser (live /wp/v2/users, context=edit)", () => {
   const out = users.map((u) => fromWpUser(u));
-  test("author: public fields, login and roles private; WP meta passes through", () => {
+  test("author: public fields, login and roles private", () => {
     expect(out[0]).toEqual({
       id: "user-2", locale: "en", kind: "user", status: "published", visibility: "public", slug: "demo-author", title: "Demo Author",
       origin: [{ system: "wordpress", id: "2" }], version: 1, created_at: "2026-10-25T14:33:48+00:00", updated_at: "2026-10-25T14:33:48+00:00",
       content: "Writes the demo posts.",
       metadata: {
         url: { value: "https://example.com/demo-author" }, login: { value: "demo-author", private: true }, roles: { value: ["author"], private: true },
-        persisted_preferences: { value: [] },
       },
     });
-    expect(out[1].metadata).toEqual({ login: { value: "demo-editor", private: true }, roles: { value: ["editor"], private: true }, persisted_preferences: { value: [] } });
+    expect(out[1].metadata).toEqual({ login: { value: "demo-editor", private: true }, roles: { value: ["editor"], private: true } });
+  });
+  test("WP meta persisted_preferences (editor settings) is always dropped, other meta passes through", () => {
+    expect(users.map((u) => Object.keys(u.meta as object))).toEqual([["persisted_preferences"], ["persisted_preferences"]]);
+    for (const personal of [undefined, false, true]) for (const u of users) {
+      const e = fromWpUser(u, { personal });
+      expect(JSON.stringify(e)).not.toContain("persisted_preferences");
+      const withPrefs = { ...u, meta: { persisted_preferences: { core: { welcomeGuide: false } }, bio_extra: "x" } };
+      const m = fromWpUser(withPrefs, { personal }).metadata ?? {};
+      expect("persisted_preferences" in m).toBe(false);
+      expect(m.bio_extra).toEqual({ value: "x" });
+    }
   });
   test("personal: false (default): no email, names, capabilities, avatar or password", () => {
     for (const e of [...out, ...users.map((u) => fromWpUser(u, { personal: false }))]) {
       const s = JSON.stringify(e);
-      for (const leak of ["@example.com", "capabilities", "gravatar", "password", "first_name", "last_name", "nickname", "en_US"]) expect(s).not.toContain(leak);
+      for (const leak of ["@example.com", "capabilities", "gravatar", "password", "first_name", "last_name", "nickname", "en_US", "persisted_preferences"]) expect(s).not.toContain(leak);
     }
   });
   test("personal: true adds email and non-empty names, only as private", () => {
@@ -173,10 +183,10 @@ describe("fromWpUser (live /wp/v2/users, context=edit)", () => {
     expect(a.metadata).toEqual({
       url: { value: "https://example.com/demo-author" }, login: { value: "demo-author", private: true }, roles: { value: ["author"], private: true },
       email: { value: "demo-author@example.com", private: true }, first_name: { value: "Demo", private: true },
-      last_name: { value: "Author", private: true }, nickname: { value: "demo-author", private: true }, persisted_preferences: { value: [] },
+      last_name: { value: "Author", private: true }, nickname: { value: "demo-author", private: true },
     });
     const b = fromWpUser(users[1], { personal: true });
-    expect(Object.keys(b.metadata ?? {})).toEqual(["login", "roles", "email", "nickname", "persisted_preferences"]);
+    expect(Object.keys(b.metadata ?? {})).toEqual(["login", "roles", "email", "nickname"]);
     for (const e of [a, b]) {
       const c = canonicalize(JSON.stringify(e));
       expect(c).not.toContain("@example.com");
