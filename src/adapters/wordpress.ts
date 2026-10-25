@@ -347,10 +347,20 @@ function withMeta(fields: Record<string, MetaValueV04>, meta: WpPost["meta"] | u
  * WP attachment -> core entry of kind "media" (id `media-<n>`). Dates and status as in fromWpPost; "inherit" -> published.
  * title.raw -> title, description.raw -> content; kind fields (docs/core-draft.md §3) go to metadata:
  * source_url -> file, mime_type -> mime, media_details.filesize -> size, media_details.width/height -> width/height,
- * alt_text -> alt, caption.raw -> caption, post (attached to; its kind is unknown from REST) -> post (WP integer id).
+ * alt_text -> alt, caption.raw -> caption, post (owner record) -> attached_to = `<kind>-<n>` (a reference, built with the
+ * same id maker as fromWpPost, so it equals the owner's entry id). REST does not say the owner's kind: pass
+ * `resolveKind(postId)` (wins) or `parentKind`; post 0 / missing / unknown kind -> no field. parent_id is not used
+ * (it is hierarchy within one kind).
  * Dropped: guid, link, media_type (follows mime), media_details.sizes/image_meta/file, missing_image_sizes, computed fields.
  */
-export function fromWpMedia(m: WpMedia, opts: WpOptions = {}): EntryV04 {
+export type WpMediaOptions = WpOptions & {
+  /** Kind of the owner record (WP `post`), e.g. id -> "post" | "page"; undefined = unknown, attached_to is omitted. Wins over parentKind. */
+  resolveKind?: (postId: number) => string | undefined;
+  /** Simplification: one kind for every owner record. */
+  parentKind?: string;
+};
+
+export function fromWpMedia(m: WpMedia, opts: WpMediaOptions = {}): EntryV04 {
   const id = idMaker(opts);
   const dated = utc(m.date_gmt ?? m.modified_gmt);
   const updated = utc(m.modified_gmt);
@@ -384,7 +394,11 @@ export function fromWpMedia(m: WpMedia, opts: WpOptions = {}): EntryV04 {
   if (Number.isInteger(d.height)) f.height = { value: d.height };
   if (m.alt_text) f.alt = { value: m.alt_text };
   if (m.caption?.raw) f.caption = { value: m.caption.raw };
-  if (m.post) f.post = { value: m.post };
+  const owner = m.post;
+  if (typeof owner === "number" && Number.isInteger(owner) && owner > 0) {
+    const k = opts.resolveKind ? opts.resolveKind(owner) : opts.parentKind;
+    if (k) f.attached_to = { value: id(k, owner) };
+  }
   const md = withMeta(f, m.meta, `media ${m.id}`);
   if (md) e.metadata = md;
   if (status === "published" || status === "scheduled") e.published_at = dated;

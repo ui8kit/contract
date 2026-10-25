@@ -73,9 +73,23 @@ describe("fromWpMedia (synthetic /wp/v2/media fixtures)", () => {
       metadata: {
         file: { value: "http://localhost:8081/wp-content/uploads/2026/10/grid.jpg" }, mime: { value: "image/jpeg" },
         size: { value: 184320 }, width: { value: 1200 }, height: { value: 800 },
-        alt: { value: "A layout grid with 8px steps" }, caption: { value: "Every layout sits on an 8px grid." }, post: { value: 4 },
+        alt: { value: "A layout grid with 8px steps" }, caption: { value: "Every layout sits on an 8px grid." },
       },
     });
+    expect("post" in (out[0].metadata ?? {})).toBe(false);
+  });
+  test("attached_to: resolveKind -> owner post id (wins over parentKind); parentKind; unknown / 0 -> omitted", () => {
+    const owner = fromWpPost({ ...posts[0], id: 4 }).entry;
+    const r = fromWpMedia(media[0], { resolveKind: (n) => (n === 4 ? "post" : undefined), parentKind: "page" });
+    expect(r.metadata?.attached_to).toEqual({ value: owner.id });
+    expect(isCodexId(owner.id)).toBe(true);
+    expect(fromWpMedia(media[0], { parentKind: "page" }).metadata?.attached_to).toEqual({ value: "page-4" });
+    expect("attached_to" in (fromWpMedia(media[0], { resolveKind: () => undefined, parentKind: "page" }).metadata ?? {})).toBe(false);
+    const zero = fromWpMedia({ ...media[0], post: 0 }, { parentKind: "post" });
+    expect("attached_to" in (zero.metadata ?? {}) || "post" in (zero.metadata ?? {})).toBe(false);
+    expect("parent_id" in r).toBe(false);
+    for (const e of [r, zero]) { expect(entrySchema(e)).toBe(true); canonicalize(JSON.stringify(e)); }
+    for (const e of [r, zero]) expect(validateCollectionV04({ entries: files([e, owner], "entries") })).toEqual([]);
   });
   test("file without dimensions, empty texts, no parent post", () => {
     const e = out[1];
