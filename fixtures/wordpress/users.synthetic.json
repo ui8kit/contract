@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "username": "admin",
+        "name": "Site Admin",
+        "first_name": "Site",
+        "last_name": "Admin",
+        "email": "admin@example.com",
+        "url": "http://localhost:8081",
+        "description": "Runs the studio site.",
+        "link": "http://localhost:8081/author/admin/",
+        "locale": "en_US",
+        "nickname": "admin",
+        "slug": "admin",
+        "roles": ["administrator"],
+        "registered_date": "2026-10-14T23:20:00+00:00",
+        "capabilities": { "switch_themes": true, "edit_posts": true, "administrator": true },
+        "extra_capabilities": { "administrator": true },
+        "avatar_urls": {
+            "24": "https://secure.gravatar.com/avatar/00000000000000000000000000000000?s=24&d=mm&r=g",
+            "48": "https://secure.gravatar.com/avatar/00000000000000000000000000000000?s=48&d=mm&r=g",
+            "96": "https://secure.gravatar.com/avatar/00000000000000000000000000000000?s=96&d=mm&r=g"
+        },
+        "meta": [],
+        "_links": {
+            "self": [{ "href": "http://localhost:8081/wp-json/wp/v2/users/1" }],
+            "collection": [{ "href": "http://localhost:8081/wp-json/wp/v2/users" }]
+        }
+    },
+    {
+        "id": 2,
+        "username": "anna.editor",
+        "name": "Anna",
+        "first_name": "Anna",
+        "last_name": "Editor",
+        "email": "anna@example.com",
+        "url": "",
+        "description": "",
+        "link": "http://localhost:8081/author/anna-editor/",
+        "locale": "en_US",
+        "nickname": "anna.editor",
+        "slug": "anna-editor",
+        "roles": ["editor"],
+        "registered_date": "2026-10-15T08:30:00+00:00",
+        "capabilities": { "edit_posts": true, "editor": true },
+        "extra_capabilities": { "editor": true },
+        "avatar_urls": {
+            "24": "https://secure.gravatar.com/avatar/11111111111111111111111111111111?s=24&d=mm&r=g",
+            "48": "https://secure.gravatar.com/avatar/11111111111111111111111111111111?s=48&d=mm&r=g",
+            "96": "https://secure.gravatar.com/avatar/11111111111111111111111111111111?s=96&d=mm&r=g"
+        },
+        "meta": [],
+        "_links": {
+            "self": [{ "href": "http://localhost:8081/wp-json/wp/v2/users/2" }],
+            "collection": [{ "href": "http://localhost:8081/wp-json/wp/v2/users" }]
+        }
+    }
+]

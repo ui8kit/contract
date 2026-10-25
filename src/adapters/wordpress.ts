@@ -5,6 +5,7 @@
 // permalink_template, count, _links, _embedded) are dropped and not restored.
 import type { EntryStatusV04, EntryV04, MetaValueV04, SettingsV04, TermV04 } from "../v04.js";
 import type { Manifest } from "../codex.js";
+import { assertCodexId, codexIdForInt } from "../id.js";
 
 export const WP_SYSTEM = "wordpress";
 
@@ -65,7 +66,13 @@ const STATUS_IN: Record<string, EntryStatusV04> = { publish: "published", future
 /** Top-level REST post keys that are not taxonomies even when they hold arrays. */
 const NON_TAX = new Set(["class_list", "_links", "_embedded", "meta"]);
 
-const defId = (kind: string, n: number) => `${kind}-${n}`;
+/** Default core id `<kind>-<n>` (the id rule for integer primary keys, src/id.ts). */
+const defId = codexIdForInt;
+/** Id maker for one conversion: `opts.idFor` or the default, and every produced id must match CODEX_ID_PATTERN. */
+const idMaker = (opts: WpOptions) => {
+  const f = opts.idFor ?? defId;
+  return (kind: string, n: number) => assertCodexId(f(kind, n), `wordpress: id for ${kind} ${n}`);
+};
 const defWpId = (id: string) => Number(id.slice(id.lastIndexOf("-") + 1));
 const utc = (gmt: string) => (/[zZ]|[+-]\d\d:\d\d$/.test(gmt) ? gmt : `${gmt}Z`);
 const gmtOut = (t: string) => t.replace(/(\.\d+)?(Z|[+-]00:00)$/, "");
@@ -97,7 +104,7 @@ function taxFields(p: Record<string, unknown>, opts: WpOptions): Record<string, 
 }
 
 export function fromWpPost(p: WpPost, opts: WpOptions = {}): { entry: EntryV04; sidecar: WpPostSidecar } {
-  const id = opts.idFor ?? defId;
+  const id = idMaker(opts);
   // WP `date_gmt` is the publish time; for a scheduled (future) post it lies after `modified`, so the core
   // created_at falls back to modified and the WP date lives in published_at.
   const dated = utc(p.date_gmt ?? p.modified_gmt);
@@ -185,7 +192,7 @@ export function toWpPost(e: EntryV04, sidecar?: WpPostSidecar, opts: WpOptions =
 
 /** WP term -> core term. WP REST terms carry no timestamps: `at` (default epoch) fills created_at/updated_at. */
 export function fromWpTerm(t: WpTerm, opts: WpOptions & { at?: string } = {}): TermV04 {
-  const id = opts.idFor ?? defId;
+  const id = idMaker(opts);
   const at = opts.at ?? "1970-01-01T00:00:00Z";
   const term: TermV04 = {
     id: id(t.taxonomy, t.id), locale: opts.locale ?? "en", taxonomy_id: t.taxonomy, name: t.name, slug: t.slug,
@@ -254,13 +261,13 @@ const SETTINGS_MAPPED = ["title", "description", "language", "timezone", "site_l
  * WP REST has no settings timestamps: `at` (default epoch) fills created_at/updated_at.
  */
 export function fromWpSettings(w: WpSettings, opts: WpOptions & { at?: string; currency?: string; id?: string } = {}): { settings: SettingsV04; sidecar: WpSettingsSidecar } {
-  const id = opts.idFor ?? defId;
+  const id = idMaker(opts);
   const at = opts.at ?? "1970-01-01T00:00:00Z";
   const empty: Record<string, unknown> = {};
   const rest = Object.fromEntries(Object.entries(w).filter(([k]) => !SETTINGS_MAPPED.includes(k)));
   const language = (w.language || "en_US").replace(/_/g, "-");
   if (!w.language) empty.language = w.language;
-  const s: SettingsV04 = { id: opts.id ?? "site", locale: opts.locale ?? language.split("-")[0], title: w.title, language, version: 1, created_at: at, updated_at: at, origin: [{ system: WP_SYSTEM, id: "settings" }] };
+  const s: SettingsV04 = { id: assertCodexId(opts.id ?? "site", "wordpress: settings id"), locale: opts.locale ?? language.split("-")[0], title: w.title, language, version: 1, created_at: at, updated_at: at, origin: [{ system: WP_SYSTEM, id: "settings" }] };
   if (w.description) s.description = w.description; else empty.description = w.description;
   if (w.timezone) s.timezone = w.timezone; else empty.timezone = w.timezone;
   if (w.site_logo) s.logo_media_id = id("media", w.site_logo); else empty.site_logo = w.site_logo;
@@ -295,4 +302,128 @@ export function toWpSettings(s: SettingsV04, sidecar: WpSettingsSidecar = { rest
   if (s.comments_open !== undefined) out.default_comment_status = s.comments_open ? "open" : "closed";
   if (s.currency && !("wpfasty_currency" in e)) out.wpfasty_currency = s.currency;
   return out as WpSettings;
+}
+
+// ---- media (/wp/v2/media) and users (/wp/v2/users), WP -> core only
+
+/**
+ * /wp/v2/media item (context edit), fields as documented in developer.wordpress.org/rest-api/reference/media.
+ * WordPress returns attachments with status "inherit" (not in the documented enum, but the list default).
+ */
+export type WpMedia = {
+  id: number; type: string; slug: string; status: string;
+  date: string | null; date_gmt: string | null; modified: string; modified_gmt: string;
+  title: { raw: string; rendered?: string };
+  author?: number | null; comment_status?: string; ping_status?: string; template?: string;
+  meta?: Record<string, unknown> | unknown[];
+  alt_text?: string;
+  caption?: { raw: string; rendered?: string };
+  description?: { raw: string; rendered?: string };
+  media_type?: string; mime_type?: string; post?: number | null; source_url?: string;
+  media_details?: { width?: number; height?: number; filesize?: number; file?: string; [k: string]: unknown };
+  [computed: string]: unknown;
+};
+
+/** /wp/v2/users item, fields as documented in developer.wordpress.org/rest-api/reference/users (edit-only ones optional). */
+export type WpUser = {
+  id: number; name: string; slug: string; url?: string; description?: string;
+  username?: string; first_name?: string; last_name?: string; email?: string; nickname?: string; locale?: string;
+  registered_date?: string; roles?: string[];
+  meta?: Record<string, unknown> | unknown[];
+  [computed: string]: unknown;
+};
+
+const MEDIA_STATUS_IN: Record<string, EntryStatusV04> = { ...STATUS_IN, inherit: "published" };
+
+/** Adds adapter fields to WP meta; a WP meta key equal to an adapter field is an error (no silent overwrite). */
+function withMeta(fields: Record<string, MetaValueV04>, meta: WpPost["meta"] | undefined, what: string): Record<string, MetaValueV04> | undefined {
+  const { md } = metaIn(meta);
+  for (const k of Object.keys(md ?? {})) if (k in fields) throw new Error(`wordpress: meta key "${k}" of ${what} collides with an adapter field`);
+  const out = { ...fields, ...md };
+  return Object.keys(out).length ? out : undefined;
+}
+
+/**
+ * WP attachment -> core entry of kind "media" (id `media-<n>`). Dates and status as in fromWpPost; "inherit" -> published.
+ * title.raw -> title, description.raw -> content; kind fields (docs/core-draft.md §3) go to metadata:
+ * source_url -> file, mime_type -> mime, media_details.filesize -> size, media_details.width/height -> width/height,
+ * alt_text -> alt, caption.raw -> caption, post (attached to; its kind is unknown from REST) -> post (WP integer id).
+ * Dropped: guid, link, media_type (follows mime), media_details.sizes/image_meta/file, missing_image_sizes, computed fields.
+ */
+export function fromWpMedia(m: WpMedia, opts: WpOptions = {}): EntryV04 {
+  const id = idMaker(opts);
+  const dated = utc(m.date_gmt ?? m.modified_gmt);
+  const updated = utc(m.modified_gmt);
+  const created = dated > updated ? updated : dated;
+  const status = MEDIA_STATUS_IN[m.status];
+  if (!status) throw new Error(`wordpress: unknown media status "${m.status}" (media ${m.id})`);
+  const self = id("media", m.id);
+  const e: EntryV04 = {
+    id: self,
+    locale: opts.locale ?? "en",
+    kind: "media",
+    status,
+    visibility: m.status === "private" ? "private" : "public",
+    slug: m.slug || self,
+    title: m.title.raw,
+    origin: [{ system: WP_SYSTEM, id: String(m.id) }],
+    version: 1,
+    created_at: created,
+    updated_at: updated,
+  };
+  if (m.description?.raw) e.content = m.description.raw;
+  if (m.author) e.author_id = id("user", m.author);
+  if (m.template) e.template = m.template;
+  if (m.comment_status !== undefined || m.ping_status !== undefined) e.discussion = { comments: m.comment_status === "open", pings: m.ping_status === "open" };
+  const f: Record<string, MetaValueV04> = {};
+  const d = m.media_details ?? {};
+  if (m.source_url) f.file = { value: m.source_url };
+  if (m.mime_type) f.mime = { value: m.mime_type };
+  if (Number.isInteger(d.filesize)) f.size = { value: d.filesize };
+  if (Number.isInteger(d.width)) f.width = { value: d.width };
+  if (Number.isInteger(d.height)) f.height = { value: d.height };
+  if (m.alt_text) f.alt = { value: m.alt_text };
+  if (m.caption?.raw) f.caption = { value: m.caption.raw };
+  if (m.post) f.post = { value: m.post };
+  const md = withMeta(f, m.meta, `media ${m.id}`);
+  if (md) e.metadata = md;
+  if (status === "published" || status === "scheduled") e.published_at = dated;
+  if (status === "trashed") e.deleted_at = updated;
+  return e;
+}
+
+/**
+ * WP user -> core entry of kind "user" (id `user-<n>`), status published, visibility public.
+ * name -> title (display name), slug -> slug, description -> content, url -> metadata.url, meta -> metadata.
+ * Edit-only (non-public) data is private: username -> metadata.login and roles -> metadata.roles with private:true;
+ * email, first_name, last_name, nickname only with `personal: true`, and then private:true.
+ * Never carried: password, capabilities, extra_capabilities, avatar_urls (Gravatar hash of the email), link, locale (UI preference).
+ * WP REST has one user timestamp, registered_date (edit): it fills created_at and updated_at; without it `at` (default epoch).
+ */
+export function fromWpUser(u: WpUser, opts: WpOptions & { at?: string; personal?: boolean } = {}): EntryV04 {
+  const id = idMaker(opts);
+  const at = u.registered_date ? utc(u.registered_date) : opts.at ?? "1970-01-01T00:00:00Z";
+  const self = id("user", u.id);
+  const e: EntryV04 = {
+    id: self,
+    locale: opts.locale ?? "en",
+    kind: "user",
+    status: "published",
+    visibility: "public",
+    slug: u.slug || self,
+    title: u.name,
+    origin: [{ system: WP_SYSTEM, id: String(u.id) }],
+    version: 1,
+    created_at: at,
+    updated_at: at,
+  };
+  if (u.description) e.content = u.description;
+  const f: Record<string, MetaValueV04> = {};
+  if (u.url) f.url = { value: u.url };
+  if (u.username) f.login = { value: u.username, private: true };
+  if (Array.isArray(u.roles)) f.roles = { value: [...u.roles], private: true };
+  if (opts.personal) for (const k of ["email", "first_name", "last_name", "nickname"] as const) if (u[k]) f[k] = { value: u[k], private: true };
+  const md = withMeta(f, u.meta, `user ${u.id}`);
+  if (md) e.metadata = md;
+  return e;
 }

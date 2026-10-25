@@ -24,6 +24,8 @@ Features:
 - `fastygo.codex/money`: integer minor units + ISO 4217 currency (entry field or settings default); `settings` schema (`https://schema.buildy.tw/settings.schema.json`), `checkSettingsV04`, `settings` in collections; warning `core.metadata_key_shadowed`.
 - WordPress adapter: all taxonomies of a type → terms (`taxonomies` option), original key set kept (no foreign keys written back), `metaPrefix`, null meta, `fromWpSettings`/`toWpSettings`; real fixtures for projects, products, settings.
 - v0.3 types/validator kept as legacy.
+- Id rule (draft v0.4): `CODEX_ID_PATTERN`, `isCodexId`, `assertCodexId`, `codexIdForInt` (`src/id.ts`), used by `canonicalize` (same behaviour) and by the WordPress adapter, which now throws on an invalid id. `entry.schema.json` unchanged.
+- WordPress adapter: `fromWpMedia` (`/wp/v2/media` → kind `media`) and `fromWpUser` (`/wp/v2/users` → kind `user`, non-public data only as `private:true`), with synthetic fixtures after the documented REST shape.
 
 ## 0.1.0 (unreleased)
 

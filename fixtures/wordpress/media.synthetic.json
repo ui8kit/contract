@@ -1,0 +1,124 @@
+[
+    {
+        "id": 20,
+        "date": "2026-10-14T23:24:20",
+        "date_gmt": "2026-10-14T23:24:20",
+        "guid": {
+            "rendered": "http://localhost:8081/wp-content/uploads/2026/10/grid.jpg",
+            "raw": "http://localhost:8081/wp-content/uploads/2026/10/grid.jpg"
+        },
+        "modified": "2026-10-14T23:24:21",
+        "modified_gmt": "2026-10-14T23:24:21",
+        "slug": "grid",
+        "status": "inherit",
+        "type": "attachment",
+        "link": "http://localhost:8081/the-8px-grid/grid/",
+        "title": {
+            "raw": "grid",
+            "rendered": "grid"
+        },
+        "author": 1,
+        "comment_status": "open",
+        "ping_status": "closed",
+        "template": "",
+        "meta": [],
+        "permalink_template": "http://localhost:8081/?attachment_id=20",
+        "generated_slug": "grid",
+        "description": {
+            "raw": "An 8px layout grid.",
+            "rendered": "<p class=\"attachment\"><a href='http://localhost:8081/wp-content/uploads/2026/10/grid.jpg'><img width=\"300\" height=\"200\" src=\"http://localhost:8081/wp-content/uploads/2026/10/grid-300x200.jpg\" class=\"attachment-medium size-medium\" alt=\"\" /></a></p>\n<p>An 8px layout grid.</p>\n"
+        },
+        "caption": {
+            "raw": "Every layout sits on an 8px grid.",
+            "rendered": "<p>Every layout sits on an 8px grid.</p>\n"
+        },
+        "alt_text": "A layout grid with 8px steps",
+        "media_type": "image",
+        "mime_type": "image/jpeg",
+        "media_details": {
+            "width": 1200,
+            "height": 800,
+            "file": "2026/10/grid.jpg",
+            "filesize": 184320,
+            "sizes": {
+                "medium": {
+                    "file": "grid-300x200.jpg",
+                    "width": 300,
+                    "height": 200,
+                    "filesize": 12288,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/grid-300x200.jpg"
+                }
+            },
+            "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "",
+                "orientation": "0",
+                "keywords": []
+            }
+        },
+        "post": 4,
+        "source_url": "http://localhost:8081/wp-content/uploads/2026/10/grid.jpg",
+        "missing_image_sizes": [],
+        "_links": {
+            "self": [{ "href": "http://localhost:8081/wp-json/wp/v2/media/20" }],
+            "collection": [{ "href": "http://localhost:8081/wp-json/wp/v2/media" }]
+        }
+    },
+    {
+        "id": 40,
+        "date": "2026-10-16T09:00:00",
+        "date_gmt": "2026-10-16T06:00:00",
+        "guid": {
+            "rendered": "http://localhost:8081/wp-content/uploads/2026/10/price-list.pdf",
+            "raw": "http://localhost:8081/wp-content/uploads/2026/10/price-list.pdf"
+        },
+        "modified": "2026-10-16T09:00:00",
+        "modified_gmt": "2026-10-16T06:00:00",
+        "slug": "price-list",
+        "status": "inherit",
+        "type": "attachment",
+        "link": "http://localhost:8081/price-list/",
+        "title": {
+            "raw": "Price list",
+            "rendered": "Price list"
+        },
+        "author": 2,
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "template": "",
+        "meta": [],
+        "permalink_template": "http://localhost:8081/?attachment_id=40",
+        "generated_slug": "price-list",
+        "description": {
+            "raw": "",
+            "rendered": "<p class=\"attachment\"><a href='http://localhost:8081/wp-content/uploads/2026/10/price-list.pdf'>Price list</a></p>\n"
+        },
+        "caption": {
+            "raw": "",
+            "rendered": ""
+        },
+        "alt_text": "",
+        "media_type": "file",
+        "mime_type": "application/pdf",
+        "media_details": {
+            "filesize": 52431,
+            "sizes": {}
+        },
+        "post": null,
+        "source_url": "http://localhost:8081/wp-content/uploads/2026/10/price-list.pdf",
+        "missing_image_sizes": [],
+        "_links": {
+            "self": [{ "href": "http://localhost:8081/wp-json/wp/v2/media/40" }],
+            "collection": [{ "href": "http://localhost:8081/wp-json/wp/v2/media" }]
+        }
+    }
+]

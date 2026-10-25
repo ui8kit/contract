@@ -4,6 +4,7 @@
 // No runtime dependencies (own SHA-256 and UTF-8), so it runs in Node, Bun, Deno and browsers.
 import { KEYS_V04 } from "./validate-v04.js";
 import { REQUIRED_V04 } from "./v04.js";
+import { CODEX_ID_PATTERN, isCodexId } from "./id.js";
 
 export const CANONICAL_ENTRY_PROFILE = "codex-entry/v1";
 
@@ -186,7 +187,6 @@ function jcs(v: Json): string {
 
 // ---------- codex-entry/v1 projection ----------
 
-const ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 const DATE_FIELDS = new Set(["created_at", "updated_at", "published_at", "deleted_at"]);
 const ENTRY_KEYS: readonly string[] = KEYS_V04.entry;
 const REQUIRED: readonly string[] = REQUIRED_V04.entry;
@@ -232,7 +232,7 @@ function project(doc: Json): Obj {
   if (!isObj(doc)) throw new CanonicalError("canonical.invalid_type", "$", "entry must be a JSON object");
   closed(doc, ENTRY_KEYS, "$");
   for (const k of REQUIRED) if (!own(doc, k) || doc[k] === null) throw new CanonicalError("canonical.missing_field", `$.${k}`, `required field ${k} is missing`);
-  if (typeof doc.id !== "string" || !ID.test(doc.id)) throw new CanonicalError("canonical.invalid_id", "$.id", "id must match ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$");
+  if (!isCodexId(doc.id)) throw new CanonicalError("canonical.invalid_id", "$.id", `id must match ${CODEX_ID_PATTERN.source}`);
 
   const out: Obj = Object.create(null);
   for (const k of Object.keys(doc)) {
