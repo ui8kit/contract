@@ -8,10 +8,10 @@ export { validateSnapshot, validateTaxonomy, validateRevision, type Issue, type 
 export * from "./v04.js";
 export { ISSUE_CODES_V04, WARNING_CODES_V04, type IssueCodeV04 } from "./codes-v04.js";
 export { validateCollectionV04, checkEntryV04, checkTermV04, checkCommentV04, checkMenuV04, checkDictionaryV04, checkSettingsV04, KEYS_V04, type IssueV04, type ValidateV04Options, type RecordFile, type CollectionV04 } from "./validate-v04.js";
-// Canonical form and digest of an entry (codex-entry/v1) and of a full manifest (codex-manifest/v2), draft v0.4, docs/canonical.md.
+// Canonical form and digest of an entry (codex-entry/v1), a full manifest (codex-manifest/v2), a term (codex-term/v1) and settings (codex-settings/v1), draft v0.4, docs/canonical.md.
 export {
-  canonicalize, digest, canonicalizeManifest, manifestDigest, sha256Hex, CanonicalError,
-  CANONICAL_ENTRY_PROFILE, CANONICAL_MANIFEST_PROFILE, CANONICAL_ERROR_CODES, MANIFEST_SHAPE, type CanonicalErrorCode,
+  canonicalize, digest, canonicalizeManifest, manifestDigest, canonicalizeTerm, termDigest, canonicalizeSettings, settingsDigest, sha256Hex, CanonicalError,
+  CANONICAL_ENTRY_PROFILE, CANONICAL_MANIFEST_PROFILE, CANONICAL_TERM_PROFILE, CANONICAL_SETTINGS_PROFILE, CANONICAL_ERROR_CODES, MANIFEST_SHAPE, TERM_COMPUTED_FIELDS, type CanonicalErrorCode,
 } from "./canonical.js";
 // Record id rule (draft v0.4): ASCII id, `<kind>-<n>` for integer primary keys.
 export { CODEX_ID_PATTERN, isCodexId, assertCodexId, codexIdForInt } from "./id.js";

@@ -228,16 +228,25 @@ function byCodePoint(a: string, b: string): number {
   return x.length - y.length;
 }
 
-function project(doc: Json): Obj {
-  if (!isObj(doc)) throw new CanonicalError("canonical.invalid_type", "$", "entry must be a JSON object");
-  closed(doc, ENTRY_KEYS, "$");
-  for (const k of REQUIRED) if (!own(doc, k) || doc[k] === null) throw new CanonicalError("canonical.missing_field", `$.${k}`, `required field ${k} is missing`);
+/** A flat record profile: closed key set, required fields, top-level keys dropped before projection (computed fields). */
+type RecordProfile = { what: string; keys: readonly string[]; required: readonly string[]; drop?: readonly string[] };
+const ENTRY_PROFILE: RecordProfile = { what: "entry", keys: ENTRY_KEYS, required: REQUIRED };
+
+function project(input: Json, prof: RecordProfile = ENTRY_PROFILE): Obj {
+  if (!isObj(input)) throw new CanonicalError("canonical.invalid_type", "$", `${prof.what} must be a JSON object`);
+  let doc: Obj = input;
+  if (prof.drop?.some((k) => own(input, k))) {
+    doc = Object.create(null);
+    for (const k of Object.keys(input)) if (!prof.drop.includes(k)) doc[k] = input[k];
+  }
+  closed(doc, prof.keys, "$");
+  for (const k of prof.required) if (!own(doc, k) || doc[k] === null) throw new CanonicalError("canonical.missing_field", `$.${k}`, `required field ${k} is missing`);
   if (!isCodexId(doc.id)) throw new CanonicalError("canonical.invalid_id", "$.id", `id must match ${CODEX_ID_PATTERN.source}`);
 
   const out: Obj = Object.create(null);
   for (const k of Object.keys(doc)) {
     let v = doc[k];
-    const required = REQUIRED.includes(k);
+    const required = prof.required.includes(k);
     if (!required && isEmpty(v)) continue;
     const path = `$.${k}`;
     if (DATE_FIELDS.has(k)) v = normalizeDate(v, path);
@@ -361,6 +370,32 @@ export function canonicalizeManifest(manifest: string | object): string {
 /** `codex-manifest/v2:sha256:<hex>` of the UTF-8 bytes of canonicalizeManifest(manifest). Throws CanonicalError. */
 export function manifestDigest(manifest: string | object): string {
   return `${CANONICAL_MANIFEST_PROFILE}:sha256:${sha256Hex(utf8(canonicalizeManifest(manifest)))}`;
+}
+
+// ---------- codex-term/v1 and codex-settings/v1 (flat records, codex-entry/v1 rules) ----------
+
+export const CANONICAL_TERM_PROFILE = "codex-term/v1";
+export const CANONICAL_SETTINGS_PROFILE = "codex-settings/v1";
+/** Computed term fields: accepted on input and never part of the canonical form (`count` is not in term.schema.json). */
+export const TERM_COMPUTED_FIELDS = ["count"] as const;
+const TERM_PROFILE: RecordProfile = { what: "term", keys: KEYS_V04.term, required: REQUIRED_V04.term, drop: TERM_COMPUTED_FIELDS };
+const SETTINGS_PROFILE: RecordProfile = { what: "settings", keys: KEYS_V04.settings, required: REQUIRED_V04.settings };
+
+/** Canonical text (codex-term/v1) of one Term v0.4, as JSON text (exact integer check) or as a value; `count` is dropped. */
+export function canonicalizeTerm(term: string | object): string {
+  return jcs(project(parse(typeof term === "string" ? term : toText(term)), TERM_PROFILE));
+}
+/** `codex-term/v1:sha256:<hex>` of canonicalizeTerm(term). Throws CanonicalError. */
+export function termDigest(term: string | object): string {
+  return `${CANONICAL_TERM_PROFILE}:sha256:${sha256Hex(utf8(canonicalizeTerm(term)))}`;
+}
+/** Canonical text (codex-settings/v1) of one SettingsV04 record, as JSON text (exact integer check) or as a value. */
+export function canonicalizeSettings(settings: string | object): string {
+  return jcs(project(parse(typeof settings === "string" ? settings : toText(settings)), SETTINGS_PROFILE));
+}
+/** `codex-settings/v1:sha256:<hex>` of canonicalizeSettings(settings). Throws CanonicalError. */
+export function settingsDigest(settings: string | object): string {
+  return `${CANONICAL_SETTINGS_PROFILE}:sha256:${sha256Hex(utf8(canonicalizeSettings(settings)))}`;
 }
 
 // ---------- UTF-8 + SHA-256 (FIPS 180-4), dependency-free ----------

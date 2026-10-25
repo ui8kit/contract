@@ -67,7 +67,19 @@
 |---|---|---|
 | `codex-entry/v1` | публичная проекция записи Entry v0.4 | `digest`, векторы `fixtures/vectors/canonical.json` |
 | `codex-manifest/v2` | полный манифест | `manifestDigest`, векторы `fixtures/vectors/manifest.json` |
-| `codex-term/v1` | запись Term v0.4; `count` не входит в канонику (вычисляемое поле) | пока нет — следующий шаг |
-| `codex-settings/v1` | запись `SettingsV04` | пока нет — следующий шаг |
+| `codex-term/v1` | запись Term v0.4; `count` не входит в канонику (вычисляемое поле) | `termDigest`, векторы `fixtures/vectors/term.json` |
+| `codex-settings/v1` | запись `SettingsV04` | `settingsDigest`, векторы `fixtures/vectors/settings.json` |
 
-Для `codex-term/v1` и `codex-settings/v1` реализации и векторов в пакете пока нет.
+## Термин и настройки — профили `codex-term/v1` и `codex-settings/v1` (draft v0.4)
+
+Реализация: `canonicalizeTerm` / `termDigest`, `canonicalizeSettings` / `settingsDigest` в `src/canonical.ts` (общий код с `canonicalize`), экспорт из `@ui8kit/contract`; векторы `fixtures/vectors/term.json`, `fixtures/vectors/settings.json`, тест `test/canonical-term-settings.test.ts`. Вход — JSON-текст (точная проверка целых) или значение, как у `manifestDigest`.
+
+Правила — ровно правила `codex-entry/v1` для плоской записи: ключи и обязательные поля — `KEYS_V04.term` / `REQUIRED_V04.term` и `KEYS_V04.settings` / `REQUIRED_V04.settings` (совпадают со `schemas/term.schema.json`, `schemas/settings.schema.json`, это проверяет тест); `id` по `CODEX_ID_PATTERN`; даты `created_at`, `updated_at` → `YYYY-MM-DDTHH:MM:SSZ`; пустые необязательные поля опускаются только на верхнем уровне; `metadata.<k>` с `private: true` удаляется, `value` не трогается; `origin` и прочие массивы сохраняют порядок; коды ошибок — те же `canonical.*`, новых нет.
+
+Принятые толкования (минимальный вариант там, где docs и схема молчат):
+
+- **`count` у term.** В `term.schema.json` и `KEYS_V04.term` поля `count` нет (адаптер WordPress отбрасывает его как вычисляемое). Профиль принимает `count` верхнего уровня с любым значением и удаляет его до проверки ключей (`TERM_COMPUTED_FIELDS = ["count"]`), а не отвергает как `canonical.unknown_field`. Строгий парсер работает раньше: `count` с целым вне ±(2^53−1) всё равно даёт `canonical.unsafe_integer`. Других вычисляемых полей нет.
+- **`id` у settings.** Схема требует только непустую строку; профиль, как и у entry, требует `CODEX_ID_PATTERN` (обычный id — `site`).
+- **Ссылки** (`parent_id` у term, `*_media_id`, `front_page_id`, `posts_page_id` у settings) — как `*_id` у entry: не проверяются, пустая строка опускается.
+- **`comments_open: false`, `posts_per_page`** — не пустые значения, сохраняются. Типы, шаблоны `locale`, `language`, `currency`, `taxonomy_id` проверяет валидатор (`checkTermV04`, `checkSettingsV04`), не профиль.
+- **Сортировок нет**: в docs нет сортируемых массивов для term и settings; `origin` сохраняет порядок, как у entry.
