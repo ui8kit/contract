@@ -262,7 +262,7 @@ The tests check three things:
 - Types and fixtures come from `fastygo/codex` v0.3.0 (`content`, `schema`, `taxonomy`, `revision`, `conformance/fixtures`). Codex publishes no JSON Schema; these schemas are derived here.
 - The validator is ported from `ui8kit/spline-svelte` (`packages/content`). In that repo, 15 broken snapshots were checked against `fastygo/modules/content-json` v0.1.0. The Go comparison has not been re-run in this repo.
 - Not ported:
-  - the manifest digest (`codex-manifest/v1:sha256:…`; v2 = SHA-256 of JCS is agreed, see `docs/canonical.md`). Entry canonicalization is ported as a draft: `canonicalize` / `digest` (profile `codex-entry/v1`, `src/canonical.ts`, vectors in `fixtures/vectors/canonical.json`);
+  - the manifest digest `codex-manifest/v1:sha256:…` (Go `json.Marshal` bytes, kept in Go for compatibility). Ported as a draft instead: entry canonicalization `canonicalize` / `digest` (profile `codex-entry/v1`, vectors `fixtures/vectors/canonical.json`) and the manifest digest `canonicalizeManifest` / `manifestDigest` (profile `codex-manifest/v2` = SHA-256 of JCS of the **full** manifest under the same rules, array order kept; the short `{name, version, resources[{id, collection}]}` form is not normative; vectors `fixtures/vectors/manifest.json`), both in `src/canonical.ts`, see `docs/canonical.md`. `codex-term/v1` and `codex-settings/v1` are named there but not implemented yet;
   - `Resource.PublicProjection`;
   - `fastygo.codex/*` rules other than `integer` and `uri`;
   - the full Codex locale grammar (here a locale only has to be lower-case and trimmed).

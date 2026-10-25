@@ -280,6 +280,89 @@ export function digest(inputText: string): string {
   return `${CANONICAL_ENTRY_PROFILE}:sha256:${sha256Hex(utf8(canonicalize(inputText)))}`;
 }
 
+// ---------- codex-manifest/v2 (full manifest, same profile rules as codex-entry/v1) ----------
+
+export const CANONICAL_MANIFEST_PROFILE = "codex-manifest/v2";
+
+/** Key sets of schemas/manifest.schema.json (test/canonical-manifest.test.ts keeps them in sync with the schema). */
+export const MANIFEST_SHAPE = {
+  manifest: { keys: ["name", "version", "resources"], required: ["name", "version", "resources"] },
+  resource: { keys: ["record", "taxonomies"], required: ["record"] },
+  record: { keys: ["id", "label", "description", "schema_version", "owner_module", "scope", "fields", "relations", "capabilities", "visibility"], required: ["id", "label", "scope"] },
+  field: {
+    keys: ["id", "label", "type", "namespace", "owner_module", "description", "required", "localized", "default_value", "options", "rules", "items", "fields", "searchable", "indexed", "unique", "sensitive", "encrypted", "ui_hint", "storage_hint"],
+    required: ["id", "label", "type"],
+  },
+  option: { keys: ["value", "label"], required: ["value", "label"] },
+  rule: { keys: ["name", "message", "args", "severity"], required: ["name"] },
+  relation: { keys: ["id", "label", "source", "target", "cardinality", "inverse_name", "cross_workspace_policy", "policy", "delete_behavior"], required: ["id", "source", "target", "cardinality"] },
+  policy: { keys: ["cross_workspace_mode", "allowed_targets", "capability", "read_only"], required: [] },
+} as const satisfies Record<string, { keys: readonly string[]; required: readonly string[] }>;
+type Shape = keyof typeof MANIFEST_SHAPE;
+
+function shapeObj(v: Json | undefined, shape: Shape, path: string): Obj {
+  if (!isObj(v)) throw new CanonicalError("canonical.invalid_type", path, `${shape} must be a JSON object`);
+  const { keys, required } = MANIFEST_SHAPE[shape];
+  closed(v, keys, path);
+  for (const k of required) if (!own(v, k) || v[k] === null) throw new CanonicalError("canonical.missing_field", `${path}.${k}`, `required field ${k} is missing`);
+  return v;
+}
+function shapeArr(v: Json, path: string, each?: (x: Json, p: string) => void): void {
+  if (!Array.isArray(v)) throw new CanonicalError("canonical.invalid_type", path, "must be an array");
+  if (each) v.forEach((x, n) => each(x, `${path}[${n}]`));
+}
+function checkField(f: Json, path: string): void {
+  const o = shapeObj(f, "field", path);
+  if (own(o, "options")) shapeArr(o.options, `${path}.options`, (x, p) => void shapeObj(x, "option", p));
+  if (own(o, "rules")) shapeArr(o.rules, `${path}.rules`, (x, p) => { const r = shapeObj(x, "rule", p); if (own(r, "args") && !isObj(r.args)) throw new CanonicalError("canonical.invalid_type", `${p}.args`, "args must be an object"); });
+  if (own(o, "items")) checkField(o.items, `${path}.items`);
+  if (own(o, "fields")) shapeArr(o.fields, `${path}.fields`, checkField);
+}
+
+/**
+ * Canonical() of a manifest for codex-manifest/v2: the FULL manifest (every field of schemas/manifest.schema.json),
+ * with the codex-entry/v1 rules: strict parse (duplicate keys, unsafe integers, lone surrogates), closed key sets,
+ * required fields, empty optional fields dropped only at the top level (the manifest has none), nested values kept
+ * as is, array order kept (no array of the manifest is sorted), RFC 8785 output. Types are the validator's job.
+ */
+function projectManifest(doc: Json): Obj {
+  const m = shapeObj(doc, "manifest", "$");
+  shapeArr(m.resources, "$.resources", (x, p) => {
+    const r = shapeObj(x, "resource", p);
+    if (own(r, "taxonomies")) shapeArr(r.taxonomies, `${p}.taxonomies`);
+    const rec = shapeObj(r.record, "record", `${p}.record`);
+    if (own(rec, "fields")) shapeArr(rec.fields, `${p}.record.fields`, checkField);
+    if (own(rec, "capabilities")) shapeArr(rec.capabilities, `${p}.record.capabilities`);
+    if (own(rec, "relations")) shapeArr(rec.relations, `${p}.record.relations`, (y, q) => {
+      const rel = shapeObj(y, "relation", q);
+      if (own(rel, "policy")) { const pol = shapeObj(rel.policy, "policy", `${q}.policy`); if (own(pol, "allowed_targets")) shapeArr(pol.allowed_targets, `${q}.policy.allowed_targets`); }
+    });
+  });
+  const required: readonly string[] = MANIFEST_SHAPE.manifest.required;
+  const out: Obj = Object.create(null);
+  for (const k of Object.keys(m)) if (required.includes(k) || !isEmpty(m[k])) out[k] = m[k];
+  return out;
+}
+
+/** Turns an in-memory value into JSON text, rejecting what JSON.stringify would silently change (NaN, Infinity). */
+function toText(v: unknown): string {
+  return JSON.stringify(v, (_k, x) => {
+    if (typeof x === "number" && !Number.isFinite(x)) throw new CanonicalError("canonical.invalid_number", "$", `number ${x} is not finite`);
+    if (typeof x === "bigint") throw new CanonicalError("canonical.unsafe_integer", "$", "bigint is not a JSON number");
+    return x;
+  });
+}
+
+/** Canonical text (codex-manifest/v2) of a full manifest, given as JSON text (preferred: exact integer check) or as a value. */
+export function canonicalizeManifest(manifest: string | object): string {
+  return jcs(projectManifest(parse(typeof manifest === "string" ? manifest : toText(manifest))));
+}
+
+/** `codex-manifest/v2:sha256:<hex>` of the UTF-8 bytes of canonicalizeManifest(manifest). Throws CanonicalError. */
+export function manifestDigest(manifest: string | object): string {
+  return `${CANONICAL_MANIFEST_PROFILE}:sha256:${sha256Hex(utf8(canonicalizeManifest(manifest)))}`;
+}
+
 // ---------- UTF-8 + SHA-256 (FIPS 180-4), dependency-free ----------
 
 function utf8(s: string): Uint8Array {
@@ -301,7 +384,7 @@ const K = Uint32Array.from([
   0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 ]);
 
-/** Hex SHA-256 of bytes. Exported for tests and for the manifest digest later. */
+/** Hex SHA-256 of bytes (used by digest and manifestDigest; exported for tests). */
 export function sha256Hex(bytes: Uint8Array): string {
   const len = bytes.length;
   const total = Math.ceil((len + 9) / 64) * 64;
