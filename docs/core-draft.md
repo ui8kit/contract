@@ -2,6 +2,8 @@
 
 Статус: черновик Codex v0.4, ред. 5 (сверено с реализацией `@ui8kit/contract` 0.2.0: деньги, настройки, коды проверок). Все решения разделов 1–6 **согласованы**, открытых вопросов нет. Ядро будет выпущено как Codex v0.4 в `fastygo/codex`; `@ui8kit/contract` следует за ним. Реализовано в `@ui8kit/contract` 0.2.0: `src/v04.ts`, `src/validate-v04.ts`, схемы `https://schema.buildy.tw/<name>.schema.json` (без версии в адресе до v0.5), адаптер WordPress — `src/adapters/wordpress.ts`. База: Codex v0.3.0 (`github.com/fastygo/codex`: Entry, Manifest, Taxonomy, Revision) и `@ui8kit/contract` 0.1.0 (схемы на schema.buildy.tw/v0.3). При расхождении с фикстурами `fastygo/app-gocms` (`schema/codex/v1`) главным считается формат Codex v0.3.0.
 
+Каноническая форма и дайджест записи (профиль `codex-entry/v1`, draft v0.4) — в [docs/canonical.md](canonical.md).
+
 ## 1. Зачем
 
 Один формат данных для всех наших систем: wpfasty (WordPress), phpfasty (Slim, Flight CMS), fastygo (GoCMS, GoCRM), appfasty (SvelteCMS, React, Vue) и фикстуры codegen-x.

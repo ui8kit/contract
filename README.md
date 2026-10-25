@@ -260,12 +260,12 @@ The tests check three things:
 - Types and fixtures come from `fastygo/codex` v0.3.0 (`content`, `schema`, `taxonomy`, `revision`, `conformance/fixtures`). Codex publishes no JSON Schema; these schemas are derived here.
 - The validator is ported from `ui8kit/spline-svelte` (`packages/content`). In that repo, 15 broken snapshots were checked against `fastygo/modules/content-json` v0.1.0. The Go comparison has not been re-run in this repo.
 - Not ported:
-  - canonicalization and the manifest digest (`codex-manifest/v1:sha256:…`);
+  - the manifest digest (`codex-manifest/v1:sha256:…`; v2 = SHA-256 of JCS is agreed, see `docs/canonical.md`). Entry canonicalization is ported as a draft: `canonicalize` / `digest` (profile `codex-entry/v1`, `src/canonical.ts`, vectors in `fixtures/vectors/canonical.json`);
   - `Resource.PublicProjection`;
   - `fastygo.codex/*` rules other than `integer` and `uri`;
   - the full Codex locale grammar (here a locale only has to be lower-case and trimmed).
 - `taxonomy.Assignment` has a type and a `$defs` entry but no validator.
-- Integers above 2^53 (e.g. `source_sequence` in the fixture) lose precision in `JSON.parse`.
+- Integers above 2^53 (e.g. `source_sequence` in the fixture) lose precision in `JSON.parse` (the validator); `canonicalize` reads the raw text and rejects them with `canonical.unsafe_integer`.
 - `fixtures/snapshot` is the CMS demo snapshot from spline-svelte. `fixtures/codex` is copied from Codex (MIT, see `fixtures/codex/LICENSE`).
 
 ## License

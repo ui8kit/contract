@@ -8,3 +8,5 @@ export { validateSnapshot, validateTaxonomy, validateRevision, type Issue, type 
 export * from "./v04.js";
 export { ISSUE_CODES_V04, WARNING_CODES_V04, type IssueCodeV04 } from "./codes-v04.js";
 export { validateCollectionV04, checkEntryV04, checkTermV04, checkCommentV04, checkMenuV04, checkDictionaryV04, checkSettingsV04, KEYS_V04, type IssueV04, type ValidateV04Options, type RecordFile, type CollectionV04 } from "./validate-v04.js";
+// Canonical form and digest of an entry, profile codex-entry/v1 (draft v0.4, docs/canonical.md).
+export { canonicalize, digest, sha256Hex, CanonicalError, CANONICAL_ENTRY_PROFILE, CANONICAL_ERROR_CODES, type CanonicalErrorCode } from "./canonical.js";
