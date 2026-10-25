@@ -1,6 +1,6 @@
-// fromWpMedia / fromWpUser and the id rule. fixtures/wordpress/*.synthetic.json are SYNTHETIC: hand-written strictly
-// after the documented WP REST shape (developer.wordpress.org/rest-api/reference/media, /users, context=edit),
-// not captured from a live site.
+// fromWpMedia / fromWpUser and the id rule. fixtures/wordpress/{media,users}.{edit,view}.json are LIVE /wp/v2 REST bodies
+// (local WordPress 7.1.3 + wp-fasty demo, 2026-10-25, host rewritten to http://localhost:8081; test accounts on example.com).
+// context=edit is the main path; context=view (no raw/edit-only fields) must convert without throwing.
 import { describe, expect, test } from "bun:test";
 import fs from "node:fs";
 import path from "node:path";
@@ -23,9 +23,15 @@ for (const s of Object.values(ALL_V04)) ajv.addSchema(s);
 const entrySchema = ajv.getSchema(schemaUrlV04("entry"))!;
 const files = (list: unknown[], prefix: string) => list.map((data, i) => ({ file: `${prefix}[${i}]`, data }));
 
-const media: WpMedia[] = wpfx("media.synthetic");
-const users: WpUser[] = wpfx("users.synthetic");
+const media: WpMedia[] = wpfx("media.edit");
+const mediaView: WpMedia[] = wpfx("media.view");
+const users: WpUser[] = wpfx("users.edit");
+const usersView: WpUser[] = wpfx("users.view");
 const posts: WpPost[] = wpfx("posts");
+const products: WpPost[] = wpfx("products");
+// media 11 is attached to product 10 (fixtures/wordpress/products.json), media 19 is unattached.
+const productIds = new Set(products.map((p) => p.id));
+const resolveKind = (n: number) => (productIds.has(n) ? "product" : undefined);
 
 describe("id rule (src/id.ts)", () => {
   test("pattern is the one canonicalize uses", () => {
@@ -54,36 +60,48 @@ describe("id rule (src/id.ts)", () => {
   });
   test("adapters refuse an invalid custom id", () => {
     const bad = { idFor: (k: string, n: number) => `${k} ${n}` };
-    expect(() => fromWpMedia(media[0], bad)).toThrow(/wordpress: id for media 20/);
-    expect(() => fromWpUser(users[0], bad)).toThrow(/wordpress: id for user 1/);
+    expect(() => fromWpMedia(media[0], bad)).toThrow(/wordpress: id for media 11/);
+    expect(() => fromWpUser(users[0], bad)).toThrow(/wordpress: id for user 2/);
     expect(() => fromWpPost(posts[0], bad)).toThrow(/wordpress: id for post 4/);
     expect(() => fromWpTerm(wpfx("categories")[0] as WpTerm, bad)).toThrow(/wordpress: id for category/);
-    expect(fromWpMedia(media[0], { idFor: (k, n) => `wp:${k}:${n}` }).id).toBe("wp:media:20");
+    expect(fromWpMedia(media[0], { idFor: (k, n) => `wp:${k}:${n}` }).id).toBe("wp:media:11");
   });
 });
 
-describe("fromWpMedia (synthetic /wp/v2/media fixtures)", () => {
-  const out = media.map((m) => fromWpMedia(m, { locale: "en" }));
-  test("image: fields", () => {
+describe("fromWpMedia (live /wp/v2/media, context=edit)", () => {
+  const out = media.map((m) => fromWpMedia(m, { locale: "en", resolveKind }));
+  test("fixtures are the expected live records", () => {
+    expect(media.map((m) => [m.id, m.post, m.status])).toEqual([[11, 10, "inherit"], [19, null, "inherit"]]);
+    expect(mediaView.map((m) => m.id)).toEqual([11, 19]);
+    expect(JSON.stringify([media, mediaView, users, usersView])).not.toContain("127.0.0.1");
+  });
+  test("attached image: fields", () => {
     expect(out[0]).toEqual({
-      id: "media-20", locale: "en", kind: "media", status: "published", visibility: "public", slug: "grid", title: "grid",
-      origin: [{ system: "wordpress", id: "20" }], version: 1,
-      created_at: "2026-10-14T23:24:20Z", updated_at: "2026-10-14T23:24:21Z", published_at: "2026-10-14T23:24:20Z",
-      content: "An 8px layout grid.", author_id: "user-1", discussion: { comments: true, pings: false },
+      id: "media-11", locale: "en", kind: "media", status: "published", visibility: "public", slug: "picsum-id-972", title: "Picsum ID: 972",
+      origin: [{ system: "wordpress", id: "11" }], version: 1,
+      created_at: "2026-10-25T14:32:53Z", updated_at: "2026-10-25T14:34:02Z", published_at: "2026-10-25T14:32:53Z",
+      content: "Picsum ID: 972", discussion: { comments: true, pings: false },
       metadata: {
-        file: { value: "http://localhost:8081/wp-content/uploads/2026/10/grid.jpg" }, mime: { value: "image/jpeg" },
-        size: { value: 184320 }, width: { value: 1200 }, height: { value: 800 },
-        alt: { value: "A layout grid with 8px steps" }, caption: { value: "Every layout sits on an 8px grid." },
+        file: { value: "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg" }, mime: { value: "image/jpeg" },
+        size: { value: 145618 }, width: { value: 1000 }, height: { value: 1000 },
+        alt: { value: "Shop Linen Apron" }, attached_to: { value: "product-10" },
       },
     });
+    // author 0 -> no author_id; empty caption.raw -> no caption; post never lands as metadata.post
+    expect("author_id" in out[0]).toBe(false);
+    expect("caption" in (out[0].metadata ?? {})).toBe(false);
     expect("post" in (out[0].metadata ?? {})).toBe(false);
   });
-  test("attached_to: resolveKind -> owner post id (wins over parentKind); parentKind; unknown / 0 -> omitted", () => {
-    const owner = fromWpPost({ ...posts[0], id: 4 }).entry;
-    const r = fromWpMedia(media[0], { resolveKind: (n) => (n === 4 ? "post" : undefined), parentKind: "page" });
+  test("unattached image (post: null): no attached_to", () => {
+    expect(out[1].id).toBe("media-19");
+    expect(Object.keys(out[1].metadata ?? {})).toEqual(["file", "mime", "size", "width", "height", "alt"]);
+  });
+  test("attached_to: resolveKind -> owner entry id (wins over parentKind); parentKind; unknown / 0 -> omitted", () => {
+    const owner = fromWpPost(products.find((p) => p.id === 10)!).entry;
+    expect(owner.id).toBe("product-10");
+    const r = fromWpMedia(media[0], { resolveKind, parentKind: "page" });
     expect(r.metadata?.attached_to).toEqual({ value: owner.id });
-    expect(isCodexId(owner.id)).toBe(true);
-    expect(fromWpMedia(media[0], { parentKind: "page" }).metadata?.attached_to).toEqual({ value: "page-4" });
+    expect(fromWpMedia(media[0], { parentKind: "page" }).metadata?.attached_to).toEqual({ value: "page-10" });
     expect("attached_to" in (fromWpMedia(media[0], { resolveKind: () => undefined, parentKind: "page" }).metadata ?? {})).toBe(false);
     const zero = fromWpMedia({ ...media[0], post: 0 }, { parentKind: "post" });
     expect("attached_to" in (zero.metadata ?? {}) || "post" in (zero.metadata ?? {})).toBe(false);
@@ -91,14 +109,15 @@ describe("fromWpMedia (synthetic /wp/v2/media fixtures)", () => {
     for (const e of [r, zero]) { expect(entrySchema(e)).toBe(true); canonicalize(JSON.stringify(e)); }
     for (const e of [r, zero]) expect(validateCollectionV04({ entries: files([e, owner], "entries") })).toEqual([]);
   });
-  test("file without dimensions, empty texts, no parent post", () => {
-    const e = out[1];
+  test("file without dimensions, empty texts, with author (variant of a live record)", () => {
+    const { width, height, sizes, image_meta, ...details } = media[1].media_details as Record<string, unknown>;
+    const e = fromWpMedia({
+      ...media[1], author: 2, mime_type: "application/pdf", source_url: "http://localhost:8081/wp-content/uploads/2026/10/price-list.pdf",
+      alt_text: "", description: { raw: "" }, media_details: { ...details, filesize: 52431 },
+    });
     expect(e.metadata).toEqual({ file: { value: "http://localhost:8081/wp-content/uploads/2026/10/price-list.pdf" }, mime: { value: "application/pdf" }, size: { value: 52431 } });
     expect("content" in e).toBe(false);
     expect(e.author_id).toBe("user-2");
-  });
-  test("the post's featured_media points at the media id", () => {
-    expect(fromWpPost(posts[0]).entry.featured_media_id).toBe(out[0].id);
   });
   test("statuses: private, draft; unknown throws", () => {
     const p = fromWpMedia({ ...media[0], status: "private" });
@@ -112,46 +131,82 @@ describe("fromWpMedia (synthetic /wp/v2/media fixtures)", () => {
   });
 });
 
-describe("fromWpUser (synthetic /wp/v2/users fixtures)", () => {
-  const out = users.map((u) => fromWpUser(u));
-  test("admin: public fields, login and roles private", () => {
-    expect(out[0]).toEqual({
-      id: "user-1", locale: "en", kind: "user", status: "published", visibility: "public", slug: "admin", title: "Site Admin",
-      origin: [{ system: "wordpress", id: "1" }], version: 1, created_at: "2026-10-14T23:20:00+00:00", updated_at: "2026-10-14T23:20:00+00:00",
-      content: "Runs the studio site.",
-      metadata: { url: { value: "http://localhost:8081" }, login: { value: "admin", private: true }, roles: { value: ["administrator"], private: true } },
-    });
+describe("fromWpMedia (live /wp/v2/media, context=view)", () => {
+  test("no edit fields (title/caption/description without raw): converts without throwing", () => {
+    for (const m of mediaView) {
+      expect("raw" in m.title).toBe(false);
+      const e = fromWpMedia(m, { resolveKind });
+      const edit = fromWpMedia(media.find((x) => x.id === m.id)!, { resolveKind });
+      expect(e.id).toBe(edit.id);
+      expect([e.created_at, e.updated_at, e.status, e.slug]).toEqual([edit.created_at, edit.updated_at, edit.status, edit.slug]);
+      expect(e.metadata?.file).toEqual(edit.metadata?.file);
+      expect(e.metadata?.attached_to).toEqual(edit.metadata?.attached_to);
+      // view has no title.raw / description.raw: the adapter does not use rendered HTML, so title and content are absent.
+      expect("title" in e && e.title !== undefined).toBe(false);
+      expect("content" in e).toBe(false);
+    }
   });
-  test("no email, names, capabilities, avatar or password by default", () => {
-    for (const e of out) {
+});
+
+describe("fromWpUser (live /wp/v2/users, context=edit)", () => {
+  const out = users.map((u) => fromWpUser(u));
+  test("author: public fields, login and roles private; WP meta passes through", () => {
+    expect(out[0]).toEqual({
+      id: "user-2", locale: "en", kind: "user", status: "published", visibility: "public", slug: "demo-author", title: "Demo Author",
+      origin: [{ system: "wordpress", id: "2" }], version: 1, created_at: "2026-10-25T14:33:48+00:00", updated_at: "2026-10-25T14:33:48+00:00",
+      content: "Writes the demo posts.",
+      metadata: {
+        url: { value: "https://example.com/demo-author" }, login: { value: "demo-author", private: true }, roles: { value: ["author"], private: true },
+        persisted_preferences: { value: [] },
+      },
+    });
+    expect(out[1].metadata).toEqual({ login: { value: "demo-editor", private: true }, roles: { value: ["editor"], private: true }, persisted_preferences: { value: [] } });
+  });
+  test("personal: false (default): no email, names, capabilities, avatar or password", () => {
+    for (const e of [...out, ...users.map((u) => fromWpUser(u, { personal: false }))]) {
       const s = JSON.stringify(e);
       for (const leak of ["@example.com", "capabilities", "gravatar", "password", "first_name", "last_name", "nickname", "en_US"]) expect(s).not.toContain(leak);
     }
   });
-  test("personal: true adds email and names, only as private", () => {
-    const e = fromWpUser(users[1], { personal: true });
-    expect(e.metadata).toEqual({
-      login: { value: "anna.editor", private: true }, roles: { value: ["editor"], private: true },
-      email: { value: "anna@example.com", private: true }, first_name: { value: "Anna", private: true },
-      last_name: { value: "Editor", private: true }, nickname: { value: "anna.editor", private: true },
+  test("personal: true adds email and non-empty names, only as private", () => {
+    const a = fromWpUser(users[0], { personal: true });
+    expect(a.metadata).toEqual({
+      url: { value: "https://example.com/demo-author" }, login: { value: "demo-author", private: true }, roles: { value: ["author"], private: true },
+      email: { value: "demo-author@example.com", private: true }, first_name: { value: "Demo", private: true },
+      last_name: { value: "Author", private: true }, nickname: { value: "demo-author", private: true }, persisted_preferences: { value: [] },
     });
-    expect(canonicalize(JSON.stringify(e))).not.toContain("anna@example.com");
+    const b = fromWpUser(users[1], { personal: true });
+    expect(Object.keys(b.metadata ?? {})).toEqual(["login", "roles", "email", "nickname", "persisted_preferences"]);
+    for (const e of [a, b]) {
+      const c = canonicalize(JSON.stringify(e));
+      expect(c).not.toContain("@example.com");
+      expect(c).not.toContain('"first_name"');
+    }
   });
-  test("view context (no registered_date, no edit fields) uses `at`", () => {
-    const { username, email, roles, registered_date, first_name, last_name, nickname, locale, ...view } = users[0];
-    const e = fromWpUser(view as WpUser, { at: "2026-10-20T00:00:00Z" });
-    expect([e.created_at, e.updated_at]).toEqual(["2026-10-20T00:00:00Z", "2026-10-20T00:00:00Z"]);
-    expect(Object.keys(e.metadata ?? {})).toEqual(["url"]);
+});
+
+describe("fromWpUser (live /wp/v2/users, context=view)", () => {
+  test("no registered_date / edit fields: converts without throwing, uses `at`", () => {
+    expect(usersView.map((u) => u.id)).toEqual([2, 3]);
+    for (const u of usersView) {
+      for (const k of ["email", "username", "roles", "registered_date"]) expect(k in u).toBe(false);
+      const e = fromWpUser(u, { at: "2026-10-20T00:00:00Z", personal: true });
+      expect([e.created_at, e.updated_at]).toEqual(["2026-10-20T00:00:00Z", "2026-10-20T00:00:00Z"]);
+      expect(entrySchema(e)).toBe(true);
+    }
+    expect(fromWpUser(usersView[0]).metadata).toEqual({ url: { value: "https://example.com/demo-author" } });
+    expect("metadata" in fromWpUser(usersView[1])).toBe(false);
   });
 });
 
 describe("media and users pass the v0.4 schema, validator and canonicalize()", () => {
+  const owner = fromWpPost(products.find((p) => p.id === 10)!).entry;
   const all: EntryV04[] = [
-    ...media.map((m) => fromWpMedia(m)), ...users.map((u) => fromWpUser(u)), ...users.map((u) => fromWpUser(u, { personal: true, locale: "ru" })),
-    ...posts.map((p) => fromWpPost(p).entry),
+    ...media.map((m) => fromWpMedia(m, { resolveKind })), ...users.map((u) => fromWpUser(u)), ...users.map((u) => fromWpUser(u, { personal: true, locale: "ru" })),
+    ...usersView.map((u) => fromWpUser(u, { locale: "de" })), ...posts.map((p) => fromWpPost(p).entry), owner,
   ];
   test("ajv entry schema", () => { for (const e of all) { const r = entrySchema(e); if (!r) console.log(e.id, entrySchema.errors); expect([e.id, r]).toEqual([e.id, true]); } });
-  test("validateCollectionV04 together with posts", () => { expect(validateCollectionV04({ entries: files(all, "entries") })).toEqual([]); });
+  test("validateCollectionV04 together with posts and the owner product", () => { expect(validateCollectionV04({ entries: files(all, "entries") })).toEqual([]); });
   test("canonicalize() accepts every record; private metadata is not in the projection", () => {
     for (const e of all) {
       const c = canonicalize(JSON.stringify(e));

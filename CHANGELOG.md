@@ -27,6 +27,7 @@ Features:
 - Id rule (draft v0.4): `CODEX_ID_PATTERN`, `isCodexId`, `assertCodexId`, `codexIdForInt` (`src/id.ts`), used by `canonicalize` (same behaviour) and by the WordPress adapter, which now throws on an invalid id. `entry.schema.json` unchanged.
 - WordPress adapter: `fromWpMedia` (`/wp/v2/media` → kind `media`) and `fromWpUser` (`/wp/v2/users` → kind `user`, non-public data only as `private:true`), with synthetic fixtures after the documented REST shape.
 - `fromWpMedia`: WP `post` → `metadata.attached_to` (`<kind>-<n>` reference, same id maker as posts) via `resolveKind` / `parentKind` options; `metadata.post` is no longer written; `parent_id` stays hierarchy within one kind.
+- Live WordPress REST fixtures `fixtures/wordpress/{media,users}.{edit,view}.json` (test accounts on example.com); media/user tests use them (edit = main path, view = converts without edit fields) instead of `*.synthetic.json`.
 
 ## 0.1.0 (unreleased)
 
