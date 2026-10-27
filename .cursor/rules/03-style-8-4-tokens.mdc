@@ -1,0 +1,30 @@
+---
+description: Spacing 8+4 for organisms and blocks only (ui8px); tokens-only colors, Lucide icons and no inline style everywhere
+globs: **/*.svelte,**/*.tsx,**/*.jsx,**/*.vue,**/*.templ,**/*.twig,**/*.latte,**/*.j2,**/*.css,**/*.html,**/specs/**/*.json,.ui8px/**
+alwaysApply: false
+---
+
+# Rule 03. Spacing and style
+
+## Spacing 8+4: organisms and blocks only
+
+Scope: the intermediate prototype layer, organisms and blocks (their specs and recipes). **Screens and applications
+are brand taste and style: ui8px does not check them** and this section does not apply to them.
+
+1. Layout spacing (`gap`, `p*`, `m*`, `space-*`, `inset`, sizes) uses even Tailwind steps (8px grid: `gap-2`,
+   `p-4`, `py-16`).
+2. Odd steps (4px: `gap-1`, `px-3`, `py-1`) only inside controls: button, input, select, textarea, checkbox, radio,
+   switch, badge, icon badge (the `controls` scope of `.ui8px/policy/scopes.json`).
+3. No half steps (`p-0.5`, `gap-1.5`), no arbitrary px values, no arbitrary `[..]` values. Hairlines `gap-px`,
+   `p-px` are allowed utilities.
+
+Check: `ui8px` (npm, `npx ui8px lint`), rules `UI8PX001` (spacing off the scope's grid), `UI8PX003` (denied),
+`UI8PX005` (unknown `ui-*`) blocking; `UI8PX002`, `UI8PX004` report only (`codegen-x/ui8kit:.ui8px/gate.json`,
+`packages/tooling/bin/ui8px-gate.mjs`). Setup: skill `ui8kit-spacing-ui8px`.
+
+## Everywhere (blocks, screens, apps)
+
+- Colors only via tokens (`bg-primary`, `text-muted-foreground`), never palette classes (`bg-blue-500`), hex or
+  `rgb()/hsl()/oklch()` values.
+- Icons: Lucide only, rendered through the kit's icon primitive.
+- No inline `style` attribute in composition.

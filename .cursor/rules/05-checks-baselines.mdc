@@ -1,0 +1,40 @@
+---
+description: Zones, rule checks on by default, zero baseline for new code, baselines only shrink, every step ends green
+globs: **/package.json,rules/**,.ui8px/**,.github/workflows/**
+alwaysApply: false
+---
+
+# Rule 05. Checks, zones and baselines
+
+Source: `codegen-x/ui8kit:packages/tooling/rules` (`rules.ts`, `src/rules/zones.ts`, `src/rules/index.ts`,
+`src/style-zones.ts`), `rules/zones.json`, `rules/baselines`, `rules/style-baselines`, root `package.json`.
+
+## Zones
+
+Each package declares its zones in the `ui8kit` field of its `package.json`:
+
+```json
+"ui8kit": { "runtime": "svelte", "kit": ["src/lib"], "composition": ["src/blocks", "src/parts"], "blockRoot": ["src/blocks"] }
+```
+
+`runtime`: `svelte`, `react`, `vue`, `solid`, `templ`, `twig`, `jinja2`, `latte`. The kit zone is never scanned;
+the composition zone gets detectors `block-root`, `raw-html`, `dynamic-tag`, `raw-native-tag`, `reactive-aria`,
+`literal-text`. The catalog `rules/zones.json` is assembled from these fields and must not be stale.
+
+**Target policy:** checks are on by default for every component directory; opting a directory out is explicit, with
+a written reason. **Current state:** opt-in (a package without a `ui8kit` field is not scanned).
+
+## Baselines
+
+1. New code has a **zero baseline**. A new file has no recorded count, so any finding fails the gate.
+2. Baselines (`rules/baselines/<package>.json`, `rules/style-baselines/<package>.json`) exist only for legacy
+   code. A count above the recorded one fails; a count below asks to re-record (`rules:baseline`), so the list
+   only shrinks.
+3. Never run `rules:baseline` to absorb a new finding: fix the code. Re-record only after a count went down, or for
+   a new zone whose files are clean.
+4. The `ui8px` ratchet (`.ui8px/gate.json` `max`) is 0 for new projects and only goes down.
+
+## Done means green
+
+Every step ends with the project's verify / check, `codex:validate` (fixtures against `@ui8kit/contract`) and the
+tests green. Setup: skill `ui8kit-rule-checks`.

@@ -1,0 +1,41 @@
+---
+description: UI8Kit core rules (contract first, Block root, primitives only, ARIA, 8+4 for organisms and blocks, tokens, Lucide, content, zero baseline). Always on; details in rules 01 to 05.
+alwaysApply: true
+---
+
+# UI8Kit core rules
+
+`ui8kit/contract` is the one central place of UI8Kit rules: no block exists without a contract, so the rules
+live with the contract. Copy `.cursor/rules` and `.cursor/skills` of this repo into a consumer project as is.
+Sources are cited as `codegen-x/ui8kit:<path>` (reference implementation, commit `0156f73`).
+
+## Rules (authoritative)
+
+1. **Contract first.** A block reads its data from Codex records (`@ui8kit/contract`, Codex v0.4) and its words from
+   the dictionary. Describe the data (kind, manifest fields, fixture entry) before the markup; `codex:validate` is green.
+2. **Block root.** Every block opens on `Block`. One `Block` per render path: never nested, never in a loop, never
+   duplicated. A nested or repeated region that needs its own landmark goes to its own file (rule 01).
+3. **Retag, do not re-element.** The host tag comes from the `tag` prop (`Block tag="section"`); `Title` uses `as`
+   (1 to 6), its native prop. No dynamic tags, no raw HTML injection.
+4. **Primitives only.** Composition is built from the framework's native UI8Kit primitives and the block / stack /
+   group compositions over them. No bare HTML tags outside the kit (rule 02).
+5. **Valid HTML5 and ARIA.** Native semantics first; ARIA in composition is static; state reaches ARIA only through
+   primitive props (rule 02).
+6. **Identical output across the 8 runtimes:** svelte, react, vue, solid, templ, twig, latte, jinja2 (same DOM, tokens
+   and ARIA). Web components are out of scope.
+7. **Spacing 8+4, organisms and blocks only** (the intermediate prototype layer): 8px steps everywhere, 4px steps
+   only inside controls (buttons, inputs, badges), no half steps, no arbitrary px or `[..]` values. Screens and
+   applications are brand taste and style: ui8px does not check them (rule 03).
+8. **Everywhere:** colors only via tokens, icons Lucide only, no inline `style`.
+9. **Texts** come from content / the dictionary or props, never literals in templates (rule 04).
+10. **Zero baseline for new code.** Baselines exist only for legacy code and must not grow (rule 05).
+11. **Checks on by default** for every component directory; opting out is explicit, with a reason.
+    *Target policy:* today zones are opt-in (`ui8kit` field of `package.json` -> `rules/zones.json`).
+12. **Every step ends green:** the project's verify / check, `codex:validate` and the tests.
+13. **License holder** is the GitHub org owning the repo (UI8Kit / CodeGen-X).
+
+## Where things are
+
+- Rules: `.cursor/rules/01-block-root.mdc` ... `05-checks-baselines.mdc`; this package: `10-contract-package.mdc`.
+- How to wire the checks into a project: `.cursor/skills/ui8kit-rule-checks`, `ui8kit-spacing-ui8px`, `ui8kit-new-block`.
+- Overview, enforcement status and known gaps: `AGENTS.md`.

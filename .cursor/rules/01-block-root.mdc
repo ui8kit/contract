@@ -1,0 +1,30 @@
+---
+description: Block is the root of blocks and screens; one Block per render path, never nested or looped; retag via the tag prop (Title uses as)
+globs: **/*.svelte,**/*.tsx,**/*.jsx,**/*.vue,**/*.templ,**/*.twig,**/*.latte,**/*.j2
+alwaysApply: false
+---
+
+# Rule 01. Block root
+
+Applies to the composition zone (blocks, composite components, screens, templates); the kit zone (primitives,
+utils) is never checked. Zones: rule 05. Source: `codegen-x/ui8kit:.cursor/rules/01-block-root.mdc`,
+`docs/specs-guide.md` §4, detector `block-root` in `packages/tooling/rules/src/rules/detectors.ts`.
+
+1. A file in the `blockRoot` part of the composition (blocks, screens, page templates, the app frame) opens on
+   `Block`, or on a composite whose own root is `Block`. Never on `Box`, `Stack`, `Group`, `Grid`, `Card`.
+2. Any other composition file may open on exactly one `Block` with a semantic tag.
+3. At most **one `Block` per render path**. Mutually exclusive branches (if / else, ternary, `v-if`/`v-else`,
+   early returns) may each hold one. Any other second `Block` goes to its own file and is imported.
+4. `Block` is never nested in another `Block` of the same file and never inside a loop (`{#each}`, `.map`, `v-for`,
+   `for`). Extract the item into its own file rooted on `Block`.
+5. Landmarks and sectioning come only from `Block` with `tag`: `div` (default), `section`, `article`, `aside`,
+   `header`, `footer`, `main`, `nav`, `figure`, `search`, `hgroup`. There is no `Nav`/`Header`/`Article` primitive.
+6. Retag through the prop: `Block tag="section"`, `Text tag="blockquote"`; headings are `Title as={2}` (`as` 1 to 6
+   -> `h1`..`h6`, its native prop). Specs write `Tag` / `As`.
+7. `Box` is a plain `div`, never a wrapper and never a file root; prefer the specialised primitive.
+
+Roots by surface: app frame `Block` without tag (no landmark); screen `Block tag="section"`; page header
+`tag="header"`; primary content `tag="main"` with `id="main-content"` (one per page); side column `tag="aside"`.
+
+Enforced: `block-root` (root not Block, more than one Block per path, nested, in a loop). Review only (no tool):
+`Box` as a wrapper, the frame's landmark tag, one `main` per page.

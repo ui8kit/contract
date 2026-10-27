@@ -1,0 +1,19 @@
+---
+description: Working on @ui8kit/contract itself (Codex v0.4 core, schemas, validator, canonical digests, WordPress adapter)
+globs: src/**,scripts/**,schemas/**,test/**,fixtures/**,docs/**,public/**,package.json,README.md,CHANGELOG.md
+alwaysApply: false
+---
+
+# The contract package
+
+Source: `README.md`, `CHANGELOG.md`, `docs/core-draft.md`, `docs/canonical.md` of this repo.
+
+1. Single source: `src/v04.ts` (types, enums, required lists) -> `scripts/schemas-v04.ts` -> `schemas/` and `public/`
+   (`bun run gen`). Strict keys in `src/validate-v04.ts`. Never hand-edit generated schemas.
+2. The core is closed: no platform fields. Extend by a new `kind` + manifest, field rules (`fastygo.codex/*`),
+   adapters outside the core (`fromX` / `toX` with a sidecar, real-data round trip), translations as records.
+3. Digests are JCS (RFC 8785) + SHA-256 under the profiles `codex-entry/v1`, `codex-manifest/v2`, `codex-term/v1`,
+   `codex-settings/v1` (`src/canonical.ts`, vectors in `fixtures/vectors`). Changing a profile changes vectors.
+4. Public surface and semver: README "Public API and semver"; every change goes to `CHANGELOG.md`, breaking ones
+   under "Breaking". Issue codes are API; keep README, registry and validator in sync (`test/agreement.test.ts`).
+5. Done = `bun run check` green (typecheck + `bun test` + self-test + build). Never `npm publish` from an agent.

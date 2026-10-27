@@ -1,0 +1,22 @@
+---
+description: No literal text in composition; words come from content (Codex records, the ui dictionary) or props. English-first, no Cyrillic in code
+globs: **/*.svelte,**/*.tsx,**/*.jsx,**/*.vue,**/*.templ,**/*.twig,**/*.latte,**/*.j2
+alwaysApply: false
+---
+
+# Rule 04. Text lives in content
+
+Source: `codegen-x/ui8kit:.cursor/rules/06-fixtures-no-literal-text.mdc`, detector `literal-text`.
+
+1. Interface text (titles, labels, buttons, placeholders, empty states, screen-reader text) comes from the ui
+   dictionary (`DictionaryV04` of `@ui8kit/contract`: `{ locale, source_locale?, messages }`) or from props.
+2. Records (posts, products, menus, settings) are Codex v0.4 records of `@ui8kit/contract`; a translation is another
+   record with the same `id` and another `locale`.
+3. Literal text in composition: a text node with letters (`<Text>Save</Text>`), a string with letters in a text prop
+   (`label`, `title`, `placeholder`, `alt`, `aria-label`, ...), a string result of a template expression
+   (`{ok ? "Yes" : "No"}`).
+4. Allowed: technical values (`class`, `id`, `href`, `type`, `role`, `variant`, `size`, `tag`, `data-*`, icon names),
+   strings without letters (`/`, `·`, `12`), anything from a variable, prop, fixture or `ui.*`.
+5. English is the default; other languages are content files. No Cyrillic in code, comments or strings.
+
+Enforced: rules gate `literal-text` (templates only; script-level prose is reviewed).

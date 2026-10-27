@@ -1,0 +1,34 @@
+---
+description: Primitives only (no bare HTML tags, no raw HTML, no dynamic tags) and valid HTML5 with static ARIA in composition
+globs: **/*.svelte,**/*.tsx,**/*.jsx,**/*.vue,**/*.templ,**/*.twig,**/*.latte,**/*.j2
+alwaysApply: false
+---
+
+# Rule 02. Primitives, HTML5 and ARIA
+
+Source: `codegen-x/ui8kit:.cursor/rules/02-no-raw-html.mdc`, `03-static-aria.mdc`, runtime appendices
+`runtime-{svelte,react,vue}.mdc`, `packages/ui-gates`.
+
+## Primitives only
+
+1. Composition contains zero raw native tags (lowercase HTML/SVG elements). Use the kit: `Box`, `Stack`, `Group`,
+   `Grid` instead of `div`; `Text`, `Inline`, `Title` instead of `p`/`span`/`h1`..`h6`; `List`/`ListItem`; `Form`,
+   `Label`, inputs; `Button` with `variant`/`size`; `Card`; landmarks via `Block tag`.
+2. No raw HTML injection (`{@html}`, `dangerouslySetInnerHTML`, `v-html`) and no dynamic tag
+   (`<svelte:element this>`, `<component :is>`, `createElement(tag)`).
+3. Missing tag: search the kit primitives, then the kit's tag groups; else add a primitive to the kit (its spec for
+   a generated kit). Never fall back to a raw tag. Never edit generated or installed kit files by hand.
+4. `Box`/`Text` `tag` only from the HTML5 allowlist (`ui-gates source`, rule `tag-allowlist`).
+
+## HTML5 and ARIA
+
+1. Native HTML5 semantics first; ARIA only where the element cannot express the role.
+2. In composition an `aria-*` state is static. State reaches ARIA only through a primitive prop
+   (`<Button pressed={on}>`). Naming attributes (`aria-label`, `aria-labelledby`, `aria-describedby`, ...) may be
+   expressions from content or props.
+3. ARIA goes through `Attrs`/attributes; there are no role props. Screens never write `data-ui8kit*` by hand.
+4. Dialogs have a name, a description, Escape close and focus return. Keep the kit focus ring.
+
+Enforced: rules gate detectors `raw-native-tag`, `raw-html`, `dynamic-tag`, `reactive-aria`;
+`ui-gates source <dirs>` (raw tag where a primitive exists, tag allowlist); `ui-gates html <cases.json>`
+(html-validate + axe-core in jsdom; config `rules/html-validate.json`, preset `html-validate:recommended`).
