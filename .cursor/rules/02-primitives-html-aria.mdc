@@ -1,5 +1,5 @@
 ---
-description: Primitives only (no bare HTML tags, no raw HTML, no dynamic tags) and valid HTML5 with static ARIA in composition
+description: Primitives only with tag retag (no bare HTML tags, no raw HTML, no dynamic tags) in every layer, screens and apps included, and valid HTML5 with static ARIA in composition
 globs: **/*.svelte,**/*.tsx,**/*.jsx,**/*.vue,**/*.templ,**/*.twig,**/*.latte,**/*.j2
 alwaysApply: false
 ---
@@ -8,6 +8,19 @@ alwaysApply: false
 
 Source: `codegen-x/ui8kit:.cursor/rules/02-no-raw-html.mdc`, `03-static-aria.mdc`, runtime appendices
 `runtime-{svelte,react,vue}.mdc`, `packages/ui-gates`.
+
+## Scope: every layer
+
+These rules apply to prototypes, layouts and apps alike, including app screens and taste screens (rule 00, three
+layers). Brand freedom of app screens covers spacing and look, never the tags: a screen is built from the framework's
+UI8Kit primitives with the `tag` retag, by the UI8Kit contracts.
+
+- Framework special elements that render no host tag are not bare tags: `<svelte:window>`, `<svelte:document>`,
+  `<svelte:body>`, `<svelte:head>`, `<svelte:options>` (the rules gate skips them). `<svelte:element this>` is a dynamic
+  tag and is not allowed.
+- Inline `svg`, `path`, `img`, `canvas` in composition are bare tags too: icons go through the kit's icon primitive
+  (Lucide), images through the image primitive. Raw markup is allowed only inside the kit zone (primitives, icon
+  glyph registry, utils), which is never scanned.
 
 ## Primitives only
 

@@ -1,5 +1,5 @@
 ---
-description: UI8Kit core rules (contract first, Block root, primitives only, ARIA, 8+4 for organisms and blocks, tokens, Lucide, content, zero baseline). Always on; details in rules 01 to 05.
+description: UI8Kit core rules (three layers, contract first, Block root, primitives only with tag retag everywhere, ARIA, 8+4 for prototypes and layouts, tokens, Lucide, content, zero baseline, exportable screens). Always on; details in rules 01 to 05.
 alwaysApply: true
 ---
 
@@ -9,6 +9,19 @@ alwaysApply: true
 live with the contract. Copy `.cursor/rules` and `.cursor/skills` of this repo into a consumer project as is.
 Sources are cited as `codegen-x/ui8kit:<path>` (reference implementation, commit `0156f73`).
 
+## Three layers
+
+Decision: `codegen-x/ui8kit:.project/adr/0001-three-layers-prototypes-layouts-apps.md` (commit `8fa0643`).
+
+| Layer | What | Rules |
+| --- | --- | --- |
+| **Prototypes** | blocks and organisms (specs, recipes, generated compositions) | every rule below, 8+4 through ui8px included |
+| **Layouts** | the app structure as a package (proposed `packages/layouts`): header, filters, facets, chips, card grid, preview frame, pagination, cards, search, panels | as strict as prototypes: structural detectors, 8+4, tokens, zero baseline; texts through props, data from the search engine package |
+| **Apps** | `apps/*`: assemble layout + data + routes + brand theme; app screens and taste screens | brand style is free: no 8+4, no spacing group; the retag rule (3, 4), ARIA (5), tokens, Lucide and texts (8, 9) still apply |
+
+The retag rule is not scoped by layer: every screen, in every layer, is built from the framework's UI8Kit primitives with
+the `tag` retag, never from bare HTML tags.
+
 ## Rules (authoritative)
 
 1. **Contract first.** A block reads its data from Codex records (`@ui8kit/contract`, Codex v0.4) and its words from
@@ -16,16 +29,19 @@ Sources are cited as `codegen-x/ui8kit:<path>` (reference implementation, commit
 2. **Block root.** Every block opens on `Block`. One `Block` per render path: never nested, never in a loop, never
    duplicated. A nested or repeated region that needs its own landmark goes to its own file (rule 01).
 3. **Retag, do not re-element.** The host tag comes from the `tag` prop (`Block tag="section"`); `Title` uses `as`
-   (1 to 6), its native prop. No dynamic tags, no raw HTML injection.
+   (1 to 6), its native prop. No dynamic tags, no raw HTML injection. This holds in every layer: prototypes, layouts,
+   app screens and taste screens.
 4. **Primitives only.** Composition is built from the framework's native UI8Kit primitives and the block / stack /
-   group compositions over them. No bare HTML tags outside the kit (rule 02).
+   group compositions over them. No bare HTML tags (`div`, `span`, `a`, `button`, `header`, `img`, `svg`, `input`,
+   `ul`/`li`, ...) outside the kit, in any layer, screens and apps included (rule 02).
 5. **Valid HTML5 and ARIA.** Native semantics first; ARIA in composition is static; state reaches ARIA only through
    primitive props (rule 02).
 6. **Identical output across the 8 runtimes:** svelte, react, vue, solid, templ, twig, latte, jinja2 (same DOM, tokens
    and ARIA). Web components are out of scope.
-7. **Spacing 8+4, organisms and blocks only** (the intermediate prototype layer): 8px steps everywhere, 4px steps
-   only inside controls (buttons, inputs, badges), no half steps, no arbitrary px or `[..]` values. Screens and
-   applications are brand taste and style: ui8px does not check them (rule 03).
+7. **Spacing 8+4, prototypes and layouts only** (organisms, blocks and the layouts package): 8px steps everywhere,
+   4px steps only inside controls (buttons, inputs, badges), no half steps, no arbitrary px or `[..]` values. App
+   screens are brand taste and style: 8+4 does not apply to them, and neither ui8px nor a spacing check scans them
+   (rule 03). Rules 3 and 4 still apply to them.
 8. **Everywhere:** colors only via tokens, icons Lucide only, no inline `style`.
 9. **Texts** come from content / the dictionary or props, never literals in templates (rule 04).
 10. **Zero baseline for new code.** Baselines exist only for legacy code and must not grow (rule 05).
@@ -33,6 +49,9 @@ Sources are cited as `codegen-x/ui8kit:<path>` (reference implementation, commit
     *Target policy:* today zones are opt-in (`ui8kit` field of `package.json` -> `rules/zones.json`).
 12. **Every step ends green:** the project's verify / check, `codex:validate` and the tests.
 13. **License holder** is the GitHub org owning the repo (UI8Kit / CodeGen-X).
+14. **End goal: exportable screens.** A visitor gets the ready code of a screen with every dependency: primitives,
+    organisms, layouts and styles (tokens, skin). Keep every dependency of a screen explicit (imports, tokens, no
+    app-only CSS classes in prototypes or layouts) so the set can be collected. Status: no exporter yet (`AGENTS.md`).
 
 ## Where things are
 

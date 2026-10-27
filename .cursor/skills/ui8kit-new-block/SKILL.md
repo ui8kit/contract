@@ -8,6 +8,13 @@ description: Create a new UI8Kit block by contract - Codex data and dictionary f
 Rules: `.cursor/rules/00-ui8kit-core.mdc` to `05-checks-baselines.mdc`. Reference walkthrough:
 `codegen-x/ui8kit:docs/specs-guide.md` §11 (organism `KeyFigure`).
 
+## 0. Layer
+
+Decide the layer first (rule 00, three layers): a **prototype** (block, organism: spec + generated runtimes) or a
+**layout** (app structure in the layouts package, texts via props, data from the search engine package). Both follow
+every step below, 8+4 included. An **app** only assembles layouts, data, routes and the brand theme: no new structure
+there, and still no bare tags.
+
 ## 1. Contract first
 
 1. Data: which Codex v0.4 records feed the block (`EntryV04` of a `kind`, terms, menus, settings). A new entity is

@@ -1,15 +1,17 @@
 ---
-description: Spacing 8+4 for organisms and blocks only (ui8px); tokens-only colors, Lucide icons and no inline style everywhere
+description: Spacing 8+4 for prototypes (organisms, blocks) and layouts only (ui8px), not app screens; tokens-only colors, Lucide icons and no inline style everywhere
 globs: **/*.svelte,**/*.tsx,**/*.jsx,**/*.vue,**/*.templ,**/*.twig,**/*.latte,**/*.j2,**/*.css,**/*.html,**/specs/**/*.json,.ui8px/**
 alwaysApply: false
 ---
 
 # Rule 03. Spacing and style
 
-## Spacing 8+4: organisms and blocks only
+## Spacing 8+4: prototypes and layouts only
 
-Scope: the intermediate prototype layer, organisms and blocks (their specs and recipes). **Screens and applications
-are brand taste and style: ui8px does not check them** and this section does not apply to them.
+Scope: the prototype layer, organisms and blocks (their specs and recipes), and the layouts layer (the app structure
+package, proposed `packages/layouts`; rule 00, three layers). **App screens are brand taste and style: neither ui8px
+nor a spacing check scans them** and this section does not apply to them. The retag rule (rule 02) and the section
+"Everywhere" below still apply to them.
 
 1. Layout spacing (`gap`, `p*`, `m*`, `space-*`, `inset`, sizes) uses even Tailwind steps (8px grid: `gap-2`,
    `p-4`, `py-16`).
@@ -22,7 +24,7 @@ Check: `ui8px` (npm, `npx ui8px lint`), rules `UI8PX001` (spacing off the scope'
 `UI8PX005` (unknown `ui-*`) blocking; `UI8PX002`, `UI8PX004` report only (`codegen-x/ui8kit:.ui8px/gate.json`,
 `packages/tooling/bin/ui8px-gate.mjs`). Setup: skill `ui8kit-spacing-ui8px`.
 
-## Everywhere (blocks, screens, apps)
+## Everywhere (prototypes, layouts, screens, apps)
 
 - Colors only via tokens (`bg-primary`, `text-muted-foreground`), never palette classes (`bg-blue-500`), hex or
   `rgb()/hsl()/oklch()` values.

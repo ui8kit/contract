@@ -1,12 +1,13 @@
 ---
 name: ui8kit-spacing-ui8px
-description: Set up the 8+4 spacing check with ui8px for organisms and blocks (not screens or apps). Use when adding or tuning lint:px, .ui8px policy files or the ui8px gate.
+description: Set up the 8+4 spacing check with ui8px for prototypes (organisms, blocks) and layouts (not app screens). Use when adding or tuning lint:px, .ui8px policy files or the ui8px gate.
 ---
 
-# 8+4 spacing check with ui8px (organisms and blocks)
+# 8+4 spacing check with ui8px (prototypes and layouts)
 
-Scope: the intermediate prototype layer, **organisms and blocks** only. Screens and applications are brand taste and
-style; do not point ui8px at them. Rule: `.cursor/rules/03-style-8-4-tokens.mdc`.
+Scope: the prototype layer (**organisms and blocks**) and the **layouts** layer (the app structure package, proposed
+`packages/layouts`). App screens are brand taste and style; do not point ui8px at them (the retag rule still applies to
+them, rule 02). Rules: `.cursor/rules/00-ui8kit-core.mdc` (three layers), `03-style-8-4-tokens.mdc`.
 
 Facts below are from `ui8px` 0.2.5 (`npx ui8px --help`, its README and `docs/cli-api.md`, repo
 `github.com/ui8kit/ui8px-cli`) and `codegen-x/ui8kit:packages/tooling/bin/ui8px-gate.mjs`, `ui8px-extract.mjs`,
@@ -27,7 +28,7 @@ in `allowed.json` (`spacing.layout`: even steps, 8px; `spacing.control`: adds od
 
 - `controls` (`spacing: "control"`): the control recipes of the blocks layer: button, input, select, textarea,
   checkbox, radio, switch, badge, icon badge (upstream lists them file by file).
-- `layout` (`spacing: "layout"`): every other organism and block.
+- `layout` (`spacing: "layout"`): every other organism and block, and every layout.
 - Do not list screens or app folders. Keep them out of the scan paths and `--ignore` them if a path overlaps.
 
 ## 3. What ui8px can read
@@ -36,7 +37,8 @@ in `allowed.json` (`spacing.layout`: even steps, 8px; `spacing.control`: adds od
 does not read `.svelte`, `.tsx`, `.vue` or JSON specs. For those, mirror the class sets into `.html` first, as
 upstream does: `ui8px-extract.mjs` writes `.ui8px/extract/specs/<dir>/<spec>.html` (one
 `<i data-src="$.json.path" class="...">` per class set, with a nested `.gitignore`). Adapt its source folder
-(upstream: `packages/compose-gen/specs`) to your organisms/blocks.
+(upstream: `packages/compose-gen/specs`) to your organisms/blocks. Layouts are hand-written `.svelte`/`.tsx`/`.vue`:
+they need their own extract of class sets (not built upstream yet) or the rules gate `spacing` group.
 
 ## 4. Gate
 

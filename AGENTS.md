@@ -12,16 +12,26 @@
 
 Full text: `.cursor/rules/00-ui8kit-core.mdc` (always on) and rules 01 to 05.
 
+- Three layers (`codegen-x/ui8kit:.project/adr/0001-three-layers-prototypes-layouts-apps.md` (commit `8fa0643`)): **prototypes** (blocks, organisms: every rule, 8+4 via
+  ui8px), **layouts** (the app structure package, proposed `packages/layouts`: structural detectors, 8+4, tokens, zero
+  baseline; texts via props, data from the search engine package), **apps** (assemble layout + data + routes + brand
+  theme; screens free in brand style, no 8+4, no spacing group).
+- The retag rule holds in every layer, app screens and taste screens included: no bare HTML tags, only the framework's
+  UI8Kit primitives with `tag`.
+- End goal: a visitor gets the ready code of a screen with all its dependencies (primitives, organisms, layouts,
+  styles and tokens).
+
 - Contract first: Codex records and dictionary keys before markup; `codex:validate` green.
 - Every block opens on `Block`; one `Block` per render path, never nested, looped or duplicated; a nested or
   repeated landmark is its own file.
 - Retag via the `tag` prop; `Title` uses `as` (its native prop). No dynamic tags, no raw HTML injection.
-- Only the framework's native UI8Kit primitives and block / stack / group compositions; no bare HTML tags.
+- Only the framework's native UI8Kit primitives and block / stack / group compositions; no bare HTML tags, in every
+  layer.
 - Valid HTML5 and ARIA; ARIA state only through primitive props.
 - Identical DOM, tokens and ARIA on svelte, react, vue, solid, templ, twig, latte, jinja2 (web components out of
   scope).
-- Spacing 8+4 for organisms and blocks only (8px steps; 4px only inside controls; no half steps, no arbitrary px or
-  `[..]`). Screens and apps are brand taste and style: ui8px does not check them.
+- Spacing 8+4 for prototypes (organisms, blocks) and layouts only (8px steps; 4px only inside controls; no half
+  steps, no arbitrary px or `[..]`). App screens are brand taste and style: neither ui8px nor a spacing check scans them.
 - Everywhere: colors via tokens, Lucide icons, no inline `style`, texts from content / dictionary.
 - New code has a zero baseline; baselines are legacy only and never grow.
 - Checks on by default for every component directory, explicit opt-out with a reason (target policy).
@@ -51,6 +61,10 @@ Tooling = `codegen-x/ui8kit` (commit `0156f73`).
 | Literal text | enforced: `literal-text` (templates; script prose reviewed) |
 | Same DOM on 8 runtimes | enforced for generated compositions: kit-compose parity tests (`UI8KIT_REQUIRE_ALL_RUNTIMES=1` in CI) |
 | 8+4 spacing (organisms, blocks) | enforced: `lint:px` (ui8px gate, `max: 0`) on compose-gen specs; kit-compose recipe tests |
+| 8+4 spacing (layouts) | not yet: the layouts package does not exist; ui8px reads only the specs extract |
+| No 8+4 on app screens | not yet: the `spacing` style group still scans `apps/magazine`, `apps/stock` (`STYLE_PACKAGES`) |
+| No bare tags in app screens (whole app) | partial: `raw-native-tag` covers only the declared composition dirs (`apps/magazine/src/theme` is outside); `apps/magazine` records 230 |
+| Exportable screen with its dependencies | no tool: no per-screen dependency closure or bundle emitter |
 | Colors via tokens | enforced: recipe test, `hardcode` (specs; style group in `magazine`, `stock`) |
 | Lucide icons | partial: kit-compose organisms test (glyph only inside the Icon primitive) |
 | No inline `style` | policy only (`rules/html-validate.json` sets `no-inline-style: off`) |
@@ -70,6 +84,9 @@ Tooling = `codegen-x/ui8kit` (commit `0156f73`).
 - The rules tooling lives inside `codegen-x/ui8kit` (`@codegen-x/tooling`, `@codegen-x/ui-gates`, both private) and is
   not yet a standalone package. Whether `ui8px` or a new package should host it: not decided / not checked.
 - `ui8px` 0.2.5 reads `.html`, `.templ`, `.css`, `.go` only; Svelte/React/Vue need the extract bridge.
+
+- Layers (`codegen-x/ui8kit` at `8fa0643`): Magazine's structure (`apps/magazine/src/parts`, `src/feed`, `src/theme`) still
+  lives in the app with `mg-*` classes from `src/magazine.css`; the migration into a layouts package is planned, not done.
 
 ## How to verify (this repo)
 

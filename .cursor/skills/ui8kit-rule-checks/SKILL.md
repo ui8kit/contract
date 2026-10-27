@@ -22,7 +22,9 @@ and reads `workspaces` of the root `package.json`):
 - `packages/ui-gates/**` (deps `html-validate`, `axe-core`, `jsdom`) and `rules/html-validate.json`.
 
 Then edit `STYLE_PACKAGES` in `packages/tooling/rules/src/style-zones.ts`: it is a hard-coded list (`magazine`,
-`stock` upstream). Put your hand-written app packages there or empty it.
+`stock` upstream). Put your hand-written app packages there or empty it. By layer (rule 05, zones by layer): a layouts package gets all
+four groups; an app gets `corners`, `shadows`, `hardcode` but not `spacing` (upstream applies all four to every listed
+package today, so this needs a per-package group list).
 
 ## 2. Declare zones (on by default)
 
@@ -33,7 +35,9 @@ In every package with components, add the `ui8kit` field to its `package.json`:
 ```
 
 Target policy: every component directory is in `composition`; a directory left out gets a written reason (README
-or a comment next to the field). Today the gate only scans packages that declare the field.
+or a comment next to the field). Today the gate only scans packages that declare the field. For apps the whole source
+is composition (app screens included: no bare tags in any layer), only the kit list is left out; a layouts package is
+composition with a zero baseline.
 
 ## 3. Scripts (root `package.json`)
 

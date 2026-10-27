@@ -24,6 +24,20 @@ the composition zone gets detectors `block-root`, `raw-html`, `dynamic-tag`, `ra
 **Target policy:** checks are on by default for every component directory; opting a directory out is explicit, with
 a written reason. **Current state:** opt-in (a package without a `ui8kit` field is not scanned).
 
+## Zones by layer
+
+Target per layer (rule 00, three layers; decision `codegen-x/ui8kit:.project/adr/0001-three-layers-prototypes-layouts-apps.md` (commit `8fa0643`)):
+
+| Layer | Structural detectors (rules gate) | Style groups | 8+4 |
+| --- | --- | --- | --- |
+| Prototypes | every detector on the composition zone | `corners`, `shadows`, `hardcode` (recipe tests) | ui8px gate, `max: 0` |
+| Layouts | every detector, zero baseline | `corners`, `shadows`, `hardcode`, `spacing`, zero baseline | yes (ui8px through an extract, or the `spacing` group) |
+| Apps | every detector over the **whole** app source (`raw-native-tag` everywhere, screens included); only the kit list is excluded | `corners`, `shadows`, `hardcode`; **no `spacing`** | no |
+
+**Current state** (`codegen-x/ui8kit` at `8fa0643`): the style groups are one list for all four groups
+(`STYLE_PACKAGES` = `apps/magazine`, `apps/stock` in `packages/tooling/rules/src/style-zones.ts`), so `spacing` still
+scans the apps; app zones list directories (`apps/magazine/src/theme` is in no zone); no layouts package exists.
+
 ## Baselines
 
 1. New code has a **zero baseline**. A new file has no recorded count, so any finding fails the gate.
