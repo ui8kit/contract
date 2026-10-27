@@ -49,7 +49,7 @@ Full text: `.cursor/rules/00-ui8kit-core.mdc` (always on) and rules 01 to 05.
 
 ## Enforced by tooling today vs policy only
 
-Tooling = `codegen-x/ui8kit` (commit `0156f73`).
+Tooling = `codegen-x/ui8kit` (commit `6c45d66`).
 
 | Rule | Status |
 | --- | --- |
