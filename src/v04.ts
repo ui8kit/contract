@@ -18,6 +18,11 @@ export type CommentStatusV04 = (typeof COMMENT_STATUSES_V04)[number];
 export const VISIBILITIES_V04 = ["public", "private"] as const;
 export type VisibilityV04 = (typeof VISIBILITIES_V04)[number];
 export const TAXONOMY_MODES_V04 = ["flat", "hierarchical"] as const;
+/** Weekdays of `settings.hours[].days` (ISO 8601 order, Monday first; the record keeps the order of the source). */
+export const WEEKDAYS_V04 = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+export type WeekdayV04 = (typeof WEEKDAYS_V04)[number];
+/** Settings fields that hold the same value in every locale of one settings id (only `contact.address` is localized). */
+export const LOCALE_NEUTRAL_SETTINGS_V04 = ["contact.phone", "contact.email", "contact.links", "hours", "hours_exceptions", "map"] as const;
 
 /**
  * Required fields of each record type. Single source for the JSON Schemas (scripts/schemas-v04.ts) and the TS types:
@@ -32,6 +37,9 @@ export const REQUIRED_V04 = {
   menuItem: ["id", "label", "url"],
   dictionary: ["locale", "messages"],
   settings: ["id", "locale", "title", "language", "version", "created_at", "updated_at"],
+  contactLink: ["network", "handle"],
+  hoursRule: ["days", "open", "close"],
+  hoursException: ["date"],
   revision: ["id", "entry_id", "locale", "version", "snapshot", "author_id", "created_at"],
 } as const;
 
@@ -98,6 +106,38 @@ export type DictionaryV04 = { locale: string; source_locale?: string; messages: 
 export type RevisionV04 = { id: string; entry_id: string; locale: string; version: number; snapshot: EntryV04; author_id: string; reason?: string; created_at: string };
 
 /**
+ * One messenger or social profile of the site. `network` is a lowercase identifier ("telegram", "whatsapp", "viber",
+ * "instagram", "x", ...); `handle` is the network's own id without spaces: a Telegram username without "@", a WhatsApp
+ * number in E.164, a profile name. Not a URL: platforms build links themselves.
+ */
+export type ContactLinkV04 = { network: string; handle: string };
+/**
+ * Contact data of the site, platform-neutral. Every field is optional; nested empty values are invalid (omit the key).
+ * `address` is localized: each settings record (one per locale) carries its own; the other fields are the same in
+ * every locale of one settings id (warning `core.settings.locale_neutral_mismatch`).
+ */
+export type ContactV04 = {
+  /** E.164: "+" and 2 to 15 digits, no spaces, e.g. "+12025550143". */
+  phone?: string;
+  /** A string with UI hint "email" (not a separate type), e.g. "hello@example.com". */
+  email?: string;
+  /** Postal address as one line, in the record's locale. */
+  address?: string;
+  /** Messengers and social profiles; order of the source is kept (never sorted). */
+  links?: ContactLinkV04[];
+};
+/**
+ * Weekly opening hours: on each of `days` the site is open from `open` to `close` ("HH:MM", 24 h, in
+ * `settings.timezone`). `close` may be "24:00"; `close` earlier than `open` runs past midnight. Several rules may name
+ * the same day (a lunch break = two rules). Days not named by any rule are closed.
+ */
+export type HoursRuleV04 = { days: WeekdayV04[]; open: string; close: string };
+/** One date ("YYYY-MM-DD", in `settings.timezone`) that replaces the weekly hours: closed, or open from `open` to `close`. */
+export type HoursExceptionV04 = { date: string; closed: true; open?: never; close?: never } | { date: string; open: string; close: string; closed?: never };
+/** Map pin of the site: a provider ("osm", "google", "yandex", "apple", ...) and/or coordinates (WGS 84 degrees, lat and lng together). */
+export type MapV04 = { provider?: string; lat?: number; lng?: number };
+
+/**
  * Site settings (one record per site and locale, usually id "site"). Money fields of entries are integer minor units;
  * `currency` here is the default when an entry has no own `currency` metadata.
  */
@@ -121,6 +161,14 @@ export type SettingsV04 = {
   comments_open?: boolean;
   /** ISO 4217 code, e.g. "USD". */
   currency?: string;
+  /** Contact data (phone, email, localized address, messenger and social links). */
+  contact?: ContactV04;
+  /** Weekly opening hours in `timezone`; absent = no hours published. */
+  hours?: HoursRuleV04[];
+  /** Dates that replace the weekly hours (holidays, short days), one per date. */
+  hours_exceptions?: HoursExceptionV04[];
+  /** Map pin; platforms fall back to a search by `contact.address`. */
+  map?: MapV04;
   origin?: Origin[];
   metadata?: Record<string, MetaValueV04>;
   version: number;

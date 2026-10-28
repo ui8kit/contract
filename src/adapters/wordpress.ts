@@ -3,7 +3,7 @@
 // Platform-only fields (password, local dates) go to an adapter-side sidecar so WP -> core -> WP is lossless;
 // computed fields (link, guid, *.rendered, *.protected, block_version, class_list, generated_slug,
 // permalink_template, count, _links, _embedded) are dropped and not restored.
-import type { EntryStatusV04, EntryV04, MetaValueV04, SettingsV04, TermV04 } from "../v04.js";
+import type { ContactV04, EntryStatusV04, EntryV04, MetaValueV04, SettingsV04, TermV04 } from "../v04.js";
 import type { Manifest } from "../codex.js";
 import { assertCodexId, codexIdForInt } from "../id.js";
 
@@ -254,10 +254,25 @@ export type WpSettings = Record<string, unknown> & {
 /** Everything WordPress-only from /wp/v2/settings (url, email, date formats, ...) and the original empty values. */
 export type WpSettingsSidecar = { rest: Record<string, unknown>; empty: Record<string, unknown> };
 
-const SETTINGS_MAPPED = ["title", "description", "language", "timezone", "site_logo", "site_icon", "show_on_front", "page_on_front", "page_for_posts", "posts_per_page", "default_comment_status", "wpfasty_currency"];
+/**
+ * Contact block options of the wpfasty-types plugin (registered with show_in_rest) → core settings paths. Each holds
+ * the core value as is (strings; links / hours / exceptions arrays; map object); "", [], {} and null mean "not set".
+ */
+export const WP_CONTACT_OPTIONS = {
+  wpfasty_contact_phone: "contact.phone",
+  wpfasty_contact_email: "contact.email",
+  wpfasty_contact_address: "contact.address",
+  wpfasty_contact_links: "contact.links",
+  wpfasty_hours: "hours",
+  wpfasty_hours_exceptions: "hours_exceptions",
+  wpfasty_map: "map",
+} as const;
+const SETTINGS_MAPPED = ["title", "description", "language", "timezone", "site_logo", "site_icon", "show_on_front", "page_on_front", "page_for_posts", "posts_per_page", "default_comment_status", "wpfasty_currency", ...Object.keys(WP_CONTACT_OPTIONS)];
+const unset = (v: unknown) => v === undefined || v === null || v === "" || (Array.isArray(v) && v.length === 0) || (typeof v === "object" && v !== null && !Array.isArray(v) && Object.keys(v).length === 0);
 
 /**
- * /wp/v2/settings -> core settings. `currency` comes from `wpfasty_currency` (wpfasty-types plugin) or `opts.currency`.
+ * /wp/v2/settings -> core settings. `currency` comes from `wpfasty_currency` (wpfasty-types plugin) or `opts.currency`;
+ * the contact block (`contact`, `hours`, `hours_exceptions`, `map`) from the `WP_CONTACT_OPTIONS` options of the same plugin.
  * WP REST has no settings timestamps: `at` (default epoch) fills created_at/updated_at.
  */
 export function fromWpSettings(w: WpSettings, opts: WpOptions & { at?: string; currency?: string; id?: string } = {}): { settings: SettingsV04; sidecar: WpSettingsSidecar } {
@@ -281,6 +296,16 @@ export function fromWpSettings(w: WpSettings, opts: WpOptions & { at?: string; c
   const currency = (w.wpfasty_currency as string | undefined) ?? opts.currency;
   if (currency) s.currency = currency;
   if (w.wpfasty_currency === undefined) empty.wpfasty_currency = undefined;
+  // contact block: a set option goes to its core path; an option present but not set is kept in the sidecar
+  const contact: ContactV04 = {};
+  for (const [opt, at] of Object.entries(WP_CONTACT_OPTIONS)) {
+    if (!(opt in w)) continue;
+    const v = w[opt];
+    if (unset(v)) { empty[opt] = v; continue; }
+    if (at.startsWith("contact.")) (contact as Record<string, unknown>)[at.slice(8)] = v;
+    else (s as Record<string, unknown>)[at] = v;
+  }
+  if (Object.keys(contact).length > 0) s.contact = contact;
   return { settings: s, sidecar: { rest, empty } };
 }
 
@@ -301,6 +326,11 @@ export function toWpSettings(s: SettingsV04, sidecar: WpSettingsSidecar = { rest
   if (s.posts_per_page !== undefined) out.posts_per_page = s.posts_per_page;
   if (s.comments_open !== undefined) out.default_comment_status = s.comments_open ? "open" : "closed";
   if (s.currency && !("wpfasty_currency" in e)) out.wpfasty_currency = s.currency;
+  for (const [opt, at] of Object.entries(WP_CONTACT_OPTIONS)) {
+    const v = at.startsWith("contact.") ? (s.contact as Record<string, unknown> | undefined)?.[at.slice(8)] : (s as Record<string, unknown>)[at];
+    if (v !== undefined) out[opt] = v;
+    else if (opt in e) out[opt] = e[opt];
+  }
   return out as WpSettings;
 }
 

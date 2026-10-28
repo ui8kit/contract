@@ -1,7 +1,7 @@
 // Validator for the Codex v0.4 core (docs/core-draft.md). Structure + the set rules:
 //   (id, locale) unique per record type; entry slug unique within (kind, locale, parent_id);
 //   term slug unique within (taxonomy_id, locale, parent_id); entry/comment status enums.
-import { COMMENT_STATUSES_V04, ENTRY_STATUSES_V04 } from "./v04.js";
+import { COMMENT_STATUSES_V04, ENTRY_STATUSES_V04, LOCALE_NEUTRAL_SETTINGS_V04, WEEKDAYS_V04 } from "./v04.js";
 import type { Field, Manifest, Relation } from "./codex.js";
 import { RULE_INTEGER, RULE_MONEY, RULE_URI } from "./codex.js";
 
@@ -24,7 +24,12 @@ export const KEYS_V04 = {
   menu: ["id", "location", "locale", "items"],
   menuItem: ["id", "label", "url", "parent_id", "order", "target"],
   dictionary: ["locale", "source_locale", "messages"],
-  settings: ["id", "locale", "title", "description", "language", "timezone", "logo_media_id", "icon_media_id", "front_page_id", "posts_page_id", "posts_per_page", "comments_open", "currency", "origin", "metadata", "version", "created_at", "updated_at"],
+  settings: ["id", "locale", "title", "description", "language", "timezone", "logo_media_id", "icon_media_id", "front_page_id", "posts_page_id", "posts_per_page", "comments_open", "currency", "contact", "hours", "hours_exceptions", "map", "origin", "metadata", "version", "created_at", "updated_at"],
+  contact: ["phone", "email", "address", "links"],
+  contactLink: ["network", "handle"],
+  hoursRule: ["days", "open", "close"],
+  hoursException: ["date", "closed", "open", "close"],
+  map: ["provider", "lat", "lng"],
   origin: ["system", "id"],
   metadata: ["value", "private"],
   termRef: ["taxonomy", "term_id"],
@@ -35,6 +40,18 @@ export const KEYS_V04 = {
 const IDENT = /^[a-z][a-z0-9_-]{0,62}$/;
 const LOCALE = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;
 const CURRENCY = /^[A-Z]{3}$/;
+/** E.164 phone: "+", a non-zero country digit, 2 to 15 digits in all, no spaces or separators. */
+export const E164_PATTERN = /^\+[1-9][0-9]{1,14}$/;
+/** Loose email shape (one "@", a dot in the domain, no spaces); email is a string with UI hint "email", not a type. */
+export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** Contact link handle: a non-empty string without whitespace. */
+export const HANDLE_PATTERN = /^\S+$/;
+/** Opening time "HH:MM", 00:00 to 23:59. */
+export const TIME_PATTERN = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+/** Closing time "HH:MM", 00:00 to 24:00. */
+export const CLOSE_PATTERN = /^(([01][0-9]|2[0-3]):[0-5][0-9]|24:00)$/;
+/** Calendar date "YYYY-MM-DD" (the validator also checks that the day exists). */
+export const DATE_PATTERN = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
 const RFC3339 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 type Obj = Record<string, unknown>;
 type Add = (code: string, path: string, message: string) => void;
@@ -174,7 +191,99 @@ export function checkSettingsV04(o: unknown, p: string, add: Add) {
   if (o.posts_per_page !== undefined && !(Number.isInteger(o.posts_per_page) && (o.posts_per_page as number) >= 1)) add("core.settings.type_invalid", `${p}.posts_per_page`, "posts_per_page must be an integer >= 1");
   if (o.comments_open !== undefined && typeof o.comments_open !== "boolean") add("core.settings.type_invalid", `${p}.comments_open`, "comments_open must be boolean");
   if (o.currency !== undefined && !CURRENCY.test(str(o.currency))) add("core.settings.currency_invalid", `${p}.currency`, "currency must be an ISO 4217 code like USD");
+  if (o.contact !== undefined) checkContact(o.contact, `${p}.contact`, add);
+  if (o.hours !== undefined) checkHours(o.hours, `${p}.hours`, add);
+  if (o.hours_exceptions !== undefined) checkHoursExceptions(o.hours_exceptions, `${p}.hours_exceptions`, add);
+  if (o.map !== undefined) checkMap(o.map, `${p}.map`, add);
 }
+
+// Nested values of the contact block are never empty: the canonical form omits empty values only at the top level,
+// so "" or [] inside would give a second digest for the same data. Omit the key instead.
+function checkContact(c: unknown, p: string, add: Add) {
+  if (!isObj(c)) return add("core.settings.type_invalid", p, "contact must be an object {phone?, email?, address?, links?}");
+  closed(add, c, KEYS_V04.contact, p);
+  if (c.phone !== undefined && !(typeof c.phone === "string" && E164_PATTERN.test(c.phone))) add("core.settings.phone_invalid", `${p}.phone`, "phone must be E.164: + and 2 to 15 digits without spaces, e.g. +12025550143");
+  if (c.email !== undefined && !(typeof c.email === "string" && EMAIL_PATTERN.test(c.email))) add("core.settings.email_invalid", `${p}.email`, "email must look like name@example.com");
+  if (c.address !== undefined && (typeof c.address !== "string" || blank(c.address))) add("core.settings.type_invalid", `${p}.address`, "address must be a non-blank string (omit it when there is none)");
+  if (c.links === undefined) return;
+  if (!Array.isArray(c.links) || c.links.length === 0) return add("core.settings.type_invalid", `${p}.links`, "links must be a non-empty array of {network, handle} (omit it when there are none)");
+  c.links.forEach((l, i) => {
+    const q = `${p}.links[${i}]`;
+    if (!isObj(l)) return add("core.settings.link_invalid", q, "a link must be {network, handle}");
+    closed(add, l, KEYS_V04.contactLink, q);
+    if (!IDENT.test(str(l.network))) add("core.settings.link_invalid", `${q}.network`, "network must be a lowercase identifier like telegram or whatsapp");
+    if (!(typeof l.handle === "string" && HANDLE_PATTERN.test(l.handle))) add("core.settings.link_invalid", `${q}.handle`, "handle must be a non-empty string without spaces");
+  });
+}
+
+const minutes = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3, 5));
+const realDate = (d: string) => {
+  if (!DATE_PATTERN.test(d)) return false;
+  const [y, m, day] = d.split("-").map(Number);
+  const t = new Date(Date.UTC(2000, 0, 1));
+  t.setUTCFullYear(y, m - 1, day);
+  return t.getUTCFullYear() === y && t.getUTCMonth() === m - 1 && t.getUTCDate() === day;
+};
+/** open/close of a rule or an exception: open 00:00..23:59, close 00:00..24:00, never equal (close < open = past midnight). */
+const interval = (o: Obj, q: string, code: string, add: Add) => {
+  if (!(typeof o.open === "string" && TIME_PATTERN.test(o.open))) add(code, `${q}.open`, "open must be HH:MM (00:00 to 23:59)");
+  else if (!(typeof o.close === "string" && CLOSE_PATTERN.test(o.close))) add(code, `${q}.close`, "close must be HH:MM (00:00 to 24:00)");
+  else if (o.close !== "24:00" && minutes(o.close) === minutes(o.open)) add(code, `${q}.close`, "close must differ from open (00:00 to 24:00 = all day)");
+};
+
+function checkHours(h: unknown, p: string, add: Add) {
+  if (!Array.isArray(h)) return add("core.settings.type_invalid", p, "hours must be an array of {days, open, close}");
+  h.forEach((r, i) => {
+    const q = `${p}[${i}]`;
+    if (!isObj(r)) return add("core.settings.hours_invalid", q, "an hours rule must be {days, open, close}");
+    closed(add, r, KEYS_V04.hoursRule, q);
+    const days = r.days;
+    if (!Array.isArray(days) || days.length === 0) add("core.settings.hours_invalid", `${q}.days`, `days must be a non-empty array of ${WEEKDAYS_V04.join(", ")}`);
+    else {
+      days.forEach((d, n) => { if (!(WEEKDAYS_V04 as readonly unknown[]).includes(d)) add("core.settings.hours_invalid", `${q}.days[${n}]`, `day must be one of ${WEEKDAYS_V04.join(", ")}`); });
+      if (new Set(days).size !== days.length) add("core.settings.hours_invalid", `${q}.days`, "a day is listed twice in one rule");
+    }
+    interval(r, q, "core.settings.hours_invalid", add);
+  });
+}
+
+function checkHoursExceptions(x: unknown, p: string, add: Add) {
+  if (!Array.isArray(x)) return add("core.settings.type_invalid", p, "hours_exceptions must be an array of {date, closed: true} or {date, open, close}");
+  const seen = new Map<string, number>();
+  x.forEach((e, i) => {
+    const q = `${p}[${i}]`;
+    if (!isObj(e)) return add("core.settings.hours_exception_invalid", q, "an exception must be {date, closed: true} or {date, open, close}");
+    closed(add, e, KEYS_V04.hoursException, q);
+    const date = str(e.date);
+    if (!realDate(date)) add("core.settings.hours_exception_invalid", `${q}.date`, "date must be an existing calendar day YYYY-MM-DD");
+    else if (seen.has(date)) add("core.settings.hours_exception_duplicated", `${q}.date`, `date ${date} already has an exception (${p}[${seen.get(date)}])`);
+    else seen.set(date, i);
+    const timed = e.open !== undefined || e.close !== undefined;
+    if (e.closed !== undefined) {
+      if (e.closed !== true) add("core.settings.hours_exception_invalid", `${q}.closed`, "closed must be true (give open and close for a short day)");
+      if (timed) add("core.settings.hours_exception_invalid", q, "an exception is either {date, closed: true} or {date, open, close}, not both");
+    } else if (!timed) add("core.settings.hours_exception_invalid", q, "an exception needs closed: true or open and close");
+    else interval(e, q, "core.settings.hours_exception_invalid", add);
+  });
+}
+
+function checkMap(m: unknown, p: string, add: Add) {
+  if (!isObj(m)) return add("core.settings.type_invalid", p, "map must be an object {provider?, lat?, lng?}");
+  closed(add, m, KEYS_V04.map, p);
+  if (Object.keys(m).length === 0) return add("core.settings.map_invalid", p, "map needs a provider or lat and lng (omit it when there is none)");
+  if (m.provider !== undefined && !IDENT.test(str(m.provider))) add("core.settings.map_invalid", `${p}.provider`, "provider must be a lowercase identifier like osm, google or yandex");
+  const deg = (v: unknown, max: number) => typeof v === "number" && Number.isFinite(v) && v >= -max && v <= max;
+  if ((m.lat === undefined) !== (m.lng === undefined)) add("core.settings.map_invalid", p, "lat and lng go together");
+  if (m.lat !== undefined && !deg(m.lat, 90)) add("core.settings.map_invalid", `${p}.lat`, "lat must be a number from -90 to 90");
+  if (m.lng !== undefined && !deg(m.lng, 180)) add("core.settings.map_invalid", `${p}.lng`, "lng must be a number from -180 to 180");
+}
+
+/** Value of a dotted settings path ("contact.phone") for the locale-neutral comparison, as stable JSON text. */
+const neutral = (o: Obj, path: string) => {
+  const v = path.split(".").reduce<unknown>((x, k) => (isObj(x) ? x[k] : undefined), o);
+  const stable = (x: unknown): string => Array.isArray(x) ? `[${x.map(stable).join(",")}]` : isObj(x) ? `{${Object.keys(x).sort().map((k) => `${JSON.stringify(k)}:${stable(x[k])}`).join(",")}}` : JSON.stringify(x);
+  return v === undefined ? "" : stable(v);
+};
 
 /** Validates a collection of v0.4 records: each record's shape, then the uniqueness rules and references. */
 export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options = {}): IssueV04[] {
@@ -196,6 +305,13 @@ export function validateCollectionV04(c: CollectionV04, opts: ValidateV04Options
   run(c.dictionaries, checkDictionaryV04);
   const settings = run(c.settings, checkSettingsV04);
   unique(settings, "core.settings.key_duplicated", (o) => `(${o.id}, ${o.locale})`, "settings key");
+  // only contact.address is localized: the rest of the contact block, hours and map match across the locales of one id
+  const firstOf = new Map<string, { file: string; o: Obj }>();
+  for (const r of settings) {
+    const first = firstOf.get(str(r.o.id));
+    if (!first) { firstOf.set(str(r.o.id), r); continue; }
+    for (const k of LOCALE_NEUTRAL_SETTINGS_V04) if (neutral(first.o, k) !== neutral(r.o, k)) add("core.settings.locale_neutral_mismatch", `${r.file}.${k}`, `${k} differs from settings (${first.o.id}, ${first.o.locale}) in ${first.file}; only contact.address is localized`, "warning");
+  }
   for (const { file, o } of entries) for (const k of Object.keys(isObj(o.metadata) ? o.metadata : {})) if ((KEYS_V04.entry as readonly string[]).includes(k)) add("core.metadata_key_shadowed", `${file}.metadata.${k}`, `metadata key "${k}" is a core entry field; use the core field or rename it (e.g. "${k}_value")`, "warning");
 
   unique(entries, "core.entry.key_duplicated", (o) => `(${o.id}, ${o.locale})`, "entry key");

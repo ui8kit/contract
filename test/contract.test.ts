@@ -19,6 +19,7 @@ const fx = (n: string) => JSON.parse(fs.readFileSync(path.join(root, "fixtures/c
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);
 ajv.addKeyword("x-codex-version");
+ajv.addKeyword("x-ui-hint");
 for (const s of Object.values(ALL)) ajv.addSchema(s);
 // Legacy v0.3 schemas (in memory only, not published) to keep checking the v0.3 fixtures.
 const v = (name: keyof typeof ALL) => ajv.getSchema((ALL[name] as any).$id)!;

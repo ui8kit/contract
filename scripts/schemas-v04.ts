@@ -1,6 +1,7 @@
 // Source of the Codex v0.4 JSON Schemas (draft 2020-12). `bun run gen` writes schemas/*.schema.json and public/*.schema.json.
 // Enums and required lists come from src/v04.ts; test/agreement.test.ts keeps keys in sync with src/validate-v04.ts (KEYS_V04) and the TS types.
-import { CODEX_V04_VERSION, COMMENT_STATUSES_V04, ENTRY_STATUSES_V04, REQUIRED_V04, TAXONOMY_MODES_V04, VISIBILITIES_V04, schemaUrlV04, type SchemaNameV04 } from "../src/v04.ts";
+import { CODEX_V04_VERSION, COMMENT_STATUSES_V04, ENTRY_STATUSES_V04, REQUIRED_V04, TAXONOMY_MODES_V04, VISIBILITIES_V04, WEEKDAYS_V04, schemaUrlV04, type SchemaNameV04 } from "../src/v04.ts";
+import { E164_PATTERN, EMAIL_PATTERN, HANDLE_PATTERN, TIME_PATTERN, CLOSE_PATTERN, DATE_PATTERN } from "../src/validate-v04.ts";
 import { manifest as manifestV03 } from "./schemas.ts";
 
 const S = "https://json-schema.org/draft/2020-12/schema";
@@ -102,6 +103,50 @@ export const dictionary = {
   properties: { locale, source_locale: locale, messages: { type: "object", additionalProperties: str } },
 };
 
+// settings: contact block, opening hours, map (all optional; nested values are never empty)
+const contactLink = {
+  type: "object", additionalProperties: false, required: [...REQUIRED_V04.contactLink],
+  properties: { network: ident, handle: { type: "string", pattern: HANDLE_PATTERN.source, description: "Network id without spaces: Telegram username without @, WhatsApp number in E.164, profile name" } },
+};
+const contact = {
+  description: "Contact data. address is localized (one per settings record / locale); the other fields are the same in every locale.",
+  type: "object", additionalProperties: false,
+  properties: {
+    phone: { type: "string", pattern: E164_PATTERN.source, description: "E.164, e.g. +12025550143" },
+    email: { type: "string", pattern: EMAIL_PATTERN.source, "x-ui-hint": "email", description: "A string with UI hint email (not a separate type)" },
+    address: { ...nonEmpty, description: "Postal address in the record's locale" },
+    links: { type: "array", minItems: 1, items: contactLink, description: "Messengers and social profiles; source order kept, never sorted" },
+  },
+};
+const hhmm = (p: RegExp, d: string) => ({ type: "string", pattern: p.source, description: d });
+const hoursRule = {
+  type: "object", additionalProperties: false, required: [...REQUIRED_V04.hoursRule],
+  properties: {
+    days: { type: "array", minItems: 1, uniqueItems: true, items: { enum: [...WEEKDAYS_V04] } },
+    open: hhmm(TIME_PATTERN, "HH:MM, 00:00 to 23:59"),
+    close: hhmm(CLOSE_PATTERN, "HH:MM, 00:00 to 24:00; earlier than open = past midnight; never equal to open"),
+  },
+};
+const hoursException = {
+  type: "object", additionalProperties: false, required: [...REQUIRED_V04.hoursException],
+  properties: {
+    date: { type: "string", pattern: DATE_PATTERN.source, description: "YYYY-MM-DD in settings.timezone" },
+    closed: { const: true },
+    open: hhmm(TIME_PATTERN, "HH:MM"),
+    close: hhmm(CLOSE_PATTERN, "HH:MM, up to 24:00"),
+  },
+  // {date, closed: true} or {date, open, close}: one more key than date, open and close together, closed excludes them
+  minProperties: 2,
+  dependentRequired: { open: ["close"], close: ["open"] },
+  dependentSchemas: { closed: { properties: { open: false, close: false } } },
+};
+const map = {
+  description: "Map pin: provider and/or WGS 84 coordinates (lat and lng together)",
+  type: "object", additionalProperties: false, minProperties: 1,
+  properties: { provider: ident, lat: { type: "number", minimum: -90, maximum: 90 }, lng: { type: "number", minimum: -180, maximum: 180 } },
+  dependentRequired: { lat: ["lng"], lng: ["lat"] },
+};
+
 export const settings = {
   ...meta("settings", "Codex v0.4 site settings (one record per site and locale)"),
   type: "object", additionalProperties: false,
@@ -116,6 +161,10 @@ export const settings = {
     posts_per_page: { type: "integer", minimum: 1 },
     comments_open: { type: "boolean", description: "Default for new entries" },
     currency: { type: "string", pattern: "^[A-Z]{3}$", description: "ISO 4217; default currency of money fields (integer minor units)" },
+    contact,
+    hours: { type: "array", items: hoursRule, description: "Weekly opening hours in timezone; days not named are closed; source order kept" },
+    hours_exceptions: { type: "array", items: hoursException, description: "Dates replacing the weekly hours: {date, closed: true} or {date, open, close}; one per date" },
+    map,
   },
 };
 

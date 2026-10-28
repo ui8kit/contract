@@ -31,6 +31,7 @@ yes<Eq<Req<RevisionV04>, R<"revision">>>();
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);
 ajv.addKeyword("x-codex-version");
+ajv.addKeyword("x-ui-hint");
 for (const s of Object.values(ALL_V04)) ajv.addSchema(s);
 const at = "2026-10-15T00:00:00Z";
 type Check = (o: unknown, p: string, add: (c: string, p: string, m: string) => void) => void;
@@ -50,6 +51,8 @@ describe("schemas, types and validator agree", () => {
   const schemaOf: Record<keyof typeof REQUIRED_V04, any> = {
     entry: ALL_V04.entry, term: ALL_V04.term, definition: ALL_V04.taxonomy.$defs.Definition, comment: ALL_V04.comment, menu: ALL_V04.menu,
     menuItem: ALL_V04.menu.properties.items.items, dictionary: ALL_V04.dictionary, settings: ALL_V04.settings, revision: ALL_V04.revision,
+    contactLink: ALL_V04.settings.properties.contact.properties.links.items, hoursRule: ALL_V04.settings.properties.hours.items,
+    hoursException: ALL_V04.settings.properties.hours_exceptions.items,
   };
   for (const [n, s] of Object.entries(schemaOf)) test(`${n}: schema required = REQUIRED_V04.${n}`, () => expect([...s.required].sort()).toEqual([...REQUIRED_V04[n as keyof typeof REQUIRED_V04]].sort()));
   test("enums come from the TS constants", () => {

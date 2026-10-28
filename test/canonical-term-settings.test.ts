@@ -20,6 +20,7 @@ const read = (p: string) => JSON.parse(fs.readFileSync(path.join(root, p), "utf8
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);
 ajv.addKeyword("x-codex-version");
+ajv.addKeyword("x-ui-hint");
 
 const suites = [
   { kind: "term" as const, profile: CANONICAL_TERM_PROFILE, canon: canonicalizeTerm, dig: termDigest },
@@ -38,7 +39,7 @@ for (const s of suites) {
       expect(vectors.profile).toBe(s.profile);
       expect(s.profile).toBe(`codex-${s.kind}/v1`);
       expect(vectors.cases.length).toBeGreaterThanOrEqual(5);
-      expect(vectors.cases.length).toBeLessThanOrEqual(8);
+      expect(vectors.cases.length).toBeLessThanOrEqual(12);
       expect(byName.size).toBe(vectors.cases.length);
     });
     for (const c of vectors.cases) {
@@ -60,9 +61,10 @@ for (const s of suites) {
         expect(validate(JSON.parse(out))).toBe(true);
       });
     }
-    test("distinct non-error vectors: minimal and full differ", () => {
-      const ds = new Set(vectors.cases.filter((c) => c.digest).map((c) => c.digest));
-      expect(ds.size).toBe(2);
+    test("distinct non-error vectors: minimal and full differ; only same_digest_as cases share a digest", () => {
+      const own = vectors.cases.filter((c) => c.digest && !c.same_digest_as);
+      expect(own.length).toBeGreaterThanOrEqual(2);
+      expect(new Set(own.map((c) => c.digest)).size).toBe(own.length);
     });
   });
 

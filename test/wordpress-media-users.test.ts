@@ -19,6 +19,7 @@ const wpfx = (n: string) => JSON.parse(fs.readFileSync(path.join(root, "fixtures
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);
 ajv.addKeyword("x-codex-version");
+ajv.addKeyword("x-ui-hint");
 for (const s of Object.values(ALL_V04)) ajv.addSchema(s);
 const entrySchema = ajv.getSchema(schemaUrlV04("entry"))!;
 const files = (list: unknown[], prefix: string) => list.map((data, i) => ({ file: `${prefix}[${i}]`, data }));

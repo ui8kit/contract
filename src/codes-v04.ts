@@ -78,6 +78,14 @@ export const ISSUE_CODES_V04 = {
   "core.settings.timezone_invalid": "timezone is not an IANA zone name",
   "core.settings.currency_invalid": "currency is not ISO 4217 (three capital letters)",
   "core.settings.key_duplicated": "(id, locale) is not unique among settings",
+  "core.settings.phone_invalid": "contact.phone is not E.164 (+ and 2 to 15 digits, no spaces)",
+  "core.settings.email_invalid": "contact.email does not look like an email address",
+  "core.settings.link_invalid": "a contact.links item is not {network, handle} (lowercase identifier, handle without spaces)",
+  "core.settings.hours_invalid": "an hours rule is not {days, open, close} (unique weekdays mon..sun, HH:MM, close not equal to open)",
+  "core.settings.hours_exception_invalid": "an hours exception is not {date, closed: true} or {date, open, close} with an existing date",
+  "core.settings.hours_exception_duplicated": "two hours exceptions name the same date",
+  "core.settings.map_invalid": "map is not {provider?, lat?, lng?} (identifier provider; lat -90..90 and lng -180..180, together)",
+  "core.settings.locale_neutral_mismatch": "warning: phone, email, links, hours, exceptions or map differ between locales of one settings id (only contact.address is localized)",
 
   "manifest.invalid": "the manifest is not {name, version, resources[]}",
   "manifest.kind_unknown": "warning: no resource of the manifest describes the entry's kind",
@@ -89,4 +97,4 @@ export const ISSUE_CODES_V04 = {
 } as const;
 
 export type IssueCodeV04 = keyof typeof ISSUE_CODES_V04;
-export const WARNING_CODES_V04: readonly IssueCodeV04[] = ["core.metadata_key_shadowed", "manifest.kind_unknown", "manifest.metadata_unknown"];
+export const WARNING_CODES_V04: readonly IssueCodeV04[] = ["core.metadata_key_shadowed", "core.settings.locale_neutral_mismatch", "manifest.kind_unknown", "manifest.metadata_unknown"];

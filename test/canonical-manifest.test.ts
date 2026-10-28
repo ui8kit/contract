@@ -46,6 +46,7 @@ describe("codex-manifest/v2 vectors (fixtures/vectors/manifest.json)", () => {
     const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
     addFormats(ajv);
     ajv.addKeyword("x-codex-version");
+    ajv.addKeyword("x-ui-hint");
     const v = ajv.compile(schema);
     for (const c of vectors.cases) if (!c.error) expect([c.name, v(JSON.parse(c.input_text))]).toEqual([c.name, true]);
   });

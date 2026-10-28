@@ -14,6 +14,7 @@ const wpfx = (n: string) => JSON.parse(fs.readFileSync(path.join(root, "fixtures
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);
 ajv.addKeyword("x-codex-version");
+ajv.addKeyword("x-ui-hint");
 for (const s of Object.values(ALL_V04)) ajv.addSchema(s);
 const v = (n: keyof typeof ALL_V04) => ajv.getSchema(schemaUrlV04(n))!;
 const ok = (n: keyof typeof ALL_V04, d: unknown) => { const f = v(n); const r = f(d); if (!r) console.log(n, f.errors); return r; };

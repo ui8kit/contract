@@ -229,7 +229,11 @@ function byCodePoint(a: string, b: string): number {
 }
 
 /** A flat record profile: closed key set, required fields, top-level keys dropped before projection (computed fields). */
-type RecordProfile = { what: string; keys: readonly string[]; required: readonly string[]; drop?: readonly string[] };
+type RecordProfile = {
+  what: string; keys: readonly string[]; required: readonly string[]; drop?: readonly string[];
+  /** Closed key sets of nested objects (top-level key → item keys); `[]`-suffixed keys hold arrays of such objects. */
+  nested?: Readonly<Record<string, { keys: readonly string[]; array?: boolean; inner?: Readonly<Record<string, { keys: readonly string[]; array?: boolean }>> }>>;
+};
 const ENTRY_PROFILE: RecordProfile = { what: "entry", keys: ENTRY_KEYS, required: REQUIRED };
 
 function project(input: Json, prof: RecordProfile = ENTRY_PROFILE): Obj {
@@ -274,9 +278,22 @@ function project(input: Json, prof: RecordProfile = ENTRY_PROFILE): Obj {
       if (!Array.isArray(v)) throw new CanonicalError("canonical.invalid_type", path, "origin must be an array");
       v.forEach((o, n) => { if (!isObj(o)) throw new CanonicalError("canonical.invalid_type", `${path}[${n}]`, "origin item must be {system, id}"); closed(o, KEYS_V04.origin, `${path}[${n}]`); });
     } else if (k === "discussion" && isObj(v)) closed(v, KEYS_V04.discussion, path);
+    else if (prof.nested?.[k]) shapeNested(v, prof.nested[k], path);
     out[k] = v;
   }
   return out;
+}
+
+/** Shape of a nested settings value: object or array of objects, closed keys; values themselves are kept as is. */
+function shapeNested(v: Json, n: NonNullable<RecordProfile["nested"]>[string], path: string): void {
+  const one = (x: Json, p: string) => {
+    if (!isObj(x)) throw new CanonicalError("canonical.invalid_type", p, "must be an object");
+    closed(x, n.keys, p);
+    for (const [ik, inn] of Object.entries(n.inner ?? {})) if (own(x, ik)) shapeNested(x[ik], inn, `${p}.${ik}`);
+  };
+  if (!n.array) return one(v, path);
+  if (!Array.isArray(v)) throw new CanonicalError("canonical.invalid_type", path, "must be an array");
+  v.forEach((x, i) => one(x, `${path}[${i}]`));
 }
 
 /** Canonical text (codex-entry/v1) of one Codex v0.4 entry given as JSON text. Throws CanonicalError. */
@@ -379,7 +396,15 @@ export const CANONICAL_SETTINGS_PROFILE = "codex-settings/v1";
 /** Computed term fields: accepted on input and never part of the canonical form (`count` is not in term.schema.json). */
 export const TERM_COMPUTED_FIELDS = ["count"] as const;
 const TERM_PROFILE: RecordProfile = { what: "term", keys: KEYS_V04.term, required: REQUIRED_V04.term, drop: TERM_COMPUTED_FIELDS };
-const SETTINGS_PROFILE: RecordProfile = { what: "settings", keys: KEYS_V04.settings, required: REQUIRED_V04.settings };
+const SETTINGS_PROFILE: RecordProfile = {
+  what: "settings", keys: KEYS_V04.settings, required: REQUIRED_V04.settings,
+  nested: {
+    contact: { keys: KEYS_V04.contact, inner: { links: { keys: KEYS_V04.contactLink, array: true } } },
+    hours: { keys: KEYS_V04.hoursRule, array: true },
+    hours_exceptions: { keys: KEYS_V04.hoursException, array: true },
+    map: { keys: KEYS_V04.map },
+  },
+};
 
 /** Canonical text (codex-term/v1) of one Term v0.4, as JSON text (exact integer check) or as a value; `count` is dropped. */
 export function canonicalizeTerm(term: string | object): string {

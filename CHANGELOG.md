@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
+The npm release 0.2.0 (2026-10-17) predates the canonical digests and everything below; the next publish is 0.3.0. Codex stays `0.4.0` (draft v0.4: schemas are overwritten in place until v0.5).
+
+Features:
+
+- Settings contact block (owner decision 2026-10-28), all optional and platform-neutral, on `SettingsV04` next to `currency` and `timezone`: `contact: { phone?, email?, address?, links? }` (`phone` E.164; `email` a string with UI hint `email`, schema keyword `x-ui-hint`, not a type; `address` localized = one per settings record / locale; `links: [{ network, handle }]`, source order kept), `hours: [{ days, open, close }]` (weekdays `WEEKDAYS_V04`, `HH:MM` in `settings.timezone`, close up to `24:00`, close < open = past midnight) and `hours_exceptions: [{ date, closed: true } | { date, open, close }]`, `map: { provider?, lat?, lng? }`. New types `ContactV04`, `ContactLinkV04`, `HoursRuleV04`, `HoursExceptionV04`, `MapV04`, `WeekdayV04`; constants `WEEKDAYS_V04`, `LOCALE_NEUTRAL_SETTINGS_V04`, `E164_PATTERN`, `EMAIL_PATTERN`, `HANDLE_PATTERN`, `TIME_PATTERN`, `CLOSE_PATTERN`, `DATE_PATTERN`; `KEYS_V04.contact|contactLink|hoursRule|hoursException|map`, `REQUIRED_V04.contactLink|hoursRule|hoursException`.
+- Validator: `core.settings.phone_invalid`, `email_invalid`, `link_invalid`, `hours_invalid`, `hours_exception_invalid`, `hours_exception_duplicated`, `map_invalid`; nested empty values are `core.settings.type_invalid` (omit the key); warning `core.settings.locale_neutral_mismatch` when phone, email, links, hours, exceptions or map differ between locales of one settings id.
+- `codex-settings/v1` (profile name and rules unchanged): closed key sets of the nested contact objects (`canonical.unknown_field`, `canonical.invalid_type`); vectors `fixtures/vectors/settings.json`: full record with the block, links order changes the digest, empty top-level block fields dropped, unsafe integer inside `map`, unknown field inside `contact`.
+- WordPress adapter: `WP_CONTACT_OPTIONS` (`wpfasty_contact_phone`, `wpfasty_contact_email`, `wpfasty_contact_address`, `wpfasty_contact_links`, `wpfasty_hours`, `wpfasty_hours_exceptions`, `wpfasty_map` of the wpfasty-types plugin) ↔ `contact.*`, `hours`, `hours_exceptions`, `map`; unset options stay in the sidecar; lossless round trip.
+- Tests: `test/settings-contact.test.ts` (E.164 valid and invalid, hours and exceptions, links order, localized address, schema ↔ validator agreement, adapter); vector-count limit of the term/settings suites raised to 12.
+
 ## 0.2.0 (unreleased)
 
 Hardening:
