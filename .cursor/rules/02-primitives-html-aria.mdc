@@ -42,6 +42,15 @@ UI8Kit primitives with the `tag` retag, by the UI8Kit contracts.
 3. ARIA goes through `Attrs`/attributes; there are no role props. Screens never write `data-ui8kit*` by hand.
 4. Dialogs have a name, a description, Escape close and focus return. Keep the kit focus ring.
 
+## Native form controls: Select indicator
+
+1. The `Select` primitive renders the native `<select>` with the browser's native dropdown indicator (chevron), in
+   all 8 runtimes with the same DOM, `data-slot` and ARIA. The primitive and its compose recipe never draw or move it.
+2. `padding-right` (the recipe's `pl-3 pr-2`) spaces the text only; it does not move the native chevron.
+3. Styling or offsetting the chevron (`appearance-none` plus a custom indicator) is the application's responsibility
+   (app or brand theme layer), not the primitive's, the kit's or the compose recipe's. Do not add it to the Select spec,
+   the codegen brick or `kit-compose/variants/select.variants.json`.
+
 Enforced: rules gate detectors `raw-native-tag`, `raw-html`, `dynamic-tag`, `reactive-aria`;
 `ui-gates source <dirs>` (raw tag where a primitive exists, tag allowlist); `ui-gates html <cases.json>`
 (html-validate + axe-core in jsdom; config `rules/html-validate.json`, preset `html-validate:recommended`).

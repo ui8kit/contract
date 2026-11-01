@@ -28,6 +28,8 @@ Full text: `.cursor/rules/00-ui8kit-core.mdc` (always on) and rules 01 to 05.
 - Only the framework's native UI8Kit primitives and block / stack / group compositions; no bare HTML tags, in every
   layer.
 - Valid HTML5 and ARIA; ARIA state only through primitive props.
+- Select renders the native `<select>` with the native chevron; `padding-right` does not move it; a custom chevron
+  (`appearance-none` + indicator) belongs to the application, not the primitive (rule 02).
 - Identical DOM, tokens and ARIA on svelte, react, vue, solid, templ, twig, latte, jinja2 (web components out of
   scope).
 - Spacing 8+4 for prototypes (organisms, blocks) and layouts only (8px steps; 4px only inside controls; no half
