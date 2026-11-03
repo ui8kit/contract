@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.3.0 (2026-11-03)
 
 - Added: view profile `view/v1`: `schemas/view.schema.json` (+ `public/`), `src/view-v1.ts` (constants, `FIELD_TYPE_VIEW_V1` Manifest field-type → view mapping, TS types), `fixtures/view/` (19 page types) and `test/view-v1.test.ts`. The profile projects v0.4 records via `$ref` and adds the primitives link, image, trustedHtml, pagination, menuTree, head and shell. Additive change: no existing schema is affected.
 

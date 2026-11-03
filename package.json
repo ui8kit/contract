@@ -1,27 +1,63 @@
 {
   "name": "@ui8kit/contract",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Codex v0.4 core contract for TypeScript: types, JSON Schemas, a strict validator, snapshot loader, readers and the adapter pattern. Framework-neutral.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "repository": { "type": "git", "url": "git+https://github.com/ui8kit/contract.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ui8kit/contract.git"
+  },
   "homepage": "https://github.com/ui8kit/contract#readme",
-  "keywords": ["codex", "fastygo", "ui8kit", "json-schema", "content", "cms", "manifest"],
-  "codex": { "module": "github.com/fastygo/codex", "version": "0.4.0", "schemaLine": "v0.4" },
+  "keywords": [
+    "codex",
+    "fastygo",
+    "ui8kit",
+    "json-schema",
+    "content",
+    "cms",
+    "manifest"
+  ],
+  "codex": {
+    "module": "github.com/fastygo/codex",
+    "version": "0.4.0",
+    "schemaLine": "v0.4"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./validate": { "types": "./dist/validate.d.ts", "import": "./dist/validate.js" },
-    "./adapter": { "types": "./dist/adapter.d.ts", "import": "./dist/adapter.js" },
-    "./adapters/wordpress": { "types": "./dist/adapters/wordpress.d.ts", "import": "./dist/adapters/wordpress.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./validate": {
+      "types": "./dist/validate.d.ts",
+      "import": "./dist/validate.js"
+    },
+    "./adapter": {
+      "types": "./dist/adapter.d.ts",
+      "import": "./dist/adapter.js"
+    },
+    "./adapters/wordpress": {
+      "types": "./dist/adapters/wordpress.d.ts",
+      "import": "./dist/adapters/wordpress.js"
+    },
     "./schemas/*.json": "./schemas/*.json",
     "./fixtures/*": "./fixtures/*",
     "./package.json": "./package.json"
   },
-  "files": ["dist", "schemas", "fixtures", "README.md", "CHANGELOG.md", "LICENSE"],
-  "engines": { "node": ">=18" },
+  "files": [
+    "dist",
+    "schemas",
+    "fixtures",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "gen": "bun scripts/gen.ts",
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json",
