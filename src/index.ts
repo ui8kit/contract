@@ -15,3 +15,5 @@ export {
 } from "./canonical.js";
 // Record id rule (draft v0.4): ASCII id, `<kind>-<n>` for integer primary keys.
 export { CODEX_ID_PATTERN, isCodexId, assertCodexId, codexIdForInt } from "./id.js";
+// View profile view/v1: template / site-generator contexts as projections of Codex v0.4 records (schemas/view.schema.json).
+export * from "./view-v1.js";

@@ -1,9 +1,10 @@
 // Writes schemas/*.schema.json and the static schema site in public/ (served by Vercel as-is).
-// Only the Codex v0.4 core is published, at stable unversioned URLs: https://schema.buildy.tw/<name>.schema.json.
+// The Codex v0.4 core and the view profile view/v1 are published, at stable unversioned URLs: https://schema.buildy.tw/<name>.schema.json.
 // Versioned URLs start at v0.5.
 import fs from "node:fs";
 import path from "node:path";
 import { ALL_V04 } from "./schemas-v04.ts";
+import { view } from "./schemas-view-v1.ts";
 import { SCHEMA_BASE_URL } from "../src/codex.ts";
 import { CODEX_V04_VERSION } from "../src/v04.ts";
 
@@ -18,7 +19,10 @@ export function render(): Record<string, string> {
     out[`schemas/${name}.schema.json`] = body;
     out[`public/${name}.schema.json`] = body;
   }
-  const rows = Object.keys(ALL_V04).map((n) => `      <tr><td>${n}</td><td><a href="/${n}.schema.json">${SCHEMA_BASE_URL}/${n}.schema.json</a></td></tr>`).join("\n");
+  // View profile view/v1 (src/view-v1.ts): a projection of the records above for templates and site generators.
+  out["schemas/view.schema.json"] = json(view);
+  out["public/view.schema.json"] = json(view);
+  const rows = [...Object.keys(ALL_V04), "view"].map((n) => `      <tr><td>${n}</td><td><a href="/${n}.schema.json">${SCHEMA_BASE_URL}/${n}.schema.json</a></td></tr>`).join("\n");
   out["public/index.html"] = `<!doctype html>
 <html lang="en">
 <head>

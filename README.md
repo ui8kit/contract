@@ -55,6 +55,17 @@ Schemas (draft 2020-12), stable unversioned URLs (no consumers yet; versioned UR
 
 The old `/v0.3/…` and `/latest/…` paths are removed.
 
+## View profile view/v1
+
+`schemas/view.schema.json` (`https://schema.buildy.tw/view.schema.json`, source `src/view-v1.ts` + `scripts/schemas-view-v1.ts`) describes the context a template or static site generator receives for one rendered page, for any Codex v0.4 backend.
+
+- The view context is a **projection** of Codex records: core record fields are `$ref`'d from the v0.4 schemas (`entry`, `term`, `menu`, `settings`, `dictionary`, `comment`), never copied.
+- On top of that there is a closed set of render-time primitives: `link`, `image`, `trustedHtml`, `pagination`, `menuTree` (resolved tree with `current`/`ancestor`), `head` (seo), `shell` (site from settings, labels from dictionary, request/page state).
+- Root defs: `pageContext` (front, single, page, attachment, any kind), `archiveContext` (home, category, tag, taxonomy, kind, author, date, search), `errorContext` (404).
+- Arbitrary entry fields go in `fields`, each typed by its Manifest field type; the mapping is `FIELD_TYPE_VIEW_V1`.
+- The profile has its own version (`x-view-profile: view/v1`, `x-view-version`). Minor versions only add things.
+- `fixtures/view/*.json` holds one example per page type; `test/view-v1.test.ts` validates them.
+
 ## Issue codes
 
 `validateCollectionV04` returns `IssueV04[]` = `{ code, path, message, severity? }`. Errors have no `severity`; warnings carry `severity: "warning"` and never make a record invalid. The registry is `ISSUE_CODES_V04` (code → meaning) with `WARNING_CODES_V04`; a test proves every emitted code is registered and listed here. Match on `code`, never on `message` (messages may be reworded in any release).
