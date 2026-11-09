@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added (page-spec 1.1.0, additive): optional block fields `catalogBlock` (Stock catalog block asset, `block.<name>`) and `variant` (one of its catalog variants), copy keys `icon` (Lucide name) and `href` (link of `action`), slots `features: action, href` and `feature: icon`, row field `icon`, patch op `set_variant` and `variant` on `add` / `replace`. Hosts reject unknown catalog blocks, variants and icons against their pinned catalog and registry snapshot. Every 1.0.0 page and patch validates unchanged. Conformance cases for the new fields (`invalid_catalog_block`, `invalid_variant`, `invalid_icon`, `invalid_href`).
 - Added: page spec profile `page-spec/v1` and edit operations `page-patch/v1`: `schemas/page-spec.schema.json`, `schemas/page-patch.schema.json` (+ `public/`), `src/page-spec-v1.ts` (constants, slots `PAGE_SLOTS_V1` / `PAGE_ITEM_SLOTS_V1`, program checks, TS types), `fixtures/page-spec/` (real assembled pages, store blob, `parsePage` conformance cases), `fixtures/page-patch/` and `test/page-spec-v1.test.ts`. The page root is the buildytech/chat Page DTO (layout.version 1) unchanged. Additive change: no existing schema is affected.
 
 ## 0.3.0 (2026-11-03)

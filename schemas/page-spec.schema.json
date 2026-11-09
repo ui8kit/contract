@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/page-spec.schema.json",
   "title": "Page spec page-spec/v1 — a page as Stock catalog blocks with their copy",
   "x-page-spec-profile": "page-spec/v1",
-  "x-page-spec-version": "1.0.0",
+  "x-page-spec-version": "1.1.0",
   "description": "The primary artifact of a BuildY page: an agent proposes it (propose_layout), the host validates it against the Stock catalog, saves it, and regenerates code from it for a UI8Kit target (Svelte today). History, edits (page-patch/v1) and rollback work on this JSON; code is never the source. Root: the page (identical to buildytech/chat Page DTO, layout.version 1: every saved page validates unchanged). $defs: provenance, record and store describe the browser page store. Not a Codex v0.4 entry. After the schema, consumers run x-program-checks (duplicate ids, block count, payload size). x-page-slots lists the copy keys each kind renders and the rows of list kinds; a saved page may hold other copy keys, a patch may only write slots.",
   "x-program-checks": [
     "duplicate_id",
@@ -143,6 +143,8 @@
     },
     "features": {
       "copy": [
+        "action",
+        "href",
         "badge"
       ],
       "items": {
@@ -150,7 +152,8 @@
         "max": 6,
         "fields": [
           "label",
-          "detail"
+          "detail",
+          "icon"
         ]
       }
     },
@@ -197,6 +200,7 @@
     },
     "feature": {
       "copy": [
+        "icon",
         "badge"
       ]
     },
@@ -374,9 +378,39 @@
             }
           ],
           "maxLength": 2000
+        },
+        "icon": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 64,
+          "description": "Lucide icon name; the host checks it against the Lucide set of its pinned registry snapshot."
+        },
+        "href": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/safeText"
+            },
+            {
+              "pattern": "^(?:#|/|https?://|mailto:)"
+            }
+          ],
+          "maxLength": 2000,
+          "description": "Link of the block action: #fragment, /path, http(s) URL or mailto."
         }
       },
       "description": "Copy of a block by closed key. Which keys a kind renders: x-page-slots."
+    },
+    "catalogBlock": {
+      "type": "string",
+      "pattern": "^block\\.[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 80,
+      "description": "Stock catalog block asset the block was built from (block.<name>, the spec of the catalog block index). Optional (1.1.0). The host rejects a block its pinned catalog does not have."
+    },
+    "variant": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9-]*$",
+      "maxLength": 40,
+      "description": "Catalog variant of catalogBlock (block.<name>/<variant> is the catalog asset id); the host renders the registry organism with the variant's props. Optional (1.1.0). The host rejects a variant its pinned catalog does not have."
     },
     "block1": {
       "type": "object",
@@ -413,6 +447,12 @@
           "maxLength": 500,
           "minLength": 1,
           "pattern": "\\S"
+        },
+        "catalogBlock": {
+          "$ref": "#/$defs/catalogBlock"
+        },
+        "variant": {
+          "$ref": "#/$defs/variant"
         },
         "copy": {
           "$ref": "#/$defs/copy"
@@ -462,6 +502,12 @@
           "minLength": 1,
           "pattern": "\\S"
         },
+        "catalogBlock": {
+          "$ref": "#/$defs/catalogBlock"
+        },
+        "variant": {
+          "$ref": "#/$defs/variant"
+        },
         "copy": {
           "$ref": "#/$defs/copy"
         },
@@ -510,6 +556,12 @@
           "minLength": 1,
           "pattern": "\\S"
         },
+        "catalogBlock": {
+          "$ref": "#/$defs/catalogBlock"
+        },
+        "variant": {
+          "$ref": "#/$defs/variant"
+        },
         "copy": {
           "$ref": "#/$defs/copy"
         },
@@ -557,6 +609,12 @@
           "maxLength": 500,
           "minLength": 1,
           "pattern": "\\S"
+        },
+        "catalogBlock": {
+          "$ref": "#/$defs/catalogBlock"
+        },
+        "variant": {
+          "$ref": "#/$defs/variant"
         },
         "copy": {
           "$ref": "#/$defs/copy"

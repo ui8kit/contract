@@ -8,6 +8,8 @@ import {
   PAGE_PATCH_PAGE_FIELDS_V1, PAGE_PATCH_PROFILE_V1, PAGE_PATCH_SCHEMA_URL_V1, PAGE_PROGRAM_CHECKS_V1,
   PAGE_SCENARIOS_V1, PAGE_SECTION_KINDS_V1, PAGE_SLOTS_V1, PAGE_SLUG_PATTERN_V1, PAGE_SPEC_PROFILE_V1,
   PAGE_SPEC_SCHEMA_URL_V1, PAGE_SPEC_VERSION_V1, PAGE_STATUSES_V1, PAGE_UNIVERSAL_SLOTS_V1,
+  PAGE_CATALOG_BLOCK_PATTERN_V1, PAGE_CATALOG_LIMITS_V1, PAGE_HREF_PATTERN_V1, PAGE_ICON_MAX_LENGTH_V1, PAGE_ICON_PATTERN_V1,
+  PAGE_VARIANT_PATTERN_V1,
 } from "../src/page-spec-v1.ts";
 
 const L = PAGE_LIMITS_V1;
@@ -36,7 +38,15 @@ const text = textAt("#/$defs/safeText");
 const required = requiredAt("#/$defs/safeText");
 const id = { type: "string", pattern: PAGE_ID_PATTERN_V1, maxLength: L.maxIdLength, description: "Lowercase ASCII id, unique in the whole page (page id included; checked by the program: duplicate_id). Safe in generated code (data-block-id)." };
 
-const copyProps = Object.fromEntries(PAGE_COPY_KEYS_V1.map((k) => [k, text(L.maxCopyLength)]));
+const copyKey = (k: string) =>
+  k === "icon"
+    ? { type: "string", pattern: PAGE_ICON_PATTERN_V1, maxLength: PAGE_ICON_MAX_LENGTH_V1, description: "Lucide icon name; the host checks it against the Lucide set of its pinned registry snapshot." }
+    : k === "href"
+      ? { allOf: [{ $ref: "#/$defs/safeText" }, { pattern: PAGE_HREF_PATTERN_V1 }], maxLength: L.maxCopyLength, description: "Link of the block action: #fragment, /path, http(s) URL or mailto." }
+      : text(L.maxCopyLength);
+const copyProps = Object.fromEntries(PAGE_COPY_KEYS_V1.map((k) => [k, copyKey(k)]));
+const catalogBlock = { type: "string", pattern: PAGE_CATALOG_BLOCK_PATTERN_V1, maxLength: PAGE_CATALOG_LIMITS_V1.maxCatalogBlockLength, description: "Stock catalog block asset the block was built from (block.<name>, the spec of the catalog block index). Optional (1.1.0). The host rejects a block its pinned catalog does not have." };
+const variant = { type: "string", pattern: PAGE_VARIANT_PATTERN_V1, maxLength: PAGE_CATALOG_LIMITS_V1.maxVariantLength, description: "Catalog variant of catalogBlock (block.<name>/<variant> is the catalog asset id); the host renders the registry organism with the variant's props. Optional (1.1.0). The host rejects a variant its pinned catalog does not have." };
 const copy = { type: "object", additionalProperties: false, properties: copyProps, description: "Copy of a block by closed key. Which keys a kind renders: x-page-slots." };
 
 // Depth is part of the shape: block1 (top level) .. block4 (deepest; children must be empty). parsePage: too_deep.
@@ -49,6 +59,8 @@ const blockAt = (depth: number) => ({
     kind: { $ref: "#/$defs/kind" },
     title: required(L.maxTitleLength),
     summary: required(L.maxSummaryLength),
+    catalogBlock: { $ref: "#/$defs/catalogBlock" },
+    variant: { $ref: "#/$defs/variant" },
     copy: { $ref: "#/$defs/copy" },
     children: depth < L.maxDepth
       ? { type: "array", items: { $ref: `#/$defs/block${depth + 1}` }, maxItems: L.maxBlocks }
@@ -133,6 +145,8 @@ export const pageSpec = {
     id,
     kind: { enum: [...PAGE_BLOCK_KINDS_V1], description: "Renderer kind a Stock catalog block maps onto." },
     copy,
+    catalogBlock,
+    variant,
     block1: blockAt(1), block2: blockAt(2), block3: blockAt(3), block4: blockAt(4),
     page,
     provenance,
@@ -150,6 +164,7 @@ const item = { type: "object", additionalProperties: false, required: ["label"],
 const items = { type: "array", items: { $ref: "#/$defs/item" }, maxItems: PAGE_PATCH_LIMITS_V1.maxItems, description: "Rows of a list block, replacing its rows. Row kind, limit and fields per kind: page-spec x-page-slots." };
 const sectionKind = { enum: [...PAGE_SECTION_KINDS_V1], description: "A top-level kind. The host builds the block from the page's Stock screen family; a kind the family does not have is rejected." };
 const blockRef = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/id` };
+const variantRef = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/variant` };
 const opCopy = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/copy` };
 const op = (name: string, props: Record<string, unknown>, req: string[], description: string) => ({
   type: "object", additionalProperties: false, required: ["op", ...req], description,
@@ -177,13 +192,15 @@ export const pagePatch = {
         op("set", { blockId: blockRef, field: { enum: ["title", "summary", ...PAGE_COPY_KEYS_V1] }, value: { anyOf: [ptext(L.maxCopyLength), { type: "null" }] } }, ["blockId", "field", "value"],
           "Set one slot of a block. null removes a copy key; title and summary cannot be removed."),
         op("set_items", { blockId: blockRef, items }, ["blockId", "items"], "Replace the rows of a list block."),
-        op("add", { kind: sectionKind, at: { type: "integer", minimum: 0 }, title: prequired(L.maxTitleLength), copy: opCopy, items }, ["kind"],
-          "Add a Stock block at a top-level index (default: its natural place). Optional copy and rows overlay the catalog defaults."),
-        op("replace", { blockId: blockRef, kind: sectionKind, title: prequired(L.maxTitleLength), copy: opCopy, items }, ["blockId", "kind"],
+        op("add", { kind: sectionKind, at: { type: "integer", minimum: 0 }, title: prequired(L.maxTitleLength), variant: variantRef, copy: opCopy, items }, ["kind"],
+          "Add a Stock block at a top-level index (default: its natural place). Optional copy and rows overlay the catalog defaults; variant picks a catalog variant of the block (the host sets catalogBlock)."),
+        op("replace", { blockId: blockRef, kind: sectionKind, title: prequired(L.maxTitleLength), variant: variantRef, copy: opCopy, items }, ["blockId", "kind"],
           "Replace a top-level block by another Stock block in the same place."),
         op("remove", { blockId: blockRef }, ["blockId"], "Remove a block and its rows."),
         op("move", { blockId: blockRef, to: { type: "integer", minimum: 0 } }, ["blockId", "to"], "Move a block to an index among its siblings."),
         op("set_page", { field: { enum: [...PAGE_PATCH_PAGE_FIELDS_V1] }, value: prequired(L.maxTitleLength) }, ["field", "value"], "Set the page title or an SEO field."),
+        op("set_variant", { blockId: blockRef, variant: { anyOf: [variantRef, { type: "null" }] } }, ["blockId", "variant"],
+          "Switch a block to another catalog variant of its catalog block (1.1.0); null returns to the catalog default. Unknown variants are rejected."),
       ],
     },
   },

@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/page-patch.schema.json",
   "title": "Page patch page-patch/v1 — edit operations on a page spec",
   "x-page-patch-profile": "page-patch/v1",
-  "x-page-spec-version": "1.0.0",
+  "x-page-spec-version": "1.1.0",
   "description": "An edit of a page-spec/v1 page as an ordered list of operations, applied in order to a copy of the base page; the whole patch is rejected if any operation fails. Unchanged blocks keep their content. Slot validation: set / add / replace may only write copy keys and row fields the target kind renders (page-spec x-page-slots); rows beyond the kind's limit are rejected. The result must be a valid page-spec/v1 page. baseRevision, when sent, must equal the page revision the patch was made for.",
   "type": "object",
   "additionalProperties": false,
@@ -78,6 +78,15 @@
           ],
           "maxLength": 40,
           "description": "Row copy.eyebrow."
+        },
+        "icon": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 64,
+          "description": "Row copy.icon."
         }
       }
     },
@@ -115,7 +124,9 @@
                 "days",
                 "address",
                 "value",
-                "badge"
+                "badge",
+                "icon",
+                "href"
               ]
             },
             "value": {
@@ -168,7 +179,7 @@
             "op",
             "kind"
           ],
-          "description": "Add a Stock block at a top-level index (default: its natural place). Optional copy and rows overlay the catalog defaults.",
+          "description": "Add a Stock block at a top-level index (default: its natural place). Optional copy and rows overlay the catalog defaults; variant picks a catalog variant of the block (the host sets catalogBlock).",
           "properties": {
             "op": {
               "const": "add"
@@ -205,6 +216,9 @@
               "maxLength": 160,
               "minLength": 1,
               "pattern": "\\S"
+            },
+            "variant": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/variant"
             },
             "copy": {
               "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/copy"
@@ -263,6 +277,9 @@
               "maxLength": 160,
               "minLength": 1,
               "pattern": "\\S"
+            },
+            "variant": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/variant"
             },
             "copy": {
               "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/copy"
@@ -345,6 +362,34 @@
               "maxLength": 160,
               "minLength": 1,
               "pattern": "\\S"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "blockId",
+            "variant"
+          ],
+          "description": "Switch a block to another catalog variant of its catalog block (1.1.0); null returns to the catalog default. Unknown variants are rejected.",
+          "properties": {
+            "op": {
+              "const": "set_variant"
+            },
+            "blockId": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/id"
+            },
+            "variant": {
+              "anyOf": [
+                {
+                  "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/variant"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           }
         }

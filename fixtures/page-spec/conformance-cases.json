@@ -34,7 +34,9 @@
       "days",
       "address",
       "value",
-      "badge"
+      "badge",
+      "icon",
+      "href"
     ],
     "statuses": [
       "draft",
@@ -571,6 +573,130 @@
             "contact"
           ],
           "value": "ftp://files.example/secret"
+        }
+      ]
+    },
+    {
+      "name": "catalog-block-variant-icon-href",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "catalogBlock"
+          ],
+          "value": "block.features"
+        },
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "variant"
+          ],
+          "value": "grid"
+        },
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "copy"
+          ],
+          "value": {
+            "action": "View all",
+            "href": "#/features"
+          }
+        },
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "children",
+            0,
+            "copy"
+          ],
+          "value": {
+            "icon": "zap"
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid-catalog-block-bare-name",
+      "code": "invalid_catalog_block",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "catalogBlock"
+          ],
+          "value": "features"
+        }
+      ]
+    },
+    {
+      "name": "invalid-variant-space",
+      "code": "invalid_variant",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "catalogBlock"
+          ],
+          "value": "block.features"
+        },
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "variant"
+          ],
+          "value": "grid two"
+        }
+      ]
+    },
+    {
+      "name": "invalid-icon-uppercase",
+      "code": "invalid_icon",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "children",
+            0,
+            "copy"
+          ],
+          "value": {
+            "icon": "Zap"
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid-href-relative-file",
+      "code": "invalid_href",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            2,
+            "copy"
+          ],
+          "value": {
+            "action": "Open",
+            "href": "files/x"
+          }
         }
       ]
     }

@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const PAGE_SPEC_PROFILE_V1 = "page-spec/v1";
-export const PAGE_SPEC_VERSION_V1 = "1.0.0";
+export const PAGE_SPEC_VERSION_V1 = "1.1.0";
 export const PAGE_SPEC_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-spec.schema.json`;
 export const PAGE_PATCH_PROFILE_V1 = "page-patch/v1";
 export const PAGE_PATCH_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-patch.schema.json`;
@@ -32,8 +32,27 @@ export const PAGE_SECTION_KINDS_V1 = PAGE_BLOCK_KINDS_V1.filter(
 ) as Exclude<PageBlockKindV1, PageChildKindV1>[];
 export type PageSectionKindV1 = Exclude<PageBlockKindV1, PageChildKindV1>;
 
-/** Closed copy keys. Values are plain text, never markup. */
-export const PAGE_COPY_KEYS_V1 = ["eyebrow", "headline", "lede", "action", "note", "brand", "contact", "legal", "days", "address", "value", "badge"] as const;
+/**
+ * Closed copy keys. Values are plain text, never markup. 1.1.0 adds `icon` (a Lucide icon name; the host checks it
+ * against the Lucide set of its pinned registry snapshot) and `href` (the link of `action`: #fragment, /path,
+ * http(s) or mailto).
+ */
+export const PAGE_COPY_KEYS_V1 = ["eyebrow", "headline", "lede", "action", "note", "brand", "contact", "legal", "days", "address", "value", "badge", "icon", "href"] as const;
+/** copy.icon: a Lucide icon name. */
+export const PAGE_ICON_PATTERN_V1 = "^[a-z0-9]+(?:-[a-z0-9]+)*$";
+export const PAGE_ICON_MAX_LENGTH_V1 = 64;
+/** copy.href: a fragment, a site path, an http(s) URL or mailto. */
+export const PAGE_HREF_PATTERN_V1 = "^(?:#|/|https?://|mailto:)";
+
+/**
+ * Catalog source of a block (1.1.0, optional): `catalogBlock` is the Stock catalog block asset (`block.<name>`, the
+ * `spec` of the catalog block index) the block was built from, `variant` one of that block's catalog variants
+ * (`block.<name>/<variant>` is the catalog asset id). The host rejects a block or variant its pinned catalog does not
+ * have and renders the registry organism of that block with the variant's props; pages without them render as before.
+ */
+export const PAGE_CATALOG_BLOCK_PATTERN_V1 = "^block\\.[a-z0-9]+(?:-[a-z0-9]+)*$";
+export const PAGE_VARIANT_PATTERN_V1 = "^[A-Za-z][A-Za-z0-9-]*$";
+export const PAGE_CATALOG_LIMITS_V1 = { maxCatalogBlockLength: 80, maxVariantLength: 40 } as const;
 export type PageCopyKeyV1 = (typeof PAGE_COPY_KEYS_V1)[number];
 
 export const PAGE_STATUSES_V1 = ["draft", "pending", "scheduled", "published", "archived", "trashed"] as const;
@@ -76,13 +95,13 @@ export const PAGE_SLOTS_V1 = {
   metrics: { copy: ["lede"], items: { kind: "metric", max: 6 } },
   chart: { copy: ["lede"], items: { kind: "metric", max: 12 } },
   activity: { copy: ["lede"], items: { kind: "activity-item", max: 8 } },
-  features: { copy: [], items: { kind: "feature", max: 6 } },
+  features: { copy: ["action", "href"], items: { kind: "feature", max: 6 } },
   menu: { copy: [], items: { kind: "dish", max: 8 } },
   hours: { copy: ["days", "address"] },
   cta: { copy: ["lede", "action", "note"] },
   footer: { copy: ["contact", "legal"] },
   "nav-link": { copy: ["eyebrow"] },
-  feature: { copy: [] },
+  feature: { copy: ["icon"] },
   dish: { copy: [] },
   metric: { copy: ["value", "note"] },
   "activity-item": { copy: ["note"] },
@@ -95,12 +114,13 @@ export const PAGE_ITEM_FIELDS_V1 = {
   value: { to: "copy.value", max: 24 },
   note: { to: "copy.note", max: 120 },
   group: { to: "copy.eyebrow", max: 40 },
+  icon: { to: "copy.icon", max: 64 },
 } as const;
 export type PageItemFieldV1 = keyof typeof PAGE_ITEM_FIELDS_V1;
 /** Row fields each row kind renders. */
 export const PAGE_ITEM_SLOTS_V1 = {
   "nav-link": ["label", "group"],
-  feature: ["label", "detail"],
+  feature: ["label", "detail", "icon"],
   dish: ["label", "detail"],
   metric: ["label", "value", "note"],
   "activity-item": ["label", "detail", "note"],
@@ -108,12 +128,12 @@ export const PAGE_ITEM_SLOTS_V1 = {
 
 /** Page-level fields a patch may set. */
 export const PAGE_PATCH_PAGE_FIELDS_V1 = ["title", "seo.title", "seo.description"] as const;
-export const PAGE_PATCH_OPS_V1 = ["set", "set_items", "add", "replace", "remove", "move", "set_page"] as const;
+export const PAGE_PATCH_OPS_V1 = ["set", "set_items", "add", "replace", "remove", "move", "set_page", "set_variant"] as const;
 export type PagePatchOpNameV1 = (typeof PAGE_PATCH_OPS_V1)[number];
 export const PAGE_PATCH_LIMITS_V1 = { maxOps: 24, maxItems: 12 } as const;
 
 export type PageBlockCopyV1 = { [K in PageCopyKeyV1]?: string };
-export interface PageBlockV1 { id: string; kind: PageBlockKindV1; title: string; summary: string; copy?: PageBlockCopyV1; children?: PageBlockV1[] }
+export interface PageBlockV1 { id: string; kind: PageBlockKindV1; title: string; summary: string; catalogBlock?: string; variant?: string; copy?: PageBlockCopyV1; children?: PageBlockV1[] }
 export interface PageSpecV1 {
   id: string; slug: string; status: PageStatusV1; title: string;
   layout: { version: typeof PAGE_LAYOUT_VERSION_V1; blocks: PageBlockV1[] };
@@ -131,13 +151,14 @@ export interface PageRecordV1 {
 }
 export interface PageStoreV1 { version: 1; pages: Record<string, PageRecordV1> }
 
-export type PagePatchItemV1 = { label: string; detail?: string; value?: string; note?: string; group?: string };
+export type PagePatchItemV1 = { label: string; detail?: string; value?: string; note?: string; group?: string; icon?: string };
 export type PagePatchOpV1 =
   | { op: "set"; blockId: string; field: "title" | "summary" | PageCopyKeyV1; value: string | null }
   | { op: "set_items"; blockId: string; items: PagePatchItemV1[] }
-  | { op: "add"; kind: PageSectionKindV1; at?: number; title?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
-  | { op: "replace"; blockId: string; kind: PageSectionKindV1; title?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
+  | { op: "add"; kind: PageSectionKindV1; at?: number; title?: string; variant?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
+  | { op: "replace"; blockId: string; kind: PageSectionKindV1; title?: string; variant?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
   | { op: "remove"; blockId: string }
   | { op: "move"; blockId: string; to: number }
-  | { op: "set_page"; field: (typeof PAGE_PATCH_PAGE_FIELDS_V1)[number]; value: string };
+  | { op: "set_page"; field: (typeof PAGE_PATCH_PAGE_FIELDS_V1)[number]; value: string }
+  | { op: "set_variant"; blockId: string; variant: string | null };
 export interface PagePatchV1 { baseRevision?: number; ops: PagePatchOpV1[] }

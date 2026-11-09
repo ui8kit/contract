@@ -138,7 +138,17 @@ describe("page-patch/v1", () => {
     ["negative move", { ops: [{ op: "move", blockId: "block-cta", to: -1 }] }],
     ["set_page unknown field", { ops: [{ op: "set_page", field: "slug", value: "x" }] }],
     ["extra key on op", { ops: [{ op: "remove", blockId: "block-cta", why: "x" }] }],
+    ["variant with a space", { ops: [{ op: "set_variant", blockId: "block-features", variant: "grid two" }] }],
+    ["icon not a Lucide name shape", { ops: [{ op: "set_items", blockId: "block-features", items: [{ label: "a", icon: "<svg>" }] }] }],
+    ["catalogBlock from the caller", { ops: [{ op: "add", kind: "features", catalogBlock: "block.features" }] }],
   ];
+  const catalogOps = { ops: [
+    { op: "set_variant", blockId: "block-features", variant: "tiles4" },
+    { op: "set_variant", blockId: "block-features", variant: null },
+    { op: "add", kind: "features", variant: "grid", copy: { action: "View all", href: "#/features" }, items: [{ label: "Fast", detail: "Static pages.", icon: "zap" }] },
+    { op: "set", blockId: "block-features", field: "href", value: "https://example.com/features" },
+  ] };
+  test("catalog variant, icon and href ops (1.1.0)", () => expect(errs(patch, catalogOps)).toEqual([]));
   test("minimal patch", () => expect(errs(patch, ok)).toEqual([]));
   for (const [name, p] of bad) test(`rejects: ${name}`, () => expect(patch(p)).toBe(false));
 });
