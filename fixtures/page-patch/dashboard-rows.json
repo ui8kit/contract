@@ -1,0 +1,12 @@
+{
+  "base": "dashboard-ru-demo.json",
+  "patch": {
+    "ops": [
+      { "op": "set_items", "blockId": "block-chart", "items": [
+        { "label": "Mon", "value": "12" }, { "label": "Tue", "value": "18" }, { "label": "Wed", "value": "9" }
+      ] },
+      { "op": "remove", "blockId": "block-activity" },
+      { "op": "set", "blockId": "block-pagehead", "field": "badge", "value": null }
+    ]
+  }
+}

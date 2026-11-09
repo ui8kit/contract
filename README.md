@@ -66,6 +66,17 @@ The old `/v0.3/…` and `/latest/…` paths are removed.
 - The profile has its own version (`x-view-profile: view/v1`, `x-view-version`). Minor versions only add things.
 - `fixtures/view/*.json` holds one example per page type; `test/view-v1.test.ts` validates them.
 
+## Page spec page-spec/v1 and page patch page-patch/v1
+
+`schemas/page-spec.schema.json` (`https://schema.buildy.tw/page-spec.schema.json`) and `schemas/page-patch.schema.json` (`https://schema.buildy.tw/page-patch.schema.json`), source `src/page-spec-v1.ts` + `scripts/schemas-page-spec-v1.ts`, describe the page document a BuildY agent proposes and a host saves. It is not a Codex v0.4 entry.
+
+- The page spec is the primary artifact: history, edits and rollback work on this JSON; code for a UI8Kit target (Svelte today) is always regenerated from it.
+- Root: the page, identical to the buildytech/chat Page DTO (`layout.version` 1, `parsePage`), so every saved page validates unchanged. `$defs/provenance`, `record` and `store` describe the browser page store (`buildytech-creator-pages-v1`), including legacy records without provenance.
+- After the schema, consumers run the program checks of `x-program-checks` (`PAGE_PROGRAM_CHECKS_V1`): duplicate ids, block count, payload size. JSON Schema `maxLength` counts code points; `parsePage` counts UTF-16 units.
+- Slots: `x-page-slots` (`PAGE_SLOTS_V1`, `PAGE_ITEM_SLOTS_V1`) lists the copy keys each kind renders and the row kind, row limit and row fields of list kinds. A saved page may hold other copy keys; a patch may only write slots.
+- `page-patch/v1` is an ordered list of operations (`set`, `set_items`, `add`, `replace`, `remove`, `move`, `set_page`), applied in order, all or nothing. `add` and `replace` name a kind; the host builds the block from the page's Stock screen family.
+- `fixtures/page-spec/` holds real pages assembled from the pinned Stock catalog (dashboard, landing, website), the chat contract fixture, a store blob and the `parsePage` conformance cases; `fixtures/page-patch/` holds patches. `test/page-spec-v1.test.ts` validates them and checks that the schema and `parsePage` agree on every conformance case.
+
 ## Issue codes
 
 `validateCollectionV04` returns `IssueV04[]` = `{ code, path, message, severity? }`. Errors have no `severity`; warnings carry `severity: "warning"` and never make a record invalid. The registry is `ISSUE_CODES_V04` (code → meaning) with `WARNING_CODES_V04`; a test proves every emitted code is registered and listed here. Match on `code`, never on `message` (messages may be reworded in any release).

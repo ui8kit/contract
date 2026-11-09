@@ -1,0 +1,143 @@
+// Page spec profile page-spec/v1: the JSON page document a BuildY agent proposes and a host saves, renders and
+// regenerates code from (Svelte today; any of the 9 UI8Kit targets later). It is NOT a Codex v0.4 entry: a page spec
+// is a layout of Stock catalog blocks with their copy, and the generated code is always derived from it.
+// Shape source: buildytech/chat `packages/page-contract` (Page DTO, layout.version 1, `parsePage`) and the browser
+// page store (`buildytech-creator-pages-v1`: applied / candidate page + provenance). Saved pages validate unchanged.
+// Edits: page-patch/v1 operations (replace a block, set copy or rows, reorder, add, remove) instead of a full new spec.
+// Schemas: scripts/schemas-page-spec-v1.ts -> schemas/page-spec.schema.json and schemas/page-patch.schema.json.
+// Versioning: page-spec/v1 matches layout.version 1; minor versions only add optional things. Objects are closed.
+import { SCHEMA_BASE_URL } from "./codex.js";
+
+export const PAGE_SPEC_PROFILE_V1 = "page-spec/v1";
+export const PAGE_SPEC_VERSION_V1 = "1.0.0";
+export const PAGE_SPEC_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-spec.schema.json`;
+export const PAGE_PATCH_PROFILE_V1 = "page-patch/v1";
+export const PAGE_PATCH_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-patch.schema.json`;
+
+/** layout.version of a page spec v1. Any other version is rejected. */
+export const PAGE_LAYOUT_VERSION_V1 = 1 as const;
+
+/** Closed block kinds (renderer kinds that Stock catalog blocks map onto). */
+export const PAGE_BLOCK_KINDS_V1 = [
+  "nav", "nav-link", "hero", "features", "feature", "menu", "dish", "hours", "cta", "footer",
+  "pagehead", "overview", "metrics", "metric", "chart", "activity", "activity-item", "sidenav", "bottomnav",
+] as const;
+export type PageBlockKindV1 = (typeof PAGE_BLOCK_KINDS_V1)[number];
+
+/** Kinds that only exist as rows of a list block (never top level in a patch `add` / `replace`). */
+export const PAGE_CHILD_KINDS_V1 = ["nav-link", "feature", "dish", "metric", "activity-item"] as const;
+export type PageChildKindV1 = (typeof PAGE_CHILD_KINDS_V1)[number];
+export const PAGE_SECTION_KINDS_V1 = PAGE_BLOCK_KINDS_V1.filter(
+  (k) => !(PAGE_CHILD_KINDS_V1 as readonly string[]).includes(k),
+) as Exclude<PageBlockKindV1, PageChildKindV1>[];
+export type PageSectionKindV1 = Exclude<PageBlockKindV1, PageChildKindV1>;
+
+/** Closed copy keys. Values are plain text, never markup. */
+export const PAGE_COPY_KEYS_V1 = ["eyebrow", "headline", "lede", "action", "note", "brand", "contact", "legal", "days", "address", "value", "badge"] as const;
+export type PageCopyKeyV1 = (typeof PAGE_COPY_KEYS_V1)[number];
+
+export const PAGE_STATUSES_V1 = ["draft", "pending", "scheduled", "published", "archived", "trashed"] as const;
+export type PageStatusV1 = (typeof PAGE_STATUSES_V1)[number];
+
+/** Host scenario a page was started from (provenance only). */
+export const PAGE_SCENARIOS_V1 = ["dashboard", "landing", "website"] as const;
+export type PageScenarioV1 = (typeof PAGE_SCENARIOS_V1)[number];
+
+export const PAGE_LIMITS_V1 = {
+  maxBlocks: 64, maxDepth: 4, maxIdLength: 63, maxSlugLength: 48, maxTitleLength: 160, maxSummaryLength: 500,
+  maxCopyLength: 2000, maxSeoLength: 200, maxLocaleLength: 16, maxJsonChars: 65_536, maxDatetimeLength: 40,
+} as const;
+
+/** Patterns of buildytech/chat `parsePage` (ECMA-262). */
+export const PAGE_ID_PATTERN_V1 = "^[a-z][a-z0-9-]{0,62}$";
+export const PAGE_SLUG_PATTERN_V1 = "^[a-z0-9]+(?:-[a-z0-9]+)*$";
+export const PAGE_LOCALE_PATTERN_V1 = "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$";
+export const PAGE_DATETIME_PATTERN_V1 = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$";
+
+/**
+ * Checks a JSON Schema cannot express; every consumer runs them after the schema (codes of `parsePage`):
+ * duplicate ids in the whole page (page id included), more than maxBlocks blocks in the tree, payload over maxJsonChars.
+ */
+export const PAGE_PROGRAM_CHECKS_V1 = ["duplicate_id", "too_many_blocks", "too_large"] as const;
+
+/**
+ * Slots: the copy keys each kind renders (Preview + generated code) and, for list kinds, the row kind and row limit.
+ * `badge` (demo-data marker) is a slot of every kind. title and summary are slots of every kind.
+ * A saved page may carry other copy keys (older pages); a patch may only write slots (slot validation).
+ */
+export const PAGE_UNIVERSAL_SLOTS_V1 = ["badge"] as const;
+export const PAGE_SLOTS_V1 = {
+  nav: { copy: ["brand"], items: { kind: "nav-link", max: 6 } },
+  sidenav: { copy: ["brand"], items: { kind: "nav-link", max: 8 } },
+  bottomnav: { copy: [], items: { kind: "nav-link", max: 5 } },
+  hero: { copy: ["eyebrow", "headline", "lede", "action"] },
+  pagehead: { copy: ["headline", "lede"] },
+  overview: { copy: ["lede"], items: { kind: "metric", max: 4 } },
+  metrics: { copy: ["lede"], items: { kind: "metric", max: 6 } },
+  chart: { copy: ["lede"], items: { kind: "metric", max: 12 } },
+  activity: { copy: ["lede"], items: { kind: "activity-item", max: 8 } },
+  features: { copy: [], items: { kind: "feature", max: 6 } },
+  menu: { copy: [], items: { kind: "dish", max: 8 } },
+  hours: { copy: ["days", "address"] },
+  cta: { copy: ["lede", "action", "note"] },
+  footer: { copy: ["contact", "legal"] },
+  "nav-link": { copy: ["eyebrow"] },
+  feature: { copy: [] },
+  dish: { copy: [] },
+  metric: { copy: ["value", "note"] },
+  "activity-item": { copy: ["note"] },
+} as const satisfies Record<PageBlockKindV1, { copy: readonly PageCopyKeyV1[]; items?: { kind: PageChildKindV1; max: number } }>;
+
+/** Row fields of a list block (patch `items`) and where each lands on the row block. */
+export const PAGE_ITEM_FIELDS_V1 = {
+  label: { to: "title", max: 80 },
+  detail: { to: "summary", max: 200 },
+  value: { to: "copy.value", max: 24 },
+  note: { to: "copy.note", max: 120 },
+  group: { to: "copy.eyebrow", max: 40 },
+} as const;
+export type PageItemFieldV1 = keyof typeof PAGE_ITEM_FIELDS_V1;
+/** Row fields each row kind renders. */
+export const PAGE_ITEM_SLOTS_V1 = {
+  "nav-link": ["label", "group"],
+  feature: ["label", "detail"],
+  dish: ["label", "detail"],
+  metric: ["label", "value", "note"],
+  "activity-item": ["label", "detail", "note"],
+} as const satisfies Record<PageChildKindV1, readonly PageItemFieldV1[]>;
+
+/** Page-level fields a patch may set. */
+export const PAGE_PATCH_PAGE_FIELDS_V1 = ["title", "seo.title", "seo.description"] as const;
+export const PAGE_PATCH_OPS_V1 = ["set", "set_items", "add", "replace", "remove", "move", "set_page"] as const;
+export type PagePatchOpNameV1 = (typeof PAGE_PATCH_OPS_V1)[number];
+export const PAGE_PATCH_LIMITS_V1 = { maxOps: 24, maxItems: 12 } as const;
+
+export type PageBlockCopyV1 = { [K in PageCopyKeyV1]?: string };
+export interface PageBlockV1 { id: string; kind: PageBlockKindV1; title: string; summary: string; copy?: PageBlockCopyV1; children?: PageBlockV1[] }
+export interface PageSpecV1 {
+  id: string; slug: string; status: PageStatusV1; title: string;
+  layout: { version: typeof PAGE_LAYOUT_VERSION_V1; blocks: PageBlockV1[] };
+  seo: { title?: string; description?: string };
+  locale: string; createdAt: string; updatedAt: string;
+}
+/** Where a spec came from: the Stock screen it was assembled from (null = none recorded). */
+export interface PageProvenanceV1 { screenId: string | null; scenarioId: PageScenarioV1 | null; missing: string[]; assembler?: string }
+/** One chat's pages in the browser store (key `buildytech-creator-pages-v1`). */
+export interface PageRecordV1 {
+  applied?: PageSpecV1 | null; candidate?: PageSpecV1 | null;
+  appliedProvenance?: PageProvenanceV1 | null; candidateProvenance?: PageProvenanceV1 | null;
+  selectedBlockId?: string | null; revision?: number | null;
+  lastProposed?: PageSpecV1 | null; lastProposedProvenance?: PageProvenanceV1 | null;
+}
+export interface PageStoreV1 { version: 1; pages: Record<string, PageRecordV1> }
+
+export type PagePatchItemV1 = { label: string; detail?: string; value?: string; note?: string; group?: string };
+export type PagePatchOpV1 =
+  | { op: "set"; blockId: string; field: "title" | "summary" | PageCopyKeyV1; value: string | null }
+  | { op: "set_items"; blockId: string; items: PagePatchItemV1[] }
+  | { op: "add"; kind: PageSectionKindV1; at?: number; title?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
+  | { op: "replace"; blockId: string; kind: PageSectionKindV1; title?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
+  | { op: "remove"; blockId: string }
+  | { op: "move"; blockId: string; to: number }
+  | { op: "set_page"; field: (typeof PAGE_PATCH_PAGE_FIELDS_V1)[number]; value: string };
+export interface PagePatchV1 { baseRevision?: number; ops: PagePatchOpV1[] }

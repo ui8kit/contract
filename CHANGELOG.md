@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added: page spec profile `page-spec/v1` and edit operations `page-patch/v1`: `schemas/page-spec.schema.json`, `schemas/page-patch.schema.json` (+ `public/`), `src/page-spec-v1.ts` (constants, slots `PAGE_SLOTS_V1` / `PAGE_ITEM_SLOTS_V1`, program checks, TS types), `fixtures/page-spec/` (real assembled pages, store blob, `parsePage` conformance cases), `fixtures/page-patch/` and `test/page-spec-v1.test.ts`. The page root is the buildytech/chat Page DTO (layout.version 1) unchanged. Additive change: no existing schema is affected.
+
 ## 0.3.0 (2026-11-03)
 
 - Added: view profile `view/v1`: `schemas/view.schema.json` (+ `public/`), `src/view-v1.ts` (constants, `FIELD_TYPE_VIEW_V1` Manifest field-type → view mapping, TS types), `fixtures/view/` (19 page types) and `test/view-v1.test.ts`. The profile projects v0.4 records via `$ref` and adds the primitives link, image, trustedHtml, pagination, menuTree, head and shell. Additive change: no existing schema is affected.

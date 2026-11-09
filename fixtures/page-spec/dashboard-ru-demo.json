@@ -1,0 +1,127 @@
+{
+  "id": "page-draft",
+  "slug": "dashboard-console",
+  "status": "draft",
+  "title": "\u041f\u0430\u043d\u0435\u043b\u044c \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0438",
+  "layout": {
+    "version": 1,
+    "blocks": [
+      {
+        "id": "block-sidenav",
+        "kind": "sidenav",
+        "title": "\u041d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044f",
+        "summary": "Sidebar navigation from the Stock app shell.",
+        "copy": {
+          "brand": "\u041f\u0430\u043d\u0435\u043b\u044c \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0438"
+        },
+        "children": [
+          {
+            "id": "block-sidenav-link-1",
+            "kind": "nav-link",
+            "title": "\u041e\u0431\u0437\u043e\u0440",
+            "summary": "\u041e\u0431\u0437\u043e\u0440"
+          }
+        ]
+      },
+      {
+        "id": "block-nav",
+        "kind": "nav",
+        "title": "Header",
+        "summary": "Brand and section links assembled from compatible catalog labels.",
+        "copy": {
+          "brand": "\u041f\u0430\u043d\u0435\u043b\u044c \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0438"
+        }
+      },
+      {
+        "id": "block-pagehead",
+        "kind": "pagehead",
+        "title": "Page heading",
+        "summary": "Dashboard heading from the Stock screen or named team. No invented business.",
+        "copy": {
+          "headline": "Dashboard console",
+          "lede": "Audience, data, and tasks wait for the author. No invented KPIs.",
+          "badge": "\u0414\u0435\u043c\u043e-\u0434\u0430\u043d\u043d\u044b\u0435"
+        }
+      },
+      {
+        "id": "block-overview",
+        "kind": "overview",
+        "title": "\u041e\u0431\u0437\u043e\u0440",
+        "summary": "\u041e\u0431\u0437\u043e\u0440",
+        "copy": {
+          "badge": "\u0414\u0435\u043c\u043e-\u0434\u0430\u043d\u043d\u044b\u0435"
+        },
+        "children": [
+          {
+            "id": "block-overview-item-1",
+            "kind": "metric",
+            "title": "\u0422\u0438\u043a\u0435\u0442\u044b",
+            "summary": "+12%",
+            "copy": {
+              "note": "+12%",
+              "value": "128"
+            }
+          },
+          {
+            "id": "block-overview-item-2",
+            "kind": "metric",
+            "title": "SLA",
+            "summary": "-1%",
+            "copy": {
+              "note": "-1%",
+              "value": "94%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "block-metrics",
+        "kind": "metrics",
+        "title": "Metrics",
+        "summary": "Metric tiles with no figures until the author supplies them.",
+        "copy": {
+          "lede": "\u0412 \u044d\u0442\u043e\u043c \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u0435 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442 \u0434\u0430\u043d\u043d\u044b\u0445. \u0411\u043b\u043e\u043a \u043e\u0441\u0442\u0430\u043d\u0435\u0442\u0441\u044f \u043f\u0443\u0441\u0442\u044b\u043c, \u043f\u043e\u043a\u0430 \u0432\u044b \u043d\u0435 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u0435 \u0434\u0430\u043d\u043d\u044b\u0435."
+        }
+      },
+      {
+        "id": "block-chart",
+        "kind": "chart",
+        "title": "Chart",
+        "summary": "Chart panel with no figures until the author supplies data.",
+        "copy": {
+          "lede": "\u0412 \u044d\u0442\u043e\u043c \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u0435 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442 \u0434\u0430\u043d\u043d\u044b\u0445. \u0411\u043b\u043e\u043a \u043e\u0441\u0442\u0430\u043d\u0435\u0442\u0441\u044f \u043f\u0443\u0441\u0442\u044b\u043c, \u043f\u043e\u043a\u0430 \u0432\u044b \u043d\u0435 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u0435 \u0434\u0430\u043d\u043d\u044b\u0435."
+        }
+      },
+      {
+        "id": "block-activity",
+        "kind": "activity",
+        "title": "Activity",
+        "summary": "Empty activity list. Rows stay empty until the author supplies them.",
+        "copy": {
+          "lede": "\u0412 \u044d\u0442\u043e\u043c \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u0435 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442 \u0434\u0430\u043d\u043d\u044b\u0445. \u0411\u043b\u043e\u043a \u043e\u0441\u0442\u0430\u043d\u0435\u0442\u0441\u044f \u043f\u0443\u0441\u0442\u044b\u043c, \u043f\u043e\u043a\u0430 \u0432\u044b \u043d\u0435 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u0435 \u0434\u0430\u043d\u043d\u044b\u0435."
+        }
+      },
+      {
+        "id": "block-bottomnav",
+        "kind": "bottomnav",
+        "title": "\u0420\u0430\u0437\u0434\u0435\u043b\u044b",
+        "summary": "Mobile tab bar from the Stock app shell. Hidden on wide screens.",
+        "children": [
+          {
+            "id": "block-bottomnav-link-1",
+            "kind": "nav-link",
+            "title": "\u041e\u0431\u0437\u043e\u0440",
+            "summary": "\u041e\u0431\u0437\u043e\u0440"
+          }
+        ]
+      }
+    ]
+  },
+  "seo": {
+    "title": "\u041f\u0430\u043d\u0435\u043b\u044c \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0438",
+    "description": "\u041f\u0430\u043d\u0435\u043b\u044c \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0438. \u0414\u0435\u043c\u043e-\u0434\u0430\u043d\u043d\u044b\u0435. Draft, not published."
+  },
+  "locale": "ru",
+  "createdAt": "2026-11-09T12:00:00.000Z",
+  "updatedAt": "2026-11-09T12:00:00.000Z"
+}

@@ -1,0 +1,9 @@
+{
+  "base": "landing-en.json",
+  "patch": {
+    "ops": [
+      { "op": "replace", "blockId": "block-cta", "kind": "hours", "title": "Visit us", "copy": { "days": "Mon-Fri 9:00-18:00", "address": "1 Harbor Street" } },
+      { "op": "add", "kind": "pagehead", "at": 1, "title": "Launch week", "copy": { "headline": "Launch week", "lede": "Everything that ships this week." } }
+    ]
+  }
+}

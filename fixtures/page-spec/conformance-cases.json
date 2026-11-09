@@ -1,0 +1,578 @@
+{
+  "constants": {
+    "layoutVersion": 1,
+    "blockKinds": [
+      "nav",
+      "nav-link",
+      "hero",
+      "features",
+      "feature",
+      "menu",
+      "dish",
+      "hours",
+      "cta",
+      "footer",
+      "pagehead",
+      "overview",
+      "metrics",
+      "metric",
+      "chart",
+      "activity",
+      "activity-item",
+      "sidenav",
+      "bottomnav"
+    ],
+    "copyKeys": [
+      "eyebrow",
+      "headline",
+      "lede",
+      "action",
+      "note",
+      "brand",
+      "contact",
+      "legal",
+      "days",
+      "address",
+      "value",
+      "badge"
+    ],
+    "statuses": [
+      "draft",
+      "pending",
+      "scheduled",
+      "published",
+      "archived",
+      "trashed"
+    ],
+    "limits": {
+      "maxBlocks": 64,
+      "maxDepth": 4,
+      "maxIdLength": 63,
+      "maxSlugLength": 48,
+      "maxTitleLength": 160,
+      "maxSummaryLength": 500,
+      "maxCopyLength": 2000,
+      "maxSeoLength": 200,
+      "maxLocaleLength": 16,
+      "maxJsonChars": 65536
+    }
+  },
+  "validDraft": "north-harbor-kitchen.json",
+  "cases": [
+    {
+      "name": "valid-draft",
+      "parser": "draft"
+    },
+    {
+      "name": "valid-page",
+      "parser": "page"
+    },
+    {
+      "name": "published-status-parsePage",
+      "parser": "page",
+      "set": [
+        {
+          "path": [
+            "status"
+          ],
+          "value": "published"
+        }
+      ]
+    },
+    {
+      "name": "published-status-parseDraftPage",
+      "parser": "draft",
+      "code": "invalid_status",
+      "set": [
+        {
+          "path": [
+            "status"
+          ],
+          "value": "published"
+        }
+      ]
+    },
+    {
+      "name": "malformed-id-uppercase",
+      "code": "invalid_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "Block-Nav"
+        }
+      ]
+    },
+    {
+      "name": "malformed-id-leading-digit",
+      "code": "invalid_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "1hero"
+        }
+      ]
+    },
+    {
+      "name": "malformed-id-underscore",
+      "code": "invalid_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "block_nav"
+        }
+      ]
+    },
+    {
+      "name": "malformed-id-dot",
+      "code": "invalid_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "block.nav"
+        }
+      ]
+    },
+    {
+      "name": "malformed-id-quote",
+      "code": "invalid_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "a';alert(1)"
+        }
+      ]
+    },
+    {
+      "name": "malformed-id-space",
+      "code": "invalid_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "block id"
+        }
+      ]
+    },
+    {
+      "name": "duplicate-ids",
+      "code": "duplicate_id",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "id"
+          ],
+          "value": "block-nav"
+        }
+      ]
+    },
+    {
+      "name": "unsupported-kind",
+      "code": "unsupported_kind",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "kind"
+          ],
+          "value": "carousel"
+        }
+      ]
+    },
+    {
+      "name": "unexpected-page-key",
+      "code": "unexpected_key",
+      "set": [
+        {
+          "path": [
+            "promo"
+          ],
+          "value": "off"
+        }
+      ]
+    },
+    {
+      "name": "unexpected-layout-key",
+      "code": "unexpected_key",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "theme"
+          ],
+          "value": "dark"
+        }
+      ]
+    },
+    {
+      "name": "unexpected-block-key",
+      "code": "unexpected_key",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "href"
+          ],
+          "value": "https://example.com"
+        }
+      ]
+    },
+    {
+      "name": "unexpected-copy-key",
+      "code": "unexpected_key",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "promo"
+          ],
+          "value": "10%"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-uppercase",
+      "code": "invalid_slug",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": "Home"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-slash",
+      "code": "invalid_slug",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": "home/utm"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-underscore",
+      "code": "invalid_slug",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": "utm_source"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-double-hyphen",
+      "code": "invalid_slug",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": "home--x"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-leading-hyphen",
+      "code": "invalid_slug",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": "-home"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-trailing-hyphen",
+      "code": "invalid_slug",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": "home-"
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-empty",
+      "code": "empty_required",
+      "set": [
+        {
+          "path": [
+            "slug"
+          ],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "invalid-slug-too-long",
+      "code": "too_long",
+      "repeatSlug": 49
+    },
+    {
+      "name": "unsafe-url-javascript",
+      "code": "unsafe_url",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "action"
+          ],
+          "value": "javascript:alert(1)"
+        }
+      ]
+    },
+    {
+      "name": "unsafe-url-javascript-whitespace",
+      "code": "unsafe_url",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "action"
+          ],
+          "value": "java\nscript:alert(1)"
+        }
+      ]
+    },
+    {
+      "name": "unsafe-url-data",
+      "code": "unsafe_url",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            5,
+            "copy",
+            "lede"
+          ],
+          "value": "data:text/html,hi"
+        }
+      ]
+    },
+    {
+      "name": "unsafe-url-file",
+      "code": "unsafe_url",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            6,
+            "copy",
+            "contact"
+          ],
+          "value": "file:///etc/passwd"
+        }
+      ]
+    },
+    {
+      "name": "unsafe-url-vbscript",
+      "code": "unsafe_url",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "headline"
+          ],
+          "value": "vbscript:msgbox(1)"
+        }
+      ]
+    },
+    {
+      "name": "overlarge-payload",
+      "code": "too_large",
+      "repeatTitle": 65536
+    },
+    {
+      "name": "too-many-blocks",
+      "code": "too_many_blocks",
+      "padBlocks": 64
+    },
+    {
+      "name": "too-deep",
+      "code": "too_deep",
+      "nestDepth": 5
+    },
+    {
+      "name": "unsupported-version-2",
+      "code": "unsupported_version",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "version"
+          ],
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "unsupported-version-0",
+      "code": "unsupported_version",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "version"
+          ],
+          "value": 0
+        }
+      ]
+    },
+    {
+      "name": "unsafe-text-html",
+      "code": "unsafe_text",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "lede"
+          ],
+          "value": "<script>alert(1)</script>"
+        }
+      ]
+    },
+    {
+      "name": "unsafe-text-latte",
+      "code": "unsafe_text",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "headline"
+          ],
+          "value": "{define #pwn}"
+        }
+      ]
+    },
+    {
+      "name": "https-url-allowed",
+      "parser": "page",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            6,
+            "copy",
+            "contact"
+          ],
+          "value": "https://northharbor.example/reserve"
+        }
+      ]
+    },
+    {
+      "name": "prose-colon-headline-is-not-a-scheme",
+      "parser": "page",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            1,
+            "copy",
+            "headline"
+          ],
+          "value": "QA Landing 1109: Create a New Year landing page"
+        }
+      ]
+    },
+    {
+      "name": "prose-hours-colon-is-not-a-scheme",
+      "parser": "page",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            4,
+            "copy",
+            "days"
+          ],
+          "value": "Hours: Mon-Sun 11:00-22:00"
+        }
+      ]
+    },
+    {
+      "name": "unsafe-url-ftp-at-start",
+      "code": "unsafe_url",
+      "set": [
+        {
+          "path": [
+            "layout",
+            "blocks",
+            6,
+            "copy",
+            "contact"
+          ],
+          "value": "ftp://files.example/secret"
+        }
+      ]
+    }
+  ]
+}

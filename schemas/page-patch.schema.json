@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.buildy.tw/page-patch.schema.json",
+  "title": "Page patch page-patch/v1 — edit operations on a page spec",
+  "x-page-patch-profile": "page-patch/v1",
+  "x-page-spec-version": "1.0.0",
+  "description": "An edit of a page-spec/v1 page as an ordered list of operations, applied in order to a copy of the base page; the whole patch is rejected if any operation fails. Unchanged blocks keep their content. Slot validation: set / add / replace may only write copy keys and row fields the target kind renders (page-spec x-page-slots); rows beyond the kind's limit are rejected. The result must be a valid page-spec/v1 page. baseRevision, when sent, must equal the page revision the patch was made for.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ops"
+  ],
+  "properties": {
+    "baseRevision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ops": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 24,
+      "items": {
+        "$ref": "#/$defs/op"
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 80,
+          "description": "Row title.",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "detail": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 200,
+          "description": "Row summary."
+        },
+        "value": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 24,
+          "description": "Row copy.value."
+        },
+        "note": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 120,
+          "description": "Row copy.note."
+        },
+        "group": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 40,
+          "description": "Row copy.eyebrow."
+        }
+      }
+    },
+    "op": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "blockId",
+            "field",
+            "value"
+          ],
+          "description": "Set one slot of a block. null removes a copy key; title and summary cannot be removed.",
+          "properties": {
+            "op": {
+              "const": "set"
+            },
+            "blockId": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/id"
+            },
+            "field": {
+              "enum": [
+                "title",
+                "summary",
+                "eyebrow",
+                "headline",
+                "lede",
+                "action",
+                "note",
+                "brand",
+                "contact",
+                "legal",
+                "days",
+                "address",
+                "value",
+                "badge"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+                    }
+                  ],
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "blockId",
+            "items"
+          ],
+          "description": "Replace the rows of a list block.",
+          "properties": {
+            "op": {
+              "const": "set_items"
+            },
+            "blockId": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/id"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/item"
+              },
+              "maxItems": 12,
+              "description": "Rows of a list block, replacing its rows. Row kind, limit and fields per kind: page-spec x-page-slots."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "kind"
+          ],
+          "description": "Add a Stock block at a top-level index (default: its natural place). Optional copy and rows overlay the catalog defaults.",
+          "properties": {
+            "op": {
+              "const": "add"
+            },
+            "kind": {
+              "enum": [
+                "nav",
+                "hero",
+                "features",
+                "menu",
+                "hours",
+                "cta",
+                "footer",
+                "pagehead",
+                "overview",
+                "metrics",
+                "chart",
+                "activity",
+                "sidenav",
+                "bottomnav"
+              ],
+              "description": "A top-level kind. The host builds the block from the page's Stock screen family; a kind the family does not have is rejected."
+            },
+            "at": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "title": {
+              "allOf": [
+                {
+                  "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+                }
+              ],
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "copy": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/copy"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/item"
+              },
+              "maxItems": 12,
+              "description": "Rows of a list block, replacing its rows. Row kind, limit and fields per kind: page-spec x-page-slots."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "blockId",
+            "kind"
+          ],
+          "description": "Replace a top-level block by another Stock block in the same place.",
+          "properties": {
+            "op": {
+              "const": "replace"
+            },
+            "blockId": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/id"
+            },
+            "kind": {
+              "enum": [
+                "nav",
+                "hero",
+                "features",
+                "menu",
+                "hours",
+                "cta",
+                "footer",
+                "pagehead",
+                "overview",
+                "metrics",
+                "chart",
+                "activity",
+                "sidenav",
+                "bottomnav"
+              ],
+              "description": "A top-level kind. The host builds the block from the page's Stock screen family; a kind the family does not have is rejected."
+            },
+            "title": {
+              "allOf": [
+                {
+                  "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+                }
+              ],
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "copy": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/copy"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/item"
+              },
+              "maxItems": 12,
+              "description": "Rows of a list block, replacing its rows. Row kind, limit and fields per kind: page-spec x-page-slots."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "blockId"
+          ],
+          "description": "Remove a block and its rows.",
+          "properties": {
+            "op": {
+              "const": "remove"
+            },
+            "blockId": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "blockId",
+            "to"
+          ],
+          "description": "Move a block to an index among its siblings.",
+          "properties": {
+            "op": {
+              "const": "move"
+            },
+            "blockId": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/id"
+            },
+            "to": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "field",
+            "value"
+          ],
+          "description": "Set the page title or an SEO field.",
+          "properties": {
+            "op": {
+              "const": "set_page"
+            },
+            "field": {
+              "enum": [
+                "title",
+                "seo.title",
+                "seo.description"
+              ]
+            },
+            "value": {
+              "allOf": [
+                {
+                  "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+                }
+              ],
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

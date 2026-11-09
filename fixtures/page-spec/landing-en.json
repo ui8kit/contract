@@ -1,0 +1,106 @@
+{
+  "id": "page-draft",
+  "slug": "marketing-landing",
+  "status": "draft",
+  "title": "Marketing landing",
+  "layout": {
+    "version": 1,
+    "blocks": [
+      {
+        "id": "block-nav",
+        "kind": "nav",
+        "title": "Header",
+        "summary": "Brand and section links assembled from compatible catalog labels.",
+        "copy": {
+          "brand": "Marketing landing"
+        },
+        "children": [
+          {
+            "id": "block-nav-offer",
+            "kind": "nav-link",
+            "title": "Offer",
+            "summary": "The value proposition section."
+          },
+          {
+            "id": "block-nav-proof",
+            "kind": "nav-link",
+            "title": "Proof",
+            "summary": "Evidence the author still needs to confirm."
+          },
+          {
+            "id": "block-nav-start",
+            "kind": "nav-link",
+            "title": "Start",
+            "summary": "Primary call to action."
+          }
+        ]
+      },
+      {
+        "id": "block-hero",
+        "kind": "hero",
+        "title": "Hero",
+        "summary": "Opening section. Claims wait for the author's facts.",
+        "copy": {
+          "eyebrow": "Landing",
+          "headline": "Marketing landing",
+          "lede": "Marketing landing. Confirm the real offer with the author. No invented reviews or discounts.",
+          "action": "See the offer"
+        }
+      },
+      {
+        "id": "block-features",
+        "kind": "features",
+        "title": "Why this page",
+        "summary": "Compatible feature or metric slots. No fabricated numbers.",
+        "children": [
+          {
+            "id": "block-feature-offer",
+            "kind": "feature",
+            "title": "Marketing landing offer",
+            "summary": "State the product in the author's words, not invented claims."
+          },
+          {
+            "id": "block-feature-proof",
+            "kind": "feature",
+            "title": "Evidence",
+            "summary": "Testimonials and logos wait for verified facts."
+          },
+          {
+            "id": "block-feature-action",
+            "kind": "feature",
+            "title": "One action",
+            "summary": "A single next step. No checkout in this draft."
+          }
+        ]
+      },
+      {
+        "id": "block-cta",
+        "kind": "cta",
+        "title": "Next step",
+        "summary": "Primary action. No payment or publish.",
+        "copy": {
+          "lede": "Marketing landing next step. Not published. Ask the author for the real call to action.",
+          "action": "Contact",
+          "note": "Stock screen screen.theme-marketing-landing/home"
+        }
+      },
+      {
+        "id": "block-footer",
+        "kind": "footer",
+        "title": "Footer",
+        "summary": "Closing band. Contact facts are not invented.",
+        "copy": {
+          "contact": "Contact details are not invented.",
+          "legal": "Draft in this browser. Not a live site."
+        }
+      }
+    ]
+  },
+  "seo": {
+    "title": "Marketing landing",
+    "description": "Marketing landing draft. Not published. Catalog blocks only."
+  },
+  "locale": "en",
+  "createdAt": "2026-11-09T12:00:00.000Z",
+  "updatedAt": "2026-11-09T12:00:00.000Z"
+}

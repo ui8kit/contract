@@ -1,0 +1,16 @@
+{
+  "base": "website-en.json",
+  "patch": {
+    "baseRevision": 1,
+    "ops": [
+      { "op": "set", "blockId": "block-hero", "field": "headline", "value": "Fresh coffee every morning" },
+      { "op": "set", "blockId": "block-hero", "field": "eyebrow", "value": null },
+      { "op": "set_items", "blockId": "block-features", "items": [
+        { "label": "Single origin", "detail": "Beans from three farms, roasted weekly." },
+        { "label": "Quiet corner", "detail": "Tables with sockets by the window." }
+      ] },
+      { "op": "move", "blockId": "block-cta", "to": 2 },
+      { "op": "set_page", "field": "seo.description", "value": "Coffee house: fresh coffee every morning." }
+    ]
+  }
+}

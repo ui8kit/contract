@@ -1,0 +1,142 @@
+{
+  "id": "page-home",
+  "slug": "home",
+  "status": "draft",
+  "title": "North Harbor Kitchen",
+  "layout": {
+    "version": 1,
+    "blocks": [
+      {
+        "id": "block-nav",
+        "kind": "nav",
+        "title": "Header",
+        "summary": "Brand and section links for the landing page.",
+        "copy": {
+          "brand": "North Harbor Kitchen"
+        },
+        "children": [
+          {
+            "id": "block-nav-menu",
+            "kind": "nav-link",
+            "title": "Menu",
+            "summary": "Jump to tonight's plates."
+          },
+          {
+            "id": "block-nav-hours",
+            "kind": "nav-link",
+            "title": "Hours",
+            "summary": "Open days and street address."
+          },
+          {
+            "id": "block-nav-reserve",
+            "kind": "nav-link",
+            "title": "Reserve",
+            "summary": "Request a table. No payment in this draft."
+          }
+        ]
+      },
+      {
+        "id": "block-hero",
+        "kind": "hero",
+        "title": "Hero",
+        "summary": "Headline and a short promise. No fabricated promo.",
+        "copy": {
+          "eyebrow": "Dockside dining",
+          "headline": "Harbor tables, seasonal plates",
+          "lede": "A neighborhood kitchen on the wharf. Bread, fish, and greens from nearby stalls.",
+          "action": "Request a table"
+        }
+      },
+      {
+        "id": "block-features",
+        "kind": "features",
+        "title": "Why guests return",
+        "summary": "Three ordinary points. No checkout, no stock numbers.",
+        "children": [
+          {
+            "id": "block-feature-seasonal",
+            "kind": "feature",
+            "title": "Seasonal board",
+            "summary": "The board changes with the market, not with invented discounts."
+          },
+          {
+            "id": "block-feature-harbor",
+            "kind": "feature",
+            "title": "Harbor room",
+            "summary": "Window tables face the working dock. Walk-ins welcome when a seat is free."
+          },
+          {
+            "id": "block-feature-kitchen",
+            "kind": "feature",
+            "title": "Open kitchen",
+            "summary": "You can see the pass. Questions about the plate go to the cook, not a script."
+          }
+        ]
+      },
+      {
+        "id": "block-menu",
+        "kind": "menu",
+        "title": "Tonight's plates",
+        "summary": "A short list of dishes. No prices invented for this draft.",
+        "children": [
+          {
+            "id": "block-dish-chowder",
+            "kind": "dish",
+            "title": "Chowder",
+            "summary": "Clam, potato, dill. Served with rye."
+          },
+          {
+            "id": "block-dish-catch",
+            "kind": "dish",
+            "title": "Catch of the day",
+            "summary": "Grilled fish, bitter greens, lemon."
+          },
+          {
+            "id": "block-dish-tart",
+            "kind": "dish",
+            "title": "Bay leaf tart",
+            "summary": "Custard tart to close. Ask the pass for the day's bake."
+          }
+        ]
+      },
+      {
+        "id": "block-hours",
+        "kind": "hours",
+        "title": "Hours and place",
+        "summary": "Open days and a street address.",
+        "copy": {
+          "days": "Tue\u2013Sun, 12:00\u201322:00",
+          "address": "14 Dock Street"
+        }
+      },
+      {
+        "id": "block-cta",
+        "kind": "cta",
+        "title": "Book a table",
+        "summary": "A single action that does not start payment.",
+        "copy": {
+          "lede": "Send a request. We confirm by message. No checkout in this draft.",
+          "action": "Request a table",
+          "note": "Ordinary page. Unique slug. No payment."
+        }
+      },
+      {
+        "id": "block-footer",
+        "kind": "footer",
+        "title": "Footer",
+        "summary": "Contact line and copyright.",
+        "copy": {
+          "contact": "hello@northharbor.example",
+          "legal": "North Harbor Kitchen"
+        }
+      }
+    ]
+  },
+  "seo": {
+    "title": "North Harbor Kitchen",
+    "description": "Ordinary restaurant landing with a unique slug."
+  },
+  "locale": "en",
+  "createdAt": "2026-11-06T00:00:00.000Z",
+  "updatedAt": "2026-11-06T00:00:00.000Z"
+}

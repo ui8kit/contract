@@ -17,3 +17,5 @@ export {
 export { CODEX_ID_PATTERN, isCodexId, assertCodexId, codexIdForInt } from "./id.js";
 // View profile view/v1: template / site-generator contexts as projections of Codex v0.4 records (schemas/view.schema.json).
 export * from "./view-v1.js";
+// Page spec profile page-spec/v1 + edit operations page-patch/v1: BuildY pages as Stock catalog blocks (schemas/page-spec.schema.json, schemas/page-patch.schema.json).
+export * from "./page-spec-v1.js";

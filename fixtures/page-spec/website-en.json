@@ -1,0 +1,106 @@
+{
+  "id": "page-draft",
+  "slug": "site",
+  "status": "draft",
+  "title": "Site",
+  "layout": {
+    "version": 1,
+    "blocks": [
+      {
+        "id": "block-nav",
+        "kind": "nav",
+        "title": "Header",
+        "summary": "Brand and section links assembled from compatible catalog labels.",
+        "copy": {
+          "brand": "Site"
+        },
+        "children": [
+          {
+            "id": "block-nav-home",
+            "kind": "nav-link",
+            "title": "Home",
+            "summary": "This page."
+          },
+          {
+            "id": "block-nav-about",
+            "kind": "nav-link",
+            "title": "About",
+            "summary": "Who the business is. Facts still needed."
+          },
+          {
+            "id": "block-nav-contact",
+            "kind": "nav-link",
+            "title": "Contact",
+            "summary": "How to reach the author."
+          }
+        ]
+      },
+      {
+        "id": "block-hero",
+        "kind": "hero",
+        "title": "Hero",
+        "summary": "Opening section. Claims wait for the author's facts.",
+        "copy": {
+          "eyebrow": "Website",
+          "headline": "Site",
+          "lede": "Site website. Confirm business facts and contact details with the author.",
+          "action": "Contact"
+        }
+      },
+      {
+        "id": "block-features",
+        "kind": "features",
+        "title": "Why this page",
+        "summary": "Compatible feature or metric slots. No fabricated numbers.",
+        "children": [
+          {
+            "id": "block-feature-nav",
+            "kind": "feature",
+            "title": "Find the way",
+            "summary": "Home, about, and the next useful page."
+          },
+          {
+            "id": "block-feature-story",
+            "kind": "feature",
+            "title": "What Site does",
+            "summary": "Business facts come from the author."
+          },
+          {
+            "id": "block-feature-contact",
+            "kind": "feature",
+            "title": "Talk to us",
+            "summary": "Contact details wait for the author."
+          }
+        ]
+      },
+      {
+        "id": "block-cta",
+        "kind": "cta",
+        "title": "Next step",
+        "summary": "Primary action. No payment or publish.",
+        "copy": {
+          "lede": "Site next step. Not published. Ask the author for the real call to action.",
+          "action": "Contact",
+          "note": "Stock screen screen.site/home"
+        }
+      },
+      {
+        "id": "block-footer",
+        "kind": "footer",
+        "title": "Footer",
+        "summary": "Closing band. Contact facts are not invented.",
+        "copy": {
+          "contact": "Contact details are not invented.",
+          "legal": "Draft in this browser. Not a live site."
+        }
+      }
+    ]
+  },
+  "seo": {
+    "title": "Site",
+    "description": "Site draft. Not published. Catalog blocks only."
+  },
+  "locale": "en",
+  "createdAt": "2026-11-09T12:00:00.000Z",
+  "updatedAt": "2026-11-09T12:00:00.000Z"
+}
