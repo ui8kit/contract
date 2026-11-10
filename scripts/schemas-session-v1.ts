@@ -3,6 +3,7 @@
 // The schema stays inside the keyword subset of buildytech/chat `page-contract/src/json-schema.ts` (no `format`,
 // no `patternProperties`), so the browser validates it without Ajv.
 import {
+  SESSION_PREFS_LAYOUT_FLAGS_V1, SESSION_PREFS_LAYOUT_SIZES_V1, SESSION_PREFS_MAX_SIZE_V1,
   SESSION_COMMIT_PATTERN_V1, SESSION_SKIN_PATTERN_V1, SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_ID_PATTERN_V1, SESSION_LIMITS_V1,
   SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_PROPOSAL_STATUSES_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
@@ -116,6 +117,13 @@ const settings = closed({
   previewHideServiceLabels: { type: "boolean" },
 }, [], "Non-secret preferences of the host.");
 
+const layoutProps: Record<string, unknown> = {};
+for (const key of SESSION_PREFS_LAYOUT_SIZES_V1) layoutProps[key] = { type: "integer", minimum: 0, maximum: SESSION_PREFS_MAX_SIZE_V1 };
+for (const key of SESSION_PREFS_LAYOUT_FLAGS_V1) layoutProps[key] = { type: "boolean" };
+const prefs = closed({
+  layout: closed(layoutProps, [], "Shell layout: pane sizes (CSS px) and collapsed states. A host clamps sizes to its own ranges and ignores what it does not show."),
+}, [], "Layout preferences of the user (1.2.0): the host's buildy:v1:prefs. Optional; a file without it keeps the importer's layout.");
+
 export const sessionSchema = {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": SESSION_SCHEMA_URL_V1,
@@ -138,6 +146,7 @@ export const sessionSchema = {
     selectedSessionId: orNull(ref("id")),
     sessions: { type: "array", maxItems: L.maxSessions, items: ref("session") },
     settings: ref("settings"),
+    prefs: ref("prefs"),
   },
-  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, message, revisionEntry, session, app, pins, settings },
+  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, message, revisionEntry, session, app, pins, settings, prefs },
 };

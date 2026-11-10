@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.1.0";
+export const SESSION_VERSION_V1 = "1.2.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -92,7 +92,21 @@ export type SessionFileV1 = {
   selectedSessionId?: string | null;
   sessions: SessionChatV1[];
   settings?: { theme?: "light" | "dark"; selectedModelId?: string; previewHideServiceLabels?: boolean };
+  /** Layout preferences of the user (1.2.0, optional): the host's `buildy:v1:prefs`. */
+  prefs?: SessionPrefsV1;
 };
+
+/** Pane sizes in CSS px (integers); each host clamps them to its own ranges when it applies a file. */
+export const SESSION_PREFS_LAYOUT_SIZES_V1 = ["navWidth", "chatWidth", "inspectorWidth", "layersHeight", "treeWidth"] as const;
+/** Collapsed states of the side panels; `focus` is the preview-only mode (every side panel shown as a rail). */
+export const SESSION_PREFS_LAYOUT_FLAGS_V1 = ["navCollapsed", "chatCollapsed", "inspectorCollapsed", "layersCollapsed", "treeCollapsed", "focus"] as const;
+/** Upper bound of a stored pane size (px); a host's own maximum is lower. */
+export const SESSION_PREFS_MAX_SIZE_V1 = 4096;
+
+export type SessionPrefsLayoutV1 = Partial<
+  Record<(typeof SESSION_PREFS_LAYOUT_SIZES_V1)[number], number> & Record<(typeof SESSION_PREFS_LAYOUT_FLAGS_V1)[number], boolean>
+>;
+export type SessionPrefsV1 = { layout?: SessionPrefsLayoutV1 };
 
 /**
  * Checks a JSON Schema cannot express; every importer runs them after the schema: session ids unique in the file,

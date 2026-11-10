@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added (session 1.2.0, additive): optional root `prefs.layout`, the user's shell layout (pane sizes in integer CSS px, collapsed states, `focus` preview-only mode; `buildy:v1:prefs`). Hosts clamp sizes to their own ranges. Every 1.0.0 / 1.1.0 file validates unchanged.
 - Added (session 1.1.0, additive): optional `skin` on a session (skin id of the registry item `theme-<skin>`, pattern `SESSION_SKIN_PATTERN_V1`, or null for the default theme). Every 1.0.0 file validates unchanged.
 - Docs: the page store blob is described under its current key `buildy:v1:pages` (migrated once from `buildytech-creator-pages-v1`).
 - Added: session format `buildy:v1` (session 1.0.0): `schemas/session.schema.json` (+ `public/`, published at `https://schema.buildy.tw/session.schema.json`), `src/session-v1.ts` (constants, limits, program checks, TS types), `scripts/schemas-session-v1.ts`, `fixtures/session/` (a real file exported by buildytech/chat, a minimal file) and `test/session-v1.test.ts`. Chats, messages, Ask / Build mode, the page-spec/v1 record by `$ref`, `pageRevision` and revision history, catalog pins (Stock content commit, registry source commit), `exportedAt` and the app version. Additive change: no existing schema is affected.

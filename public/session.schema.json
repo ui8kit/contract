@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.1.0",
+  "x-session-version": "1.2.0",
   "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
@@ -71,6 +71,9 @@
     },
     "settings": {
       "$ref": "#/$defs/settings"
+    },
+    "prefs": {
+      "$ref": "#/$defs/prefs"
     }
   },
   "$defs": {
@@ -633,6 +636,63 @@
         },
         "previewHideServiceLabels": {
           "type": "boolean"
+        }
+      }
+    },
+    "prefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Layout preferences of the user (1.2.0): the host's buildy:v1:prefs. Optional; a file without it keeps the importer's layout.",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Shell layout: pane sizes (CSS px) and collapsed states. A host clamps sizes to its own ranges and ignores what it does not show.",
+          "properties": {
+            "navWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "chatWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "inspectorWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "layersHeight": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "treeWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "navCollapsed": {
+              "type": "boolean"
+            },
+            "chatCollapsed": {
+              "type": "boolean"
+            },
+            "inspectorCollapsed": {
+              "type": "boolean"
+            },
+            "layersCollapsed": {
+              "type": "boolean"
+            },
+            "treeCollapsed": {
+              "type": "boolean"
+            },
+            "focus": {
+              "type": "boolean"
+            }
+          }
         }
       }
     }

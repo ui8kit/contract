@@ -110,3 +110,24 @@ describe("session buildy:v1 1.1.0: skin", () => {
     }
   });
 });
+
+describe("session buildy:v1 1.2.0: prefs", () => {
+  test("optional layout prefs: sizes are integers, flags booleans, unknown keys rejected; 1.0/1.1 files stay valid", () => {
+    const base = read(`${dir}/exported-chat.json`);
+    expect(errs(base)).toEqual([]);
+    const ok = clone(base);
+    ok.prefs = { layout: { navWidth: 240, chatWidth: 320, inspectorWidth: 304, layersHeight: 200, treeWidth: 208, navCollapsed: true, chatCollapsed: false, inspectorCollapsed: false, layersCollapsed: false, treeCollapsed: false, focus: false } };
+    expect(errs(ok)).toEqual([]);
+    const empty = clone(base);
+    empty.prefs = {};
+    expect(errs(empty)).toEqual([]);
+    for (const layout of [{ chatWidth: 320.5 }, { chatWidth: -1 }, { chatWidth: 99999 }, { focus: "yes" }, { panel: 1 }]) {
+      const x = clone(base);
+      x.prefs = { layout };
+      expect({ layout, ok: file(x) }).toEqual({ layout, ok: false });
+    }
+    const extra = clone(base);
+    extra.prefs = { layout: {}, theme: "dark" };
+    expect(file(extra)).toBe(false);
+  });
+});
