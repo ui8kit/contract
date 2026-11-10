@@ -8,6 +8,7 @@ import {
   SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_PROPOSAL_STATUSES_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
 } from "../src/session-v1.ts";
+import { COLLECTION_DIGEST_PATTERN_V1, COLLECTION_ID_PATTERN_V1, COLLECTION_LIMITS_V1, COLLECTION_SCHEMA_URL_V1 } from "../src/collection-v1.ts";
 import { PAGE_DATETIME_PATTERN_V1, PAGE_LIMITS_V1, PAGE_SCENARIOS_V1, PAGE_SPEC_SCHEMA_URL_V1 } from "../src/page-spec-v1.ts";
 
 const L = SESSION_LIMITS_V1;
@@ -79,6 +80,16 @@ const revisionEntry = closed({
   blockId: short,
 }, ["revision", "at", "cause"], "One page revision: every committed change of the applied page adds one entry; an unchanged value adds none.");
 
+const collectionItems = (description: string) => ({ type: "array", maxItems: COLLECTION_LIMITS_V1.maxItems, items: { $ref: `${COLLECTION_SCHEMA_URL_V1}#/$defs/item` }, description });
+const collection = closed({
+  id: { type: "string", pattern: COLLECTION_ID_PATTERN_V1, description: "id of the buildy-collection:v1 document." },
+  title: { type: "string", minLength: 1, maxLength: COLLECTION_LIMITS_V1.maxTitleLength },
+  importedAt: ref("datetime"),
+  assetsDigest: { type: "string", pattern: COLLECTION_DIGEST_PATTERN_V1, description: "pins.stock.assetsDigest of the collection (the Stock asset index it was picked from)." },
+  items: collectionItems("Items found in the host's catalog snapshot, in collection order (collection.schema.json items). They bound Build: block items are required, block items and the blocks of screen items are the allowed set."),
+  missing: collectionItems("Items the host's snapshot does not have: skipped and named in a note, never substituted."),
+}, ["id", "title", "items"], "Collection the chat was opened from (1.3.0, additive): a Stock collection buildy-collection:v1 (docs/collection-intake.md).");
+
 const session = closed({
   id: ref("id"),
   title: str(L.maxTitleLength),
@@ -92,6 +103,7 @@ const session = closed({
   pageBound: { type: "boolean" },
   pageRevision: revision,
   skin: { anyOf: [{ type: "string", pattern: SESSION_SKIN_PATTERN_V1 }, { type: "null" }], description: "Skin of the page (1.1.0, additive): the id of the registry item theme-<skin> (npx ui8kit add theme-<skin> writes styles/skins/<skin>.css; the page wears it with data-skin=\"<skin>\"). Null or absent: the default theme. A host that does not have the skin keeps the value and shows the default theme." },
+  collection: ref("collection"),
   usage: open("Usage summed over the runs of the chat."),
   messages: { type: "array", maxItems: L.maxMessages, items: ref("message") },
   page: { anyOf: [{ $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/record` }, { type: "null" }], description: "The chat's pages: a page-spec/v1 record (applied page, pending candidate, last proposal, their provenance, revision)." },
@@ -148,5 +160,5 @@ export const sessionSchema = {
     settings: ref("settings"),
     prefs: ref("prefs"),
   },
-  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, message, revisionEntry, session, app, pins, settings, prefs },
+  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, message, revisionEntry, collection, session, app, pins, settings, prefs },
 };

@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.2.0";
+export const SESSION_VERSION_V1 = "1.3.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -77,10 +77,26 @@ export type SessionChatV1 = {
   pageRevision?: number | null;
   /** Skin of the chat's page (1.1.0): the registry item `theme-<skin>` (`npx ui8kit add theme-<skin>`); null or absent: the default theme. */
   skin?: string | null;
+  /** Collection the chat was opened from (1.3.0, optional): the buildy-collection:v1 items found in the host snapshot and the ones it skipped. */
+  collection?: SessionCollectionV1;
   usage?: Record<string, unknown>;
   messages: Record<string, unknown>[];
   page?: Record<string, unknown> | null;
   history?: SessionRevisionEntryV1[];
+};
+
+/**
+ * A Stock collection (buildy-collection:v1) a chat was opened from (1.3.0). `items` are the items the host found in
+ * its catalog snapshot (they bound Build: required and allowed blocks); `missing` the ones it skipped and named in a
+ * note, never substituted. Items are collection.schema.json items unchanged.
+ */
+export type SessionCollectionV1 = {
+  id: string;
+  title: string;
+  importedAt?: string;
+  assetsDigest?: string;
+  items: Record<string, unknown>[];
+  missing?: Record<string, unknown>[];
 };
 
 export type SessionFileV1 = {

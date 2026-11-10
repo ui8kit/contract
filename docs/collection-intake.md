@@ -60,9 +60,9 @@ Items the snapshot does not have are skipped and named in one short note, never 
 
 ## 4. Session
 
-The session file is closed (buildy:v1 1.2.0), so the collection on a chat needs an additive session 1.3.0 field, e.g.
-`collection: { id, title, assetsDigest, items, missing }` (items as in this profile). Until then the chat keeps it in
-memory for the turn and the user's message lists the items as text.
+Session 1.3.0 (additive) has an optional `collection` on a chat: `{ id, title, importedAt?, assetsDigest?, items,
+missing? }`, items as in this profile (`collection.schema.json#/$defs/item`). `items` are the ones found in the host
+snapshot (they bound Build), `missing` the skipped ones. Every 1.0.0 to 1.2.0 file validates unchanged.
 
 ## 5. Acceptance
 

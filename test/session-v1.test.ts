@@ -7,6 +7,7 @@ import path from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { pageSpec } from "../scripts/schemas-page-spec-v1.ts";
 import { sessionSchema } from "../scripts/schemas-session-v1.ts";
+import { collectionSchema } from "../scripts/schemas-collection-v1.ts";
 import {
   SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_LIMITS_V1, SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
@@ -14,6 +15,7 @@ import {
 
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 ajv.addSchema(pageSpec);
+ajv.addSchema(collectionSchema);
 ajv.addSchema(sessionSchema);
 const file = ajv.getSchema(SESSION_SCHEMA_URL_V1)!;
 const root = path.resolve(import.meta.dir, "..");
@@ -129,5 +131,30 @@ describe("session buildy:v1 1.2.0: prefs", () => {
     const extra = clone(base);
     extra.prefs = { layout: {}, theme: "dark" };
     expect(file(extra)).toBe(false);
+  });
+});
+
+describe("session buildy:v1 1.3.0: collection", () => {
+  test("optional per-chat collection: items are collection items, closed object; older files stay valid", () => {
+    const base = read(`${dir}/exported-chat.json`);
+    const doc = read("fixtures/collection/grill-delivery.json");
+    const ok = clone(base);
+    ok.sessions[0].collection = { id: doc.id, title: doc.title, importedAt: "2026-11-11T10:00:00.000Z", assetsDigest: doc.pins.stock.assetsDigest, items: doc.items.slice(1), missing: doc.items.slice(0, 1) };
+    expect(errs(ok)).toEqual([]);
+    const bare = clone(base);
+    bare.sessions[0].collection = { id: "c1", title: "Shelf", items: [] };
+    expect(errs(bare)).toEqual([]);
+    for (const collection of [
+      { id: "c1", title: "Shelf" },
+      { id: "c1", title: "", items: [] },
+      { id: "c1", title: "Shelf", items: [{ kind: "block", id: "hero" }] },
+      { id: "c1", title: "Shelf", items: [{ kind: "screen", id: "screen.site/home", variant: "a" }] },
+      { id: "c1", title: "Shelf", items: [], source: "stock" },
+      { id: "c1", title: "Shelf", items: [], assetsDigest: "sha256:abc" },
+    ]) {
+      const x = clone(base);
+      x.sessions[0].collection = collection;
+      expect({ collection, ok: file(x) }).toEqual({ collection, ok: false });
+    }
   });
 });
