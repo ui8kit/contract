@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.0.0";
+export const SESSION_VERSION_V1 = "1.1.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -37,6 +37,8 @@ export type SessionRevisionCauseV1 = (typeof SESSION_REVISION_CAUSES_V1)[number]
 export const SESSION_OPEN_RECORDS_V1 = ["usage", "run.usage", "proposal.catalogRefs"] as const;
 
 export const SESSION_ID_PATTERN_V1 = "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$";
+/** Skin id (registry item `theme-<id>` of registry.buildy.tw, from the CodeGen-X skins index). */
+export const SESSION_SKIN_PATTERN_V1 = "^[a-z0-9][a-z0-9-]{0,62}$";
 export const SESSION_COMMIT_PATTERN_V1 = "^[0-9a-f]{7,40}$";
 
 export const SESSION_LIMITS_V1 = {
@@ -73,6 +75,8 @@ export type SessionChatV1 = {
   pageId?: string;
   pageBound?: boolean;
   pageRevision?: number | null;
+  /** Skin of the chat's page (1.1.0): the registry item `theme-<skin>` (`npx ui8kit add theme-<skin>`); null or absent: the default theme. */
+  skin?: string | null;
   usage?: Record<string, unknown>;
   messages: Record<string, unknown>[];
   page?: Record<string, unknown> | null;

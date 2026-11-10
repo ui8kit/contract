@@ -94,3 +94,19 @@ describe("session buildy:v1 schema", () => {
     }
   });
 });
+
+describe("session buildy:v1 1.1.0: skin", () => {
+  test("a chat may carry a skin id or null; a bad id is rejected", () => {
+    const base = read(`${dir}/exported-chat.json`);
+    for (const skin of ["claude", "doom-64", null]) {
+      const x = clone(base);
+      x.sessions[0].skin = skin;
+      expect(errs(x)).toEqual([]);
+    }
+    for (const skin of ["Claude", "theme claude", "", 7]) {
+      const x = clone(base);
+      x.sessions[0].skin = skin;
+      expect({ skin, ok: file(x) }).toEqual({ skin, ok: false });
+    }
+  });
+});

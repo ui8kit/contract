@@ -2,7 +2,7 @@
 // regenerates code from (Svelte today; any of the 9 UI8Kit targets later). It is NOT a Codex v0.4 entry: a page spec
 // is a layout of Stock catalog blocks with their copy, and the generated code is always derived from it.
 // Shape source: buildytech/chat `packages/page-contract` (Page DTO, layout.version 1, `parsePage`) and the browser
-// page store (`buildytech-creator-pages-v1`: applied / candidate page + provenance). Saved pages validate unchanged.
+// page store (`buildy:v1:pages`, formerly `buildytech-creator-pages-v1`: applied / candidate page + provenance). Saved pages validate unchanged.
 // Edits: page-patch/v1 operations (replace a block, set copy or rows, reorder, add, remove) instead of a full new spec.
 // Schemas: scripts/schemas-page-spec-v1.ts -> schemas/page-spec.schema.json and schemas/page-patch.schema.json.
 // Versioning: page-spec/v1 matches layout.version 1; minor versions only add optional things. Objects are closed.
@@ -142,7 +142,7 @@ export interface PageSpecV1 {
 }
 /** Where a spec came from: the Stock screen it was assembled from (null = none recorded). */
 export interface PageProvenanceV1 { screenId: string | null; scenarioId: PageScenarioV1 | null; missing: string[]; assembler?: string }
-/** One chat's pages in the browser store (key `buildytech-creator-pages-v1`). */
+/** One chat's pages in the browser store (key `buildy:v1:pages`, migrated from `buildytech-creator-pages-v1`). */
 export interface PageRecordV1 {
   applied?: PageSpecV1 | null; candidate?: PageSpecV1 | null;
   appliedProvenance?: PageProvenanceV1 | null; candidateProvenance?: PageProvenanceV1 | null;

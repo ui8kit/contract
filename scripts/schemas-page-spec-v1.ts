@@ -121,7 +121,7 @@ const store = {
   type: "object",
   additionalProperties: false,
   required: ["version", "pages"],
-  description: "The browser page store blob (localStorage key buildytech-creator-pages-v1): pages by chat id.",
+  description: "The browser page store blob (localStorage key buildy:v1:pages; before session buildy:v1 the key buildytech-creator-pages-v1, migrated once): pages by chat id.",
   properties: { version: { const: 1 }, pages: { type: "object", additionalProperties: { $ref: "#/$defs/record" } } },
 };
 

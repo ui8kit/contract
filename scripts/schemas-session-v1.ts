@@ -3,7 +3,7 @@
 // The schema stays inside the keyword subset of buildytech/chat `page-contract/src/json-schema.ts` (no `format`,
 // no `patternProperties`), so the browser validates it without Ajv.
 import {
-  SESSION_COMMIT_PATTERN_V1, SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_ID_PATTERN_V1, SESSION_LIMITS_V1,
+  SESSION_COMMIT_PATTERN_V1, SESSION_SKIN_PATTERN_V1, SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_ID_PATTERN_V1, SESSION_LIMITS_V1,
   SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_PROPOSAL_STATUSES_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
 } from "../src/session-v1.ts";
@@ -90,6 +90,7 @@ const session = closed({
   pageId: short,
   pageBound: { type: "boolean" },
   pageRevision: revision,
+  skin: { anyOf: [{ type: "string", pattern: SESSION_SKIN_PATTERN_V1 }, { type: "null" }], description: "Skin of the page (1.1.0, additive): the id of the registry item theme-<skin> (npx ui8kit add theme-<skin> writes styles/skins/<skin>.css; the page wears it with data-skin=\"<skin>\"). Null or absent: the default theme. A host that does not have the skin keeps the value and shows the default theme." },
   usage: open("Usage summed over the runs of the chat."),
   messages: { type: "array", maxItems: L.maxMessages, items: ref("message") },
   page: { anyOf: [{ $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/record` }, { type: "null" }], description: "The chat's pages: a page-spec/v1 record (applied page, pending candidate, last proposal, their provenance, revision)." },
