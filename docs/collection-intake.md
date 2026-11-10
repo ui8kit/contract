@@ -1,6 +1,6 @@
 # BuildY collection intake (buildy-collection:v1)
 
-Status: spec for buildytech/chat (not implemented there yet). Schema: `schemas/collection.schema.json`
+Status: implemented in buildytech/chat `468f15d` (ADR 0019). Schema: `schemas/collection.schema.json`
 (`https://schema.buildy.tw/collection.schema.json`), source `src/collection-v1.ts`.
 
 A person gathers screens and block variants on Stock (https://app.codegen-x.com/, header "Collections"), then presses
@@ -16,8 +16,8 @@ Items the snapshot does not have are skipped and named in one short note, never 
   The staging deployment (`byc-staging-*.vercel.app`) is never an Open in BuildY target; it stays only the GitHub repo
   homepage link.
 - Link: `<buildy origin>/?collection=<payload>` where `payload` is the collection JSON (UTF-8) in base64url without
-  padding (RFC 4648 section 5). The chat today serves `/` and `/preview`, so the link lands on the existing chat page;
-  a `/build` alias may be added later and must accept the same parameter.
+  padding (RFC 4648 section 5). The link lands on the chat page; the `/build` alias accepts the same parameter
+  (`/build?collection=<payload>`).
 - Stock opens the link only when the whole URL is at most **8000 characters**. Above that (or when the person asks),
   Stock downloads `<title>.buildy-collection.json` and the person imports it in the chat (section 2, same checks).
 - Stock writes `pins.stock.assetsDigest` = the `digest` of its `assets.v0.json`, the same value BuildY records as
