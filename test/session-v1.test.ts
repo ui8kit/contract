@@ -158,3 +158,44 @@ describe("session buildy:v1 1.3.0: collection", () => {
     }
   });
 });
+
+describe("session buildy:v1 1.4.0: Ask page plan", () => {
+  const plan = {
+    status: "partial", pageId: "page-1", baseRevision: 3, summary: "Rework blocks",
+    executedAt: "2026-11-11T10:00:00.000Z",
+    ops: [
+      { id: "op-1", op: "set_variant", blockId: "block-nav", variant: "inverse", from: "inline", label: "Header (block.navbar)", reason: "Dark header", valid: true, result: { status: "applied" } },
+      { id: "op-2", op: "set", blockId: "block-hero", field: "headline", value: "Grill at home", valid: true, result: { status: "skipped" } },
+      { id: "op-3", op: "set_variant", blockId: "block-steps", variant: "nope", valid: false, issue: { code: "unknown_variant", message: "no variant nope", allowed: ["row", "centered"] }, result: { status: "rejected", code: "unknown_variant" } },
+      { id: "op-4", op: "add", kind: "faq", title: "FAQ", copy: { lede: "Answers" }, items: [{ label: "When?" }], valid: true },
+    ],
+  };
+  const withPlan = (p: unknown, origin = "ask-plan") => {
+    const x = clone(read(`${dir}/exported-chat.json`));
+    const messages = x.sessions[0].messages;
+    messages.push({ id: "msg-plan", role: "assistant", text: "Plan", createdAt: "2026-11-11T10:00:00.000Z", mode: "ask", answer: { blocks: [] }, plan: p });
+    messages.push({ id: "msg-run", role: "assistant", text: "Ran", createdAt: "2026-11-11T10:00:01.000Z", mode: "build", proposal: { applied: false, status: "pending", origin, changes: { added: [], kept: ["block-hero"], removed: [] } } });
+    return x;
+  };
+
+  test("an Ask message carries a plan; an ask-plan proposal is valid; older files stay valid", () => {
+    expect(errs(withPlan(plan))).toEqual([]);
+    expect(errs(withPlan(plan, "ask-card"))).toEqual([]);
+    expect(errs(read(`${dir}/exported-chat.json`))).toEqual([]);
+  });
+
+  test("plans are closed and typed", () => {
+    for (const bad of [
+      { ...plan, status: "done" },
+      { ...plan, ops: [{ ...plan.ops[0], op: "set_page" }] },
+      { ...plan, ops: [{ ...plan.ops[0], valid: undefined }] },
+      { ...plan, ops: [{ ...plan.ops[0], extra: 1 }] },
+      { ...plan, ops: [{ ...plan.ops[0], result: { status: "done" } }] },
+      { ...plan, ops: [{ ...plan.ops[3], copy: { lede: 1 } }] },
+      { status: "proposed", pageId: "page-1", ops: [] },
+    ]) {
+      expect({ bad, ok: file(withPlan(bad)) }).toEqual({ bad, ok: false });
+    }
+    expect(file(withPlan(plan, "model"))).toBe(false);
+  });
+});

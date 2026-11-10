@@ -5,7 +5,8 @@
 import {
   SESSION_PREFS_LAYOUT_FLAGS_V1, SESSION_PREFS_LAYOUT_SIZES_V1, SESSION_PREFS_MAX_SIZE_V1,
   SESSION_COMMIT_PATTERN_V1, SESSION_SKIN_PATTERN_V1, SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_ID_PATTERN_V1, SESSION_LIMITS_V1,
-  SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_PROPOSAL_STATUSES_V1,
+  SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PLAN_OPS_V1, SESSION_PLAN_STATUSES_V1, SESSION_PROGRAM_CHECKS_V1,
+  SESSION_PROPOSAL_ORIGINS_V1, SESSION_PROPOSAL_STATUSES_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
 } from "../src/session-v1.ts";
 import { COLLECTION_DIGEST_PATTERN_V1, COLLECTION_ID_PATTERN_V1, COLLECTION_LIMITS_V1, COLLECTION_SCHEMA_URL_V1 } from "../src/collection-v1.ts";
@@ -43,8 +44,8 @@ const proposal = closed({
   locale: str(PAGE_LIMITS_V1.maxLocaleLength),
   demoData: { type: "boolean" },
   catalogRefs: open("Catalog refs the program recomputed from the pinned Stock catalog (catalogDigest, pinnedCommit, screen, blocks)."),
-  origin: { const: "ask-card", description: "Made by Apply variant on an Ask block card (no model call)." },
-  changes: closed({ added: list, kept: list, removed: list }, ["added", "kept", "removed"], "Block kinds added, kept and removed versus the base page of a follow-up turn."),
+  origin: { enum: [...SESSION_PROPOSAL_ORIGINS_V1], description: "ask-card: Apply variant on an Ask block card; ask-plan (1.4.0): Apply in Build on an Ask page plan. Both make the proposal without a model call." },
+  changes: closed({ added: list, kept: list, removed: list }, ["added", "kept", "removed"], "Blocks added, kept unchanged and removed versus the base page of a follow-up turn (block ids; hosts before 1.4.0 wrote block kinds)."),
 }, ["applied"], "A page proposal of a Build turn. The page itself is the record's candidate / lastProposed.");
 
 const run = closed({
@@ -58,6 +59,32 @@ const artifact = closed({
   kind: { const: "saved_page" }, pageId: short, slug: short, revision: { type: "integer", minimum: 0 }, files: list,
 }, ["kind", "pageId", "slug", "revision", "files"]);
 
+const planItem = closed({
+  label: str(PAGE_LIMITS_V1.maxTitleLength), detail: str(PAGE_LIMITS_V1.maxSummaryLength), value: short, note: short, group: short, icon: short,
+}, ["label"], "A row of set_items / add / replace (page-patch/v1 item).");
+const planOp = closed({
+  id: short,
+  op: { enum: [...SESSION_PLAN_OPS_V1] },
+  blockId: short, field: short, value: orNull(str(L.maxNoteLength)), variant: orNull(short), kind: short,
+  title: str(PAGE_LIMITS_V1.maxTitleLength), to: { type: "integer", minimum: 0 }, at: { type: "integer", minimum: 0 },
+  copy: { type: "object", additionalProperties: str(L.maxNoteLength), description: "Copy keys of add / replace (page-patch/v1)." },
+  items: { type: "array", maxItems: L.maxListItems, items: planItem },
+  reason: str(L.maxNoteLength, "Why, in the author's language (model words, shown as text)."),
+  label: str(L.maxNoteLength, "The target block as the author sees it (title and catalog block), host-made."),
+  from: short,
+  valid: { type: "boolean", description: "The host checked this op alone against the page and the pinned catalog." },
+  issue: closed({ code: short, message: str(L.maxNoteLength), allowed: list }, ["code", "message"], "Why the op cannot apply, with the allowed values when there is a list."),
+  result: closed({ status: { enum: ["applied", "rejected", "skipped"] }, code: short, message: str(L.maxNoteLength) }, ["status"], "What Apply in Build did with the op."),
+}, ["id", "op", "valid"], "One op of an Ask page plan: a page-patch/v1 op on a block of the chat's page plus the host's check and result.");
+const plan = closed({
+  status: { enum: [...SESSION_PLAN_STATUSES_V1] },
+  pageId: short,
+  baseRevision: { type: "integer", minimum: 0 },
+  summary: str(L.maxNoteLength),
+  ops: { type: "array", maxItems: 24, items: planOp },
+  executedAt: ref("datetime"),
+}, ["status", "pageId", "baseRevision", "ops"], "Ask page plan (1.4.0, additive): page-patch/v1 ops the Ask answer recommends, checked by the host; Apply in Build runs the ticked valid ops without a model call. proposed: not run; executed / partial / failed: run, each op has its result.");
+
 const message = closed({
   id: ref("id"),
   role: { enum: [...SESSION_ROLES_V1] },
@@ -69,6 +96,7 @@ const message = closed({
   answer: closed({ blocks: list }, ["blocks"], "A text answer with no proposal: the catalog block specs the model read; cards are rebuilt from the host catalog."),
   artifacts: { type: "array", maxItems: L.maxListItems, items: ref("artifact") },
   proposal: ref("proposal"),
+  plan: ref("plan"),
   run: ref("run"),
 }, ["id", "role", "text", "createdAt"]);
 
@@ -160,5 +188,5 @@ export const sessionSchema = {
     settings: ref("settings"),
     prefs: ref("prefs"),
   },
-  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, message, revisionEntry, collection, session, app, pins, settings, prefs },
+  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, planItem, planOp, plan, message, revisionEntry, collection, session, app, pins, settings, prefs },
 };

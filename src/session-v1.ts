@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.3.0";
+export const SESSION_VERSION_V1 = "1.4.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -24,6 +24,14 @@ export const SESSION_HOSTS_V1 = ["browser", "desktop", "wordpress"] as const;
 export type SessionHostV1 = (typeof SESSION_HOSTS_V1)[number];
 
 export const SESSION_PROPOSAL_STATUSES_V1 = ["pending", "applied", "discarded", "superseded"] as const;
+
+/** What made a proposal without a model call: an Ask block card (ask-card) or an Ask page plan (ask-plan, 1.4.0). */
+export const SESSION_PROPOSAL_ORIGINS_V1 = ["ask-card", "ask-plan"] as const;
+
+/** Ops of an Ask page plan (1.4.0): page-patch/v1 ops on blocks of the chat's page. */
+export const SESSION_PLAN_OPS_V1 = ["set_variant", "set", "set_items", "add", "replace", "remove", "move"] as const;
+/** proposed: not run yet; executed: every ticked op applied; partial: some; failed: none. */
+export const SESSION_PLAN_STATUSES_V1 = ["proposed", "executed", "partial", "failed"] as const;
 
 /**
  * What made a page revision. apply: a chat proposal became the page; edit: one committed inspector edit (typing in
