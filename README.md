@@ -78,6 +78,16 @@ The old `/v0.3/…` and `/latest/…` paths are removed.
 - `page-patch/v1` is an ordered list of operations (`set`, `set_items`, `add`, `replace`, `remove`, `move`, `set_page`, `set_variant`), applied in order, all or nothing. `add` and `replace` name a kind (and optionally a `variant`); the host builds the block from the page's Stock screen family and sets `catalogBlock` itself.
 - `fixtures/page-spec/` holds real pages assembled from the pinned Stock catalog (dashboard, landing, website), the chat contract fixture, a store blob and the `parsePage` conformance cases; `fixtures/page-patch/` holds patches. `test/page-spec-v1.test.ts` validates them and checks that the schema and `parsePage` agree on every conformance case.
 
+## Session buildy:v1
+
+`schemas/session.schema.json` (`https://schema.buildy.tw/session.schema.json`), source `src/session-v1.ts` + `scripts/schemas-session-v1.ts`, describes a portable BuildY session file: what a host exports (`window.buildy.export()` in buildytech/chat), what any BuildY host imports and what Lab opens for review. It holds no credential.
+
+- Root: `format` (`buildy:v1`), `exportedAt`, `app` (name, version, host, optional commit), `pins` (Stock `contentCommit`, registry `sourceCommit`, optional catalog digest), `sessions`, optional `selectedSessionId` and non-secret `settings`.
+- A session is one chat: messages (user / assistant, Ask or Build `mode`, proposal, run), `page` (a page-spec/v1 `record` by `$ref`), `pageRevision` (equals `page.revision`) and `history` (one entry per committed change: `apply`, `edit`, `undo`, `redo`; typing in one field is one edit; an unchanged value adds none).
+- Objects are closed except the host records in `x-open-records` (usage, run usage, proposal catalog refs). After the schema, importers run `x-program-checks` (`SESSION_PROGRAM_CHECKS_V1`): duplicate session ids, page revision mismatch, non-monotonic history, unknown selected session.
+- An importer with other pins still opens the file and re-validates every page against its own catalog.
+- `fixtures/session/` holds a real file exported from the chat and a minimal file; `test/session-v1.test.ts` validates them and rejects broken files.
+
 ## Issue codes
 
 `validateCollectionV04` returns `IssueV04[]` = `{ code, path, message, severity? }`. Errors have no `severity`; warnings carry `severity: "warning"` and never make a record invalid. The registry is `ISSUE_CODES_V04` (code → meaning) with `WARNING_CODES_V04`; a test proves every emitted code is registered and listed here. Match on `code`, never on `message` (messages may be reworded in any release).

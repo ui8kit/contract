@@ -1,0 +1,628 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.buildy.tw/session.schema.json",
+  "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
+  "x-session-format": "buildy:v1",
+  "x-session-version": "1.0.0",
+  "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
+  "x-program-checks": [
+    "duplicate_session_id",
+    "page_revision_mismatch",
+    "history_not_monotonic",
+    "selected_session_unknown"
+  ],
+  "x-open-records": [
+    "usage",
+    "run.usage",
+    "proposal.catalogRefs"
+  ],
+  "x-limits": {
+    "maxSessions": 500,
+    "maxMessages": 2000,
+    "maxHistory": 500,
+    "maxTextLength": 200000,
+    "maxTitleLength": 160,
+    "maxListItems": 200,
+    "maxShortLength": 200,
+    "maxNoteLength": 4000
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "exportedAt",
+    "app",
+    "pins",
+    "sessions"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "format": {
+      "const": "buildy:v1"
+    },
+    "exportedAt": {
+      "$ref": "#/$defs/datetime"
+    },
+    "app": {
+      "$ref": "#/$defs/app"
+    },
+    "pins": {
+      "$ref": "#/$defs/pins"
+    },
+    "selectedSessionId": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sessions": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/$defs/session"
+      }
+    },
+    "settings": {
+      "$ref": "#/$defs/settings"
+    }
+  },
+  "$defs": {
+    "datetime": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$",
+      "maxLength": 40,
+      "description": "UTC ISO 8601 with Z (Date.prototype.toISOString)."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+      "description": "Host id of a chat or a message (e.g. session-<uuid>, msg-<uuid>)."
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit (7 to 40 lowercase hex)."
+    },
+    "mode": {
+      "enum": [
+        "ask",
+        "build"
+      ],
+      "description": "Ask reads the catalog and answers; Build changes the page."
+    },
+    "revision": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Revision of the applied page of the chat (null: no applied page). Equals page.revision (program check page_revision_mismatch)."
+    },
+    "proposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applied"
+      ],
+      "description": "A page proposal of a Build turn. The page itself is the record's candidate / lastProposed.",
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "applied",
+            "discarded",
+            "superseded"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "liveModel": {
+          "type": "boolean"
+        },
+        "assembler": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "warnings": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "missing": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 640
+        },
+        "screenId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "demoData": {
+          "type": "boolean"
+        },
+        "catalogRefs": {
+          "type": "object",
+          "description": "Catalog refs the program recomputed from the pinned Stock catalog (catalogDigest, pinnedCommit, screen, blocks). Host record, copied as it is (open object)."
+        },
+        "origin": {
+          "const": "ask-card",
+          "description": "Made by Apply variant on an Ask block card (no model call)."
+        },
+        "changes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "added",
+            "kept",
+            "removed"
+          ],
+          "description": "Block kinds added, kept and removed versus the base page of a follow-up turn.",
+          "properties": {
+            "added": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            },
+            "kept": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            },
+            "removed": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
+          }
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modelId"
+      ],
+      "description": "The model run that produced an assistant message. Never holds prompts, keys or provider payloads.",
+      "properties": {
+        "requestedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelLabel": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "live": {
+          "type": "boolean"
+        },
+        "policyVersion": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelCatalogVersion": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "trialPolicyVersion": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "catalogDigest": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "tools": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "runId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "usage": {
+          "type": "object",
+          "description": "Token usage of the run as the provider reported it (status, steps, token counts, cost availability). Host record, copied as it is (open object)."
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "pageId",
+        "slug",
+        "revision",
+        "files"
+      ],
+      "properties": {
+        "kind": {
+          "const": "saved_page"
+        },
+        "pageId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "slug": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "files": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role",
+        "text",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "role": {
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 200000,
+          "description": "Message text. Assistant text answers are the model's Markdown (rendered as safe Markdown, never as HTML)."
+        },
+        "createdAt": {
+          "$ref": "#/$defs/datetime"
+        },
+        "mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelText": {
+          "type": "string",
+          "maxLength": 200000,
+          "description": "Build proposals: the model's own words next to the proposal summary (Markdown)."
+        },
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "blocks"
+          ],
+          "description": "A text answer with no proposal: the catalog block specs the model read; cards are rebuilt from the host catalog.",
+          "properties": {
+            "blocks": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/artifact"
+          }
+        },
+        "proposal": {
+          "$ref": "#/$defs/proposal"
+        },
+        "run": {
+          "$ref": "#/$defs/run"
+        }
+      }
+    },
+    "revisionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "at",
+        "cause"
+      ],
+      "description": "One page revision: every committed change of the applied page adds one entry; an unchanged value adds none.",
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "cause": {
+          "enum": [
+            "apply",
+            "edit",
+            "undo",
+            "redo"
+          ],
+          "description": "apply: a proposal became the page; edit: one committed inspector edit or block operation (typing in one field is one edit); undo / redo: an inspector step. An import keeps the revisions of the file."
+        },
+        "pageId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "blockId": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "updatedAt",
+        "messages"
+      ],
+      "description": "One chat.",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "createdAt": {
+          "$ref": "#/$defs/datetime"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/datetime"
+        },
+        "mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "scenarioId": {
+          "enum": [
+            "dashboard",
+            "landing",
+            "website",
+            null
+          ]
+        },
+        "screenId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "pageId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "pageBound": {
+          "type": "boolean"
+        },
+        "pageRevision": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Revision of the applied page of the chat (null: no applied page). Equals page.revision (program check page_revision_mismatch)."
+        },
+        "usage": {
+          "type": "object",
+          "description": "Usage summed over the runs of the chat. Host record, copied as it is (open object)."
+        },
+        "messages": {
+          "type": "array",
+          "maxItems": 2000,
+          "items": {
+            "$ref": "#/$defs/message"
+          }
+        },
+        "page": {
+          "anyOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/record"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The chat's pages: a page-spec/v1 record (applied page, pending candidate, last proposal, their provenance, revision)."
+        },
+        "history": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/revisionEntry"
+          },
+          "description": "Revision history of the applied page, oldest first (the last 500 entries)."
+        }
+      }
+    },
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "host"
+      ],
+      "description": "The app that wrote the file.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "host": {
+          "enum": [
+            "browser",
+            "desktop",
+            "wordpress"
+          ]
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "description": "Git commit (7 to 40 lowercase hex)."
+        }
+      }
+    },
+    "pins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stock",
+        "registry"
+      ],
+      "description": "Catalog pins of the host when the file was written. An importer with other pins still opens the file; it re-validates pages against its own catalog.",
+      "properties": {
+        "stock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo",
+            "contentCommit"
+          ],
+          "description": "Stock content the chats were built from (codegen-x).",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "contentCommit": {
+              "$ref": "#/$defs/commit"
+            }
+          }
+        },
+        "registry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "sourceCommit"
+          ],
+          "description": "The commit the UI8Kit registry build was made from.",
+          "properties": {
+            "url": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "sourceCommit": {
+              "$ref": "#/$defs/commit"
+            }
+          }
+        },
+        "catalogDigest": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Non-secret preferences of the host.",
+      "properties": {
+        "theme": {
+          "enum": [
+            "light",
+            "dark"
+          ]
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "previewHideServiceLabels": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

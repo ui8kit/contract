@@ -1,0 +1,1048 @@
+{
+  "$schema": "https://schema.buildy.tw/session.schema.json",
+  "format": "buildy:v1",
+  "exportedAt": "2026-11-10T17:30:09.398Z",
+  "app": {
+    "name": "buildy-chat",
+    "version": "0.0.0",
+    "host": "browser"
+  },
+  "pins": {
+    "stock": {
+      "repo": "codegen-x/ui8kit",
+      "contentCommit": "081a1c5e5cc5db6f6439a37edb666ddfee7aa006"
+    },
+    "registry": {
+      "url": "https://registry.buildy.tw",
+      "sourceCommit": "3a6d923a3bdf75bba8951a3dfda7f3e97a69ecc5"
+    },
+    "catalogDigest": "sha256:78a567cf1d0f50fda913d409197455d368260a91974c7a601fd297e57f8397d7"
+  },
+  "selectedSessionId": "session-ca6d4c22-14fb-46d7-84d0-e444fea21982",
+  "sessions": [
+    {
+      "id": "session-ca6d4c22-14fb-46d7-84d0-e444fea21982",
+      "title": "Landing page for a coffee roastery: hero, featur",
+      "updatedAt": "2026-11-10T17:29:59.927Z",
+      "messages": [
+        {
+          "id": "msg-487666fd-d6ec-41cd-abf4-0b3bf3d0e1e1",
+          "role": "user",
+          "text": "Landing page for a coffee roastery: hero, features with icons, call to action, footer.",
+          "createdAt": "2026-11-10T17:29:51.834Z",
+          "selectedModelId": "grok-4.20-0309-non-reasoning",
+          "mode": "build"
+        },
+        {
+          "id": "msg-aad3188b-1e21-410f-bff7-5dc53977c0bc",
+          "role": "assistant",
+          "text": "Live Grok turn produced a proposal. Layout was assembled from the Stock catalog. Proposal ready: Marketing landing. Apply it to the page. Nothing is published.",
+          "createdAt": "2026-11-10T17:29:58.860Z",
+          "proposal": {
+            "applied": true,
+            "status": "applied",
+            "source": "xai-runtime",
+            "liveModel": true,
+            "assembler": "local-catalog-assembler",
+            "warnings": [
+              "Stock screen screen.theme-marketing-landing/home. Browser renders nav (navbar), hero, features (logos), features, features (steps), features (stats), features (testimonials), features (faq), cta, footer (sitemap).",
+              "Model copy kept on: nav, hero, features, cta, footer.",
+              "Removed invented years from footer.legal. Add a year in the request to keep one."
+            ],
+            "missing": [],
+            "title": "Marketing landing",
+            "screenId": "screen.theme-marketing-landing/home",
+            "locale": "en",
+            "demoData": false,
+            "catalogRefs": {
+              "catalogDigest": "sha256:78a567cf1d0f50fda913d409197455d368260a91974c7a601fd297e57f8397d7",
+              "pinnedCommit": "081a1c5e5cc5db6f6439a37edb666ddfee7aa006",
+              "screen": {
+                "catalogId": "screen.theme-marketing-landing/home",
+                "title": "Marketing landing / Home",
+                "url": "https://app.codegen-x.com/#/asset/screen.theme-marketing-landing/home",
+                "searchUrl": "https://app.codegen-x.com/#/search?type=screen&section=marketing&spec=screen.theme-marketing-landing",
+                "filters": {
+                  "type": [
+                    "screen"
+                  ],
+                  "section": [
+                    "marketing"
+                  ],
+                  "job": [
+                    "hero",
+                    "features",
+                    "testimonials",
+                    "cta",
+                    "faq",
+                    "how",
+                    "logos",
+                    "numbers"
+                  ],
+                  "blocks": [
+                    "cta",
+                    "faq",
+                    "features",
+                    "hero",
+                    "steps",
+                    "logos",
+                    "navbar",
+                    "sitemap",
+                    "stats",
+                    "testimonials"
+                  ],
+                  "industry": [],
+                  "spec": "screen.theme-marketing-landing",
+                  "variant": "home"
+                }
+              },
+              "blocks": [
+                {
+                  "blockId": "block-nav",
+                  "kind": "nav",
+                  "catalogLabel": "navbar",
+                  "catalogId": "block.navbar",
+                  "title": "Navigation bar",
+                  "variants": [
+                    "inline",
+                    "split",
+                    "search",
+                    "media",
+                    "plain",
+                    "inverse"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.navbar",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.navbar",
+                    "kind": "nav",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 5,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "inline",
+                  "registryItem": "nav-bar"
+                },
+                {
+                  "blockId": "block-hero",
+                  "kind": "hero",
+                  "catalogLabel": "hero",
+                  "catalogId": "block.hero",
+                  "title": "Hero",
+                  "variants": [
+                    "centered",
+                    "screenshot",
+                    "backdrop",
+                    "code",
+                    "cluster",
+                    "display",
+                    "form",
+                    "prompt",
+                    "twoActions",
+                    "split",
+                    "splitStart",
+                    "muted",
+                    "saas",
+                    "shop",
+                    "blog"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.hero",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.hero",
+                    "kind": "hero",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "screenshot",
+                  "registryItem": "hero-classic"
+                },
+                {
+                  "blockId": "block-logos",
+                  "kind": "features",
+                  "catalogLabel": "features",
+                  "catalogId": "block.features",
+                  "title": "Features",
+                  "variants": [
+                    "grid",
+                    "grid2",
+                    "tiles4",
+                    "cells4",
+                    "rows",
+                    "rowsStart",
+                    "rowsAlternate",
+                    "tilesMuted"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.features",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.features",
+                    "kind": "features",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "row",
+                  "registryItem": "logo-cloud"
+                },
+                {
+                  "blockId": "block-features",
+                  "kind": "features",
+                  "catalogLabel": "features",
+                  "catalogId": "block.features",
+                  "title": "Features",
+                  "variants": [
+                    "grid",
+                    "grid2",
+                    "tiles4",
+                    "cells4",
+                    "rows",
+                    "rowsStart",
+                    "rowsAlternate",
+                    "tilesMuted"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.features",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.features",
+                    "kind": "features",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 4,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "rowsAlternate",
+                  "registryItem": "feature-grid"
+                },
+                {
+                  "blockId": "block-steps",
+                  "kind": "features",
+                  "catalogLabel": "features",
+                  "catalogId": "block.features",
+                  "title": "Features",
+                  "variants": [
+                    "grid",
+                    "grid2",
+                    "tiles4",
+                    "cells4",
+                    "rows",
+                    "rowsStart",
+                    "rowsAlternate",
+                    "tilesMuted"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.features",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.features",
+                    "kind": "features",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "rowIcons",
+                  "registryItem": "steps-list"
+                },
+                {
+                  "blockId": "block-stats",
+                  "kind": "features",
+                  "catalogLabel": "features",
+                  "catalogId": "block.features",
+                  "title": "Features",
+                  "variants": [
+                    "grid",
+                    "grid2",
+                    "tiles4",
+                    "cells4",
+                    "rows",
+                    "rowsStart",
+                    "rowsAlternate",
+                    "tilesMuted"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.features",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.features",
+                    "kind": "features",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "icons",
+                  "registryItem": "stats-band"
+                },
+                {
+                  "blockId": "block-testimonials",
+                  "kind": "features",
+                  "catalogLabel": "features",
+                  "catalogId": "block.features",
+                  "title": "Features",
+                  "variants": [
+                    "grid",
+                    "grid2",
+                    "tiles4",
+                    "cells4",
+                    "rows",
+                    "rowsStart",
+                    "rowsAlternate",
+                    "tilesMuted"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.features",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.features",
+                    "kind": "features",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "single",
+                  "registryItem": "testimonial-grid"
+                },
+                {
+                  "blockId": "block-faq",
+                  "kind": "features",
+                  "catalogLabel": "features",
+                  "catalogId": "block.features",
+                  "title": "Features",
+                  "variants": [
+                    "grid",
+                    "grid2",
+                    "tiles4",
+                    "cells4",
+                    "rows",
+                    "rowsStart",
+                    "rowsAlternate",
+                    "tilesMuted"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.features",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.features",
+                    "kind": "features",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "list",
+                  "registryItem": "faq-list"
+                },
+                {
+                  "blockId": "block-cta",
+                  "kind": "cta",
+                  "catalogLabel": "cta",
+                  "catalogId": "block.cta",
+                  "title": "Call to action",
+                  "variants": [
+                    "card",
+                    "banner",
+                    "row",
+                    "form",
+                    "quote",
+                    "band",
+                    "split",
+                    "compact",
+                    "saas",
+                    "shop",
+                    "agency"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.cta",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.cta",
+                    "kind": "cta",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "band",
+                  "registryItem": "cta-band"
+                },
+                {
+                  "blockId": "block-footer",
+                  "kind": "footer",
+                  "catalogLabel": "sitemap",
+                  "catalogId": "block.sitemap",
+                  "title": "Sitemap footer",
+                  "variants": [
+                    "columns",
+                    "card",
+                    "row",
+                    "newsletter",
+                    "status",
+                    "compact"
+                  ],
+                  "url": "https://app.codegen-x.com/#/search?type=block&spec=block.sitemap",
+                  "filters": {
+                    "type": "block",
+                    "spec": "block.sitemap",
+                    "kind": "footer",
+                    "screen": "screen.theme-marketing-landing/home",
+                    "section": [
+                      "marketing"
+                    ],
+                    "job": [
+                      "hero",
+                      "features",
+                      "testimonials",
+                      "cta",
+                      "faq",
+                      "how",
+                      "logos",
+                      "numbers"
+                    ],
+                    "industry": []
+                  },
+                  "rows": 0,
+                  "sourceScreenId": "screen.theme-marketing-landing/home",
+                  "variant": "columns",
+                  "registryItem": "sitemap-footer"
+                }
+              ]
+            }
+          },
+          "run": {
+            "requestedModelId": "grok-4.20-0309-non-reasoning",
+            "modelId": "grok-4.20-0309-non-reasoning",
+            "modelLabel": "Grok 4.20 Non-reasoning (grok-4.20-0309-non-reasoning)",
+            "live": true,
+            "policyVersion": "browser-constructor/3",
+            "modelCatalogVersion": "grok-text-5/2026-11-08",
+            "trialPolicyVersion": "browser-constructor/3+grok-text-5/2026-11-08",
+            "catalogDigest": "sha256:78a567cf1d0f50fda913d409197455d368260a91974c7a601fd297e57f8397d7",
+            "path": "chat-completions",
+            "tools": [
+              "search_catalog",
+              "propose_layout",
+              "propose_layout"
+            ],
+            "runId": "xai-mwaytjr0-si5hyr",
+            "usage": {
+              "status": "complete",
+              "steps": 3,
+              "promptTokens": 30874,
+              "completionTokens": 619,
+              "totalTokens": 31493,
+              "reportedBy": "xai-provider",
+              "aggregation": "sum-of-tool-loop-requests",
+              "lastStep": {
+                "promptTokens": 12324,
+                "completionTokens": 291,
+                "totalTokens": 12615,
+                "reasoningTokens": 0,
+                "cachedTokens": 9600
+              },
+              "cost": {
+                "available": false,
+                "reason": "no_official_current_rates_in_repo",
+                "note": "Dollar cost is shown only when official current rates for the exact model id are confirmed, with source and date, and marked estimated vs billed. Generic or remembered prices are not used."
+              },
+              "reasoningTokens": 0,
+              "cachedTokens": 28032
+            }
+          }
+        }
+      ],
+      "mode": "build",
+      "scenarioId": "landing",
+      "screenId": "screen.theme-marketing-landing/home",
+      "selectedModelId": "grok-4.20-0309-non-reasoning",
+      "usage": {
+        "status": "complete",
+        "runs": 1,
+        "incompleteRuns": 0,
+        "promptTokens": 30874,
+        "completionTokens": 619,
+        "totalTokens": 31493,
+        "cost": {
+          "available": false,
+          "reason": "no_official_current_rates_in_repo",
+          "note": "Dollar cost is shown only when official current rates for the exact model id are confirmed, with source and date, and marked estimated vs billed. Generic or remembered prices are not used."
+        },
+        "reasoningTokens": 0,
+        "cachedTokens": 28032
+      },
+      "pageRevision": 5,
+      "pageId": "page-draft",
+      "history": [
+        {
+          "revision": 1,
+          "at": "2026-11-10T17:29:59.925Z",
+          "cause": "apply",
+          "pageId": "page-draft"
+        },
+        {
+          "revision": 2,
+          "at": "2026-11-10T17:30:01.596Z",
+          "cause": "edit",
+          "pageId": "page-draft",
+          "blockId": "block-nav"
+        },
+        {
+          "revision": 3,
+          "at": "2026-11-10T17:30:03.408Z",
+          "cause": "edit",
+          "pageId": "page-draft",
+          "blockId": "block-nav"
+        },
+        {
+          "revision": 4,
+          "at": "2026-11-10T17:30:04.625Z",
+          "cause": "undo",
+          "pageId": "page-draft"
+        },
+        {
+          "revision": 5,
+          "at": "2026-11-10T17:30:05.477Z",
+          "cause": "edit",
+          "pageId": "page-draft",
+          "blockId": "block-nav"
+        }
+      ],
+      "page": {
+        "applied": {
+          "id": "page-draft",
+          "slug": "marketing-landing",
+          "status": "draft",
+          "title": "Marketing landing",
+          "layout": {
+            "version": 1,
+            "blocks": [
+              {
+                "id": "block-nav",
+                "kind": "nav",
+                "title": "Header",
+                "summary": "Brand and section links assembled from compatible catalog labels.",
+                "catalogBlock": "block.navbar",
+                "variant": "inline",
+                "copy": {
+                  "brand": "Marketing landing"
+                },
+                "children": [
+                  {
+                    "id": "block-nav-offer",
+                    "kind": "nav-link",
+                    "title": "Offer",
+                    "summary": "The value proposition section."
+                  },
+                  {
+                    "id": "block-nav-proof",
+                    "kind": "nav-link",
+                    "title": "Proof",
+                    "summary": "Evidence the author still needs to confirm."
+                  },
+                  {
+                    "id": "block-nav-start",
+                    "kind": "nav-link",
+                    "title": "Start",
+                    "summary": "Primary call to action."
+                  }
+                ]
+              },
+              {
+                "id": "block-hero",
+                "kind": "hero",
+                "title": "Hero",
+                "summary": "Discover the rich flavors of our sustainably sourced, small-batch roasted coffee beans. From farm to cup, experience the difference.",
+                "catalogBlock": "block.hero",
+                "variant": "screenshot",
+                "copy": {
+                  "eyebrow": "Landing",
+                  "headline": "Artisan Coffee Roasted to Perfection",
+                  "lede": "Discover the rich flavors of our sustainably sourced, small-batch roasted coffee beans. From farm to cup, experience the difference.",
+                  "action": "Shop Now",
+                  "href": "/shop"
+                }
+              },
+              {
+                "id": "block-logos",
+                "kind": "features",
+                "title": "Logo cloud",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.logos",
+                "variant": "row"
+              },
+              {
+                "id": "block-features",
+                "kind": "features",
+                "title": "Our Craft",
+                "summary": "What makes BeanForge special",
+                "catalogBlock": "block.features",
+                "variant": "rowsAlternate",
+                "copy": {
+                  "lede": "What makes BeanForge special"
+                },
+                "children": [
+                  {
+                    "id": "block-features-item-1",
+                    "kind": "feature",
+                    "title": "Single Origin Beans",
+                    "summary": "Single Origin Beans",
+                    "copy": {
+                      "icon": "globe"
+                    }
+                  },
+                  {
+                    "id": "block-features-item-2",
+                    "kind": "feature",
+                    "title": "Small Batch Roasting",
+                    "summary": "Small Batch Roasting",
+                    "copy": {
+                      "icon": "zap"
+                    }
+                  },
+                  {
+                    "id": "block-features-item-3",
+                    "kind": "feature",
+                    "title": "Expert Cupping",
+                    "summary": "Expert Cupping",
+                    "copy": {
+                      "icon": "star"
+                    }
+                  },
+                  {
+                    "id": "block-features-item-4",
+                    "kind": "feature",
+                    "title": "Eco-Friendly Packaging",
+                    "summary": "Eco-Friendly Packaging",
+                    "copy": {
+                      "icon": "trees"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "block-steps",
+                "kind": "features",
+                "title": "How it works",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.steps",
+                "variant": "rowIcons"
+              },
+              {
+                "id": "block-stats",
+                "kind": "features",
+                "title": "Stats",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.stats",
+                "variant": "icons"
+              },
+              {
+                "id": "block-testimonials",
+                "kind": "features",
+                "title": "Testimonials",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.testimonials",
+                "variant": "single"
+              },
+              {
+                "id": "block-faq",
+                "kind": "features",
+                "title": "FAQ",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.faq",
+                "variant": "list"
+              },
+              {
+                "id": "block-cta",
+                "kind": "cta",
+                "title": "Join the Community",
+                "summary": "Subscribe for exclusive offers, brewing tips, and new releases.",
+                "catalogBlock": "block.cta",
+                "variant": "band",
+                "copy": {
+                  "lede": "Subscribe for exclusive offers, brewing tips, and new releases.",
+                  "action": "Subscribe",
+                  "note": "Stock screen screen.theme-marketing-landing/home",
+                  "href": "/subscribe"
+                }
+              },
+              {
+                "id": "block-footer",
+                "kind": "footer",
+                "title": "Footer",
+                "summary": "Closing band. Contact facts are not invented.",
+                "catalogBlock": "block.sitemap",
+                "variant": "columns",
+                "copy": {
+                  "brand": "BeanForge Roastery",
+                  "contact": "Contact details are not invented.",
+                  "legal": "BeanForge. All rights reserved."
+                }
+              }
+            ]
+          },
+          "seo": {
+            "title": "Marketing landing",
+            "description": "Marketing landing draft. Not published. Catalog blocks only."
+          },
+          "locale": "en",
+          "createdAt": "2026-11-10T17:29:58.734Z",
+          "updatedAt": "2026-11-10T17:30:05.472Z"
+        },
+        "candidate": null,
+        "appliedProvenance": {
+          "screenId": "screen.theme-marketing-landing/home",
+          "scenarioId": "landing",
+          "missing": [],
+          "assembler": "local-catalog-assembler"
+        },
+        "candidateProvenance": null,
+        "selectedBlockId": "block-nav",
+        "revision": 5,
+        "lastProposed": {
+          "id": "page-draft",
+          "slug": "marketing-landing",
+          "status": "draft",
+          "title": "Marketing landing",
+          "layout": {
+            "version": 1,
+            "blocks": [
+              {
+                "id": "block-nav",
+                "kind": "nav",
+                "title": "Navigation",
+                "summary": "Brand and section links assembled from compatible catalog labels.",
+                "catalogBlock": "block.navbar",
+                "variant": "inline",
+                "copy": {
+                  "brand": "BeanForge Roastery"
+                },
+                "children": [
+                  {
+                    "id": "block-nav-item-1",
+                    "kind": "nav-link",
+                    "title": "Home",
+                    "summary": "Home"
+                  },
+                  {
+                    "id": "block-nav-item-2",
+                    "kind": "nav-link",
+                    "title": "Our Beans",
+                    "summary": "Our Beans"
+                  },
+                  {
+                    "id": "block-nav-item-3",
+                    "kind": "nav-link",
+                    "title": "Roasting Process",
+                    "summary": "Roasting Process"
+                  },
+                  {
+                    "id": "block-nav-item-4",
+                    "kind": "nav-link",
+                    "title": "Shop",
+                    "summary": "Shop"
+                  },
+                  {
+                    "id": "block-nav-item-5",
+                    "kind": "nav-link",
+                    "title": "About Us",
+                    "summary": "About Us"
+                  }
+                ]
+              },
+              {
+                "id": "block-hero",
+                "kind": "hero",
+                "title": "Hero",
+                "summary": "Discover the rich flavors of our sustainably sourced, small-batch roasted coffee beans. From farm to cup, experience the difference.",
+                "catalogBlock": "block.hero",
+                "variant": "screenshot",
+                "copy": {
+                  "eyebrow": "Landing",
+                  "headline": "Artisan Coffee Roasted to Perfection",
+                  "lede": "Discover the rich flavors of our sustainably sourced, small-batch roasted coffee beans. From farm to cup, experience the difference.",
+                  "action": "Shop Now",
+                  "href": "/shop"
+                }
+              },
+              {
+                "id": "block-logos",
+                "kind": "features",
+                "title": "Logo cloud",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.logos",
+                "variant": "row"
+              },
+              {
+                "id": "block-features",
+                "kind": "features",
+                "title": "Our Craft",
+                "summary": "What makes BeanForge special",
+                "catalogBlock": "block.features",
+                "variant": "rowsAlternate",
+                "copy": {
+                  "lede": "What makes BeanForge special"
+                },
+                "children": [
+                  {
+                    "id": "block-features-item-1",
+                    "kind": "feature",
+                    "title": "Single Origin Beans",
+                    "summary": "Single Origin Beans",
+                    "copy": {
+                      "icon": "globe"
+                    }
+                  },
+                  {
+                    "id": "block-features-item-2",
+                    "kind": "feature",
+                    "title": "Small Batch Roasting",
+                    "summary": "Small Batch Roasting",
+                    "copy": {
+                      "icon": "zap"
+                    }
+                  },
+                  {
+                    "id": "block-features-item-3",
+                    "kind": "feature",
+                    "title": "Expert Cupping",
+                    "summary": "Expert Cupping",
+                    "copy": {
+                      "icon": "star"
+                    }
+                  },
+                  {
+                    "id": "block-features-item-4",
+                    "kind": "feature",
+                    "title": "Eco-Friendly Packaging",
+                    "summary": "Eco-Friendly Packaging",
+                    "copy": {
+                      "icon": "trees"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "block-steps",
+                "kind": "features",
+                "title": "How it works",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.steps",
+                "variant": "rowIcons"
+              },
+              {
+                "id": "block-stats",
+                "kind": "features",
+                "title": "Stats",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.stats",
+                "variant": "icons"
+              },
+              {
+                "id": "block-testimonials",
+                "kind": "features",
+                "title": "Testimonials",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.testimonials",
+                "variant": "single"
+              },
+              {
+                "id": "block-faq",
+                "kind": "features",
+                "title": "FAQ",
+                "summary": "Nothing is filled in this draft. Rows stay empty until the author supplies them.",
+                "catalogBlock": "block.faq",
+                "variant": "list"
+              },
+              {
+                "id": "block-cta",
+                "kind": "cta",
+                "title": "Join the Community",
+                "summary": "Subscribe for exclusive offers, brewing tips, and new releases.",
+                "catalogBlock": "block.cta",
+                "variant": "band",
+                "copy": {
+                  "lede": "Subscribe for exclusive offers, brewing tips, and new releases.",
+                  "action": "Subscribe",
+                  "note": "Stock screen screen.theme-marketing-landing/home",
+                  "href": "/subscribe"
+                }
+              },
+              {
+                "id": "block-footer",
+                "kind": "footer",
+                "title": "Footer",
+                "summary": "Closing band. Contact facts are not invented.",
+                "catalogBlock": "block.sitemap",
+                "variant": "columns",
+                "copy": {
+                  "brand": "BeanForge Roastery",
+                  "contact": "Contact details are not invented.",
+                  "legal": "BeanForge. All rights reserved."
+                }
+              }
+            ]
+          },
+          "seo": {
+            "title": "Marketing landing",
+            "description": "Marketing landing draft. Not published. Catalog blocks only."
+          },
+          "locale": "en",
+          "createdAt": "2026-11-10T17:29:58.734Z",
+          "updatedAt": "2026-11-10T17:29:58.734Z"
+        },
+        "lastProposedProvenance": {
+          "screenId": "screen.theme-marketing-landing/home",
+          "scenarioId": "landing",
+          "missing": [],
+          "assembler": "local-catalog-assembler"
+        }
+      }
+    },
+    {
+      "id": "session-legacy-1",
+      "title": "Old chat",
+      "updatedAt": "2026-11-01T10:00:00.000Z",
+      "messages": [
+        {
+          "id": "msg-old-1",
+          "role": "user",
+          "text": "hello from the old build",
+          "createdAt": "2026-11-01T10:00:00.000Z"
+        }
+      ],
+      "mode": "ask",
+      "page": {
+        "applied": null,
+        "candidate": null,
+        "appliedProvenance": null,
+        "candidateProvenance": null,
+        "selectedBlockId": null,
+        "revision": null,
+        "lastProposed": null,
+        "lastProposedProvenance": null
+      }
+    }
+  ],
+  "settings": {
+    "theme": "light",
+    "selectedModelId": "grok-4.20-0309-non-reasoning",
+    "previewHideServiceLabels": false
+  }
+}

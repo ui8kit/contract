@@ -19,3 +19,5 @@ export { CODEX_ID_PATTERN, isCodexId, assertCodexId, codexIdForInt } from "./id.
 export * from "./view-v1.js";
 // Page spec profile page-spec/v1 + edit operations page-patch/v1: BuildY pages as Stock catalog blocks (schemas/page-spec.schema.json, schemas/page-patch.schema.json).
 export * from "./page-spec-v1.js";
+// Session profile buildy:v1: a portable BuildY session file (schemas/session.schema.json).
+export * from "./session-v1.js";

@@ -1,0 +1,29 @@
+{
+  "format": "buildy:v1",
+  "exportedAt": "2026-11-10T17:30:09.398Z",
+  "app": {
+    "name": "buildy-chat",
+    "version": "0.0.0",
+    "host": "browser"
+  },
+  "pins": {
+    "stock": {
+      "repo": "codegen-x/ui8kit",
+      "contentCommit": "081a1c5e5cc5db6f6439a37edb666ddfee7aa006"
+    },
+    "registry": {
+      "url": "https://registry.buildy.tw",
+      "sourceCommit": "3a6d923a3bdf75bba8951a3dfda7f3e97a69ecc5"
+    },
+    "catalogDigest": "sha256:78a567cf1d0f50fda913d409197455d368260a91974c7a601fd297e57f8397d7"
+  },
+  "sessions": [
+    {
+      "id": "session-minimal-1",
+      "title": "Empty chat",
+      "updatedAt": "2026-11-10T17:30:09.398Z",
+      "messages": []
+    }
+  ],
+  "$schema": "https://schema.buildy.tw/session.schema.json"
+}
