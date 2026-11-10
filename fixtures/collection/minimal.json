@@ -1,0 +1,8 @@
+{
+  "format": "buildy-collection:v1",
+  "id": "col-1",
+  "title": "One screen",
+  "createdAt": "2026-11-11T09:00:00Z",
+  "pins": { "stock": { "repo": "codegen-x/ui8kit", "assetsDigest": "sha256:78a567cf1d0f50fda913d409197455d368260a91974c7a601fd297e57f8397d7" } },
+  "items": [{ "kind": "screen", "id": "screen.site/home" }]
+}

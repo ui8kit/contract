@@ -21,3 +21,5 @@ export * from "./view-v1.js";
 export * from "./page-spec-v1.js";
 // Session profile buildy:v1: a portable BuildY session file (schemas/session.schema.json).
 export * from "./session-v1.js";
+// Collection profile buildy-collection:v1: Stock screens and block variants handed to BuildY (schemas/collection.schema.json).
+export * from "./collection-v1.js";

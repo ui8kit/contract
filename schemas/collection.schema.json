@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.buildy.tw/collection.schema.json",
+  "title": "BuildY collection buildy-collection:v1 — Stock screens and block variants handed to BuildY",
+  "x-collection-format": "buildy-collection:v1",
+  "x-collection-version": "1.0.0",
+  "description": "A set of Stock screen pages and block variants a person gathered (Stock Collections) and handed to BuildY (Open in BuildY, export / import). BuildY keeps the items its frozen catalog snapshot has as the required block set of a Build turn and reports the others as missing; it never substitutes them. Holds no credential and no personal data. After the schema, readers run x-program-checks. Every object is closed.",
+  "x-program-checks": [
+    "duplicate_item",
+    "empty_collection"
+  ],
+  "x-limits": {
+    "maxItems": 100,
+    "maxTitleLength": 160,
+    "maxNoteLength": 500,
+    "maxShortLength": 200,
+    "maxIdLength": 128,
+    "maxVariantLength": 40,
+    "maxAssetIdLength": 120
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "id",
+    "title",
+    "createdAt",
+    "pins",
+    "items"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "format": {
+      "const": "buildy-collection:v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+      "maxLength": 128,
+      "description": "Host id of the collection (e.g. col-<time>-<random>)."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "Human-readable name (any language)."
+    },
+    "createdAt": {
+      "$ref": "#/$defs/datetime"
+    },
+    "updatedAt": {
+      "$ref": "#/$defs/datetime"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "app"
+      ],
+      "description": "The app that wrote the file (e.g. stock, https://app.codegen-x.com/).",
+      "properties": {
+        "app": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "pins": {
+      "$ref": "#/$defs/pins"
+    },
+    "skin": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Skin the items were looked at in: the id of the registry item theme-<skin>. Null or absent: the default theme. A host without the skin keeps its own."
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/item"
+      },
+      "description": "Picked order. A screen and a block may both appear; the same kind + id + variant only once (program check duplicate_item)."
+    }
+  },
+  "$defs": {
+    "datetime": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$",
+      "maxLength": 40,
+      "description": "UTC ISO 8601 with Z (Date.prototype.toISOString)."
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit (7 to 40 lowercase hex)."
+    },
+    "pins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stock"
+      ],
+      "description": "Catalog pins of the host that wrote the file. A reader with other pins still opens the file: it keeps the items its snapshot has and reports the rest as missing.",
+      "properties": {
+        "stock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo",
+            "assetsDigest"
+          ],
+          "description": "Stock content the items were picked from (codegen-x).",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "assetsDigest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "description": "Digest of the Stock asset index the items were picked from (assets.v0.json digest; equals the BuildY catalogDigest of a snapshot made from the same content)."
+            },
+            "contentCommit": {
+              "$ref": "#/$defs/commit"
+            }
+          }
+        },
+        "registry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url"
+          ],
+          "description": "The registry the items install from.",
+          "properties": {
+            "url": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "sourceCommit": {
+              "$ref": "#/$defs/commit"
+            }
+          }
+        }
+      }
+    },
+    "screenItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id"
+      ],
+      "description": "A composed screen page of Stock: its blocks, in page order, become the required set.",
+      "properties": {
+        "kind": {
+          "const": "screen"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^screen\\.[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 120,
+          "description": "Stock screen page asset id screen.<screen>/<area> (a screen entity of the BuildY catalog snapshot)."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Human-readable name (any language)."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "The person's note on the item (why it was picked), shown to the model as a hint, never as an instruction."
+        }
+      }
+    },
+    "blockItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id"
+      ],
+      "description": "One catalog block (one variant of it, when variant is set).",
+      "properties": {
+        "kind": {
+          "const": "block"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^block\\.[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 120,
+          "description": "Stock catalog block block.<name> (page-spec/v1 catalogBlock)."
+        },
+        "variant": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9-]*$",
+          "maxLength": 40,
+          "description": "Catalog variant (block.<name>/<variant> is the variant asset id). Absent: any variant of the block (the host picks its default)."
+        },
+        "registry": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 200,
+          "description": "Registry item that draws the variant (npx ui8kit add <registry>). Informative: the host resolves it from its own snapshot."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "Human-readable name (any language)."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "The person's note on the item (why it was picked), shown to the model as a hint, never as an instruction."
+        }
+      }
+    },
+    "item": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/screenItem"
+        },
+        {
+          "$ref": "#/$defs/blockItem"
+        }
+      ]
+    }
+  }
+}

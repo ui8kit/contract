@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.buildy.tw/collection.schema.json",
+  "format": "buildy-collection:v1",
+  "id": "col-mhtk2b0x-7f3a",
+  "title": "Grill delivery: New Year promo",
+  "createdAt": "2026-11-11T09:00:00.000Z",
+  "updatedAt": "2026-11-11T09:05:12.000Z",
+  "source": { "app": "stock", "url": "https://app.codegen-x.com/" },
+  "pins": {
+    "stock": {
+      "repo": "codegen-x/ui8kit",
+      "assetsDigest": "sha256:78a567cf1d0f50fda913d409197455d368260a91974c7a601fd297e57f8397d7",
+      "contentCommit": "081a1c5e5cc5db6f6439a37edb666ddfee7aa006"
+    },
+    "registry": { "url": "https://registry.buildy.tw" }
+  },
+  "skin": "rose",
+  "items": [
+    { "kind": "screen", "id": "screen.theme-food-grill/home", "title": "Food grill / Home", "note": "Tone and order of the page" },
+    { "kind": "block", "id": "block.hero", "variant": "centered", "registry": "hero-classic", "title": "Hero" },
+    { "kind": "block", "id": "block.dishshowcase", "variant": "grid3", "registry": "dish-showcase", "title": "Dish showcase" },
+    { "kind": "block", "id": "block.grillbuilder", "variant": "split", "registry": "grill-builder", "title": "Grill dish builder", "note": "Build your own set" },
+    { "kind": "block", "id": "block.menuboard" }
+  ]
+}

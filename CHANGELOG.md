@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added: collection format `buildy-collection:v1` (collection 1.0.0): `schemas/collection.schema.json` (+ `public/`, published at `https://schema.buildy.tw/collection.schema.json`), `src/collection-v1.ts` (constants, limits, program checks, `collectionAssetIdV1`, `collectionProgramIssuesV1`, `splitCollectionV1`, TS types), `scripts/schemas-collection-v1.ts`, `fixtures/collection/`, `test/collection-v1.test.ts` and the chat intake spec `docs/collection-intake.md`. Stock screens and block variants a person picks on Stock and hands to BuildY. Additive change: no existing schema is affected.
 - Added (session 1.2.0, additive): optional root `prefs.layout`, the user's shell layout (pane sizes in integer CSS px, collapsed states, `focus` preview-only mode; `buildy:v1:prefs`). Hosts clamp sizes to their own ranges. Every 1.0.0 / 1.1.0 file validates unchanged.
 - Added (session 1.1.0, additive): optional `skin` on a session (skin id of the registry item `theme-<skin>`, pattern `SESSION_SKIN_PATTERN_V1`, or null for the default theme). Every 1.0.0 file validates unchanged.
 - Docs: the page store blob is described under its current key `buildy:v1:pages` (migrated once from `buildytech-creator-pages-v1`).

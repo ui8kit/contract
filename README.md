@@ -90,6 +90,16 @@ The old `/v0.3/…` and `/latest/…` paths are removed.
 - An importer with other pins still opens the file and re-validates every page against its own catalog.
 - `fixtures/session/` holds a real file exported from the chat and a minimal file; `test/session-v1.test.ts` validates them and rejects broken files.
 
+## Collection buildy-collection:v1
+
+`schemas/collection.schema.json` (`https://schema.buildy.tw/collection.schema.json`), source `src/collection-v1.ts` + `scripts/schemas-collection-v1.ts`, describes a set of Stock screen pages and block variants a person gathers on Stock (app.codegen-x.com, Collections) and hands to BuildY (Open in BuildY, export / import). It holds no credential and no personal data.
+
+- Root: `format` (`buildy-collection:v1`), `id`, `title`, `createdAt`, optional `updatedAt`, `source` (the app), `pins` (Stock `repo` + `assetsDigest`, optional `contentCommit`; optional registry), optional `skin`, `items` (at most 100, picked order).
+- An item is a screen page (`kind: "screen"`, `id` = `screen.<screen>/<area>`) or a block (`kind: "block"`, `id` = `block.<name>`, optional `variant`, optional `registry` name), each with an optional `title` and `note`. Ids are Stock asset ids, the entity keys of the BuildY catalog snapshot; a block with a variant is the asset `block.<name>/<variant>` (page-spec/v1 `catalogBlock` + `variant`).
+- After the schema, readers run `x-program-checks` (`COLLECTION_PROGRAM_CHECKS_V1`: `duplicate_item`, `empty_collection`). `splitCollectionV1` splits the items into the ones a host catalog has and the missing ones; missing items are reported, never substituted.
+- The schema stays inside the keyword subset of the chat's browser validator (a test guards it).
+- How the chat takes a collection: `docs/collection-intake.md`. `fixtures/collection/` holds a real collection and a minimal one; `test/collection-v1.test.ts` validates them and rejects broken files.
+
 ## Issue codes
 
 `validateCollectionV04` returns `IssueV04[]` = `{ code, path, message, severity? }`. Errors have no `severity`; warnings carry `severity: "warning"` and never make a record invalid. The registry is `ISSUE_CODES_V04` (code → meaning) with `WARNING_CODES_V04`; a test proves every emitted code is registered and listed here. Match on `code`, never on `message` (messages may be reworded in any release).
