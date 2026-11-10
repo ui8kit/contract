@@ -10,6 +10,11 @@ Items the snapshot does not have are skipped and named in one short note, never 
 
 ## 1. Hand-off from Stock
 
+- BuildY origin: the real chat. Final domain `https://chat.buildy.tw`; until it is live, `https://buildychat.vercel.app`.
+  Stock keeps it in one place (`BUILDY_URL` in `apps/stock/src/lib/collection.ts`, overridable at build time with
+  `VITE_BUILDY_URL`; default `https://buildychat.vercel.app`), so the switch to `chat.buildy.tw` is a one-line change.
+  The staging deployment (`byc-staging-*.vercel.app`) is never an Open in BuildY target; it stays only the GitHub repo
+  homepage link.
 - Link: `<buildy origin>/?collection=<payload>` where `payload` is the collection JSON (UTF-8) in base64url without
   padding (RFC 4648 section 5). The chat today serves `/` and `/preview`, so the link lands on the existing chat page;
   a `/build` alias may be added later and must accept the same parameter.
