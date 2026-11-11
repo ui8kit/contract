@@ -165,6 +165,7 @@ const items = { type: "array", items: { $ref: "#/$defs/item" }, maxItems: PAGE_P
 const sectionKind = { enum: [...PAGE_SECTION_KINDS_V1], description: "A top-level kind. The host builds the block from the page's Stock screen family; a kind the family does not have is rejected." };
 const blockRef = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/id` };
 const variantRef = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/variant` };
+const catalogBlockRef = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/catalogBlock` };
 const opCopy = { $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/copy` };
 const op = (name: string, props: Record<string, unknown>, req: string[], description: string) => ({
   type: "object", additionalProperties: false, required: ["op", ...req], description,
@@ -194,8 +195,8 @@ export const pagePatch = {
         op("set_items", { blockId: blockRef, items }, ["blockId", "items"], "Replace the rows of a list block."),
         op("add", { kind: sectionKind, at: { type: "integer", minimum: 0 }, title: prequired(L.maxTitleLength), variant: variantRef, copy: opCopy, items }, ["kind"],
           "Add a Stock block at a top-level index (default: its natural place). Optional copy and rows overlay the catalog defaults; variant picks a catalog variant of the block (the host sets catalogBlock)."),
-        op("replace", { blockId: blockRef, kind: sectionKind, title: prequired(L.maxTitleLength), variant: variantRef, copy: opCopy, items }, ["blockId", "kind"],
-          "Replace a top-level block by another Stock block in the same place."),
+        op("replace", { blockId: blockRef, kind: sectionKind, catalogBlock: catalogBlockRef, title: prequired(L.maxTitleLength), variant: variantRef, copy: opCopy, items }, ["blockId", "kind"],
+          "Replace a top-level block by another Stock block in the same place. catalogBlock (1.2.0, optional): another Stock catalog block of the same kind (block.hero -> block.storehero); the host keeps the block id, kind and title, carries the text the new block renders and says which fields it dropped; variant is one of that block's variants (default: its catalog default)."),
         op("remove", { blockId: blockRef }, ["blockId"], "Remove a block and its rows."),
         op("move", { blockId: blockRef, to: { type: "integer", minimum: 0 } }, ["blockId", "to"], "Move a block to an index among its siblings."),
         op("set_page", { field: { enum: [...PAGE_PATCH_PAGE_FIELDS_V1] }, value: prequired(L.maxTitleLength) }, ["field", "value"], "Set the page title or an SEO field."),

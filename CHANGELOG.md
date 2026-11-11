@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added (session 1.5.0, additive): a plan op may carry `catalogBlock` (replace: the Stock catalog block that takes the block's place, same kind) and `dropped` (the block's text fields the new catalog block does not render). Every 1.0.0 to 1.4.0 file validates unchanged (buildytech/chat ADR 0023).
+- Added (page-spec 1.2.0, additive): page-patch/v1 `replace` takes an optional `catalogBlock` (`$defs/catalogBlock` of the page spec): another Stock catalog block of the same kind in the same place (block.hero -> block.storehero); the host keeps id, kind and title and carries the text the new block renders. Every 1.1.0 patch validates unchanged.
+
 - Added (session 1.4.0, additive): optional `plan` on a message (`$defs/plan`, `planOp`, `planItem`): an Ask page plan, page-patch/v1 ops (`SESSION_PLAN_OPS_V1`: set_variant, set, set_items, add, replace, remove, move) on blocks of the chat's page with the host's check (`valid`, `issue` with `allowed`) and, once run by Apply in Build, each op's `result` and the plan `status` (`SESSION_PLAN_STATUSES_V1`: proposed, executed, partial, failed). `proposal.origin` takes `ask-plan` next to `ask-card` (`SESSION_PROPOSAL_ORIGINS_V1`); `proposal.changes` lists block ids (older hosts wrote kinds). Every 1.0.0 to 1.3.0 file validates unchanged (buildytech/chat ADR 0020).
 
 - Added (session 1.3.0, additive): optional `collection` on a chat (`$defs/collection`: `id`, `title`, `importedAt`, `assetsDigest`, `items`, `missing`; items by `$ref` to `collection.schema.json#/$defs/item`), the Stock collection the chat was opened from (docs/collection-intake.md section 4). Every 1.0.0 to 1.2.0 file validates unchanged.

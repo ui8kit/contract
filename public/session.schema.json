@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.4.0",
+  "x-session-version": "1.5.0",
   "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
@@ -415,6 +415,11 @@
           "type": "string",
           "maxLength": 200
         },
+        "catalogBlock": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "replace (1.5.0): the Stock catalog block that takes the block's place (same kind, page-patch/v1 replace.catalogBlock)."
+        },
         "title": {
           "type": "string",
           "maxLength": 160
@@ -486,6 +491,15 @@
         "from": {
           "type": "string",
           "maxLength": 200
+        },
+        "dropped": {
+          "type": "array",
+          "maxItems": 40,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": "replace (1.5.0): text fields of the block the new catalog block does not render, dropped when it runs (eyebrow, rows.icon)."
         },
         "valid": {
           "type": "boolean",
@@ -638,6 +652,11 @@
                 "type": "string",
                 "maxLength": 200
               },
+              "catalogBlock": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "replace (1.5.0): the Stock catalog block that takes the block's place (same kind, page-patch/v1 replace.catalogBlock)."
+              },
               "title": {
                 "type": "string",
                 "maxLength": 160
@@ -709,6 +728,15 @@
               "from": {
                 "type": "string",
                 "maxLength": 200
+              },
+              "dropped": {
+                "type": "array",
+                "maxItems": 40,
+                "items": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "description": "replace (1.5.0): text fields of the block the new catalog block does not render, dropped when it runs (eyebrow, rows.icon)."
               },
               "valid": {
                 "type": "boolean",

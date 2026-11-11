@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/page-patch.schema.json",
   "title": "Page patch page-patch/v1 — edit operations on a page spec",
   "x-page-patch-profile": "page-patch/v1",
-  "x-page-spec-version": "1.1.0",
+  "x-page-spec-version": "1.2.0",
   "description": "An edit of a page-spec/v1 page as an ordered list of operations, applied in order to a copy of the base page; the whole patch is rejected if any operation fails. Unchanged blocks keep their content. Slot validation: set / add / replace may only write copy keys and row fields the target kind renders (page-spec x-page-slots); rows beyond the kind's limit are rejected. The result must be a valid page-spec/v1 page. baseRevision, when sent, must equal the page revision the patch was made for.",
   "type": "object",
   "additionalProperties": false,
@@ -241,7 +241,7 @@
             "blockId",
             "kind"
           ],
-          "description": "Replace a top-level block by another Stock block in the same place.",
+          "description": "Replace a top-level block by another Stock block in the same place. catalogBlock (1.2.0, optional): another Stock catalog block of the same kind (block.hero -> block.storehero); the host keeps the block id, kind and title, carries the text the new block renders and says which fields it dropped; variant is one of that block's variants (default: its catalog default).",
           "properties": {
             "op": {
               "const": "replace"
@@ -267,6 +267,9 @@
                 "bottomnav"
               ],
               "description": "A top-level kind. The host builds the block from the page's Stock screen family; a kind the family does not have is rejected."
+            },
+            "catalogBlock": {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/catalogBlock"
             },
             "title": {
               "allOf": [

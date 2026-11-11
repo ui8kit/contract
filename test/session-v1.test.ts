@@ -198,4 +198,11 @@ describe("session buildy:v1 1.4.0: Ask page plan", () => {
     }
     expect(file(withPlan(plan, "model"))).toBe(false);
   });
+
+  test("1.5.0: a replace op names the catalog block that takes the block's place and the fields it drops", () => {
+    const swap = { id: "op-5", op: "replace", blockId: "block-hero", kind: "hero", catalogBlock: "block.storehero", from: "block.hero/centered", dropped: ["eyebrow", "rows.icon"], valid: true, result: { status: "applied", message: "Dropped: eyebrow." } };
+    expect(errs(withPlan({ ...plan, ops: [...plan.ops, swap] }))).toEqual([]);
+    expect(file(withPlan({ ...plan, ops: [{ ...swap, dropped: [1] }] }))).toBe(false);
+    expect(file(withPlan({ ...plan, ops: [{ ...swap, catalogBlock: 7 }] }))).toBe(false);
+  });
 });
