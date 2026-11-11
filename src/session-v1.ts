@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.5.0";
+export const SESSION_VERSION_V1 = "1.6.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -40,6 +40,12 @@ export const SESSION_PLAN_STATUSES_V1 = ["proposed", "executed", "partial", "fai
  */
 export const SESSION_REVISION_CAUSES_V1 = ["apply", "edit", "undo", "redo"] as const;
 export type SessionRevisionCauseV1 = (typeof SESSION_REVISION_CAUSES_V1)[number];
+/**
+ * What a revision did (1.6.0, optional): set_field (one field written, `path` names it), set_variant, add, move,
+ * remove, insert (a duplicate or a new list row), replace (a block or a list swapped, a reset to the Stock sample).
+ */
+export const SESSION_REVISION_OPS_V1 = ["set_field", "set_variant", "add", "move", "remove", "insert", "replace"] as const;
+export type SessionRevisionOpV1 = (typeof SESSION_REVISION_OPS_V1)[number];
 
 /** Host records copied as they are (objects without a closed key set in this profile). */
 export const SESSION_OPEN_RECORDS_V1 = ["usage", "run.usage", "proposal.catalogRefs"] as const;
@@ -60,6 +66,10 @@ export type SessionRevisionEntryV1 = {
   cause: SessionRevisionCauseV1;
   pageId?: string;
   blockId?: string;
+  /** 1.6.0: what the revision did. */
+  op?: SessionRevisionOpV1;
+  /** 1.6.0: JSON Pointer of the field or row in the block's render props (`/actions/cta`, `/content/features/2`); never a value. */
+  path?: string;
 };
 
 export type SessionPinsV1 = {

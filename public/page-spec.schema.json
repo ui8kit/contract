@@ -3,12 +3,15 @@
   "$id": "https://schema.buildy.tw/page-spec.schema.json",
   "title": "Page spec page-spec/v1 — a page as Stock catalog blocks with their copy",
   "x-page-spec-profile": "page-spec/v1",
-  "x-page-spec-version": "1.2.0",
+  "x-page-spec-version": "1.3.0",
   "description": "The primary artifact of a BuildY page: an agent proposes it (propose_layout), the host validates it against the Stock catalog, saves it, and regenerates code from it for a UI8Kit target (Svelte today). History, edits (page-patch/v1) and rollback work on this JSON; code is never the source. Root: the page (identical to buildytech/chat Page DTO, layout.version 1: every saved page validates unchanged). $defs: provenance, record and store describe the browser page store. Not a Codex v0.4 entry. After the schema, consumers run x-program-checks (duplicate ids, block count, payload size). x-page-slots lists the copy keys each kind renders and the rows of list kinds; a saved page may hold other copy keys, a patch may only write slots.",
   "x-program-checks": [
     "duplicate_id",
     "too_many_blocks",
     "too_large"
+  ],
+  "x-host-checks": [
+    "props_invalid"
   ],
   "x-limits": {
     "maxBlocks": 64,
@@ -412,6 +415,57 @@
       "maxLength": 40,
       "description": "Catalog variant of catalogBlock (block.<name>/<variant> is the catalog asset id); the host renders the registry organism with the variant's props. Optional (1.1.0). The host rejects a variant its pinned catalog does not have."
     },
+    "propValue": {
+      "description": "A props override value (1.3.0): plain JSON (strings are safe text); the host checks it against the props schema of the block's registry item.",
+      "anyOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/safeText"
+            }
+          ],
+          "maxLength": 2000
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "$ref": "#/$defs/propValue"
+          }
+        },
+        {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_]{0,47}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/propValue"
+          }
+        }
+      ]
+    },
+    "props": {
+      "type": "object",
+      "maxProperties": 64,
+      "propertyNames": {
+        "pattern": "^(?:/(?:[A-Za-z][A-Za-z0-9_]{0,47}|[0-9]{1,2}))+$",
+        "maxLength": 200
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/propValue"
+      },
+      "description": "Props overrides of a top-level block (1.3.0, optional): JSON Pointer of a prop of the registry item its catalog variant renders (registry.buildy.tw/props/v0.json: /actions/secondary, /content/card/title, /content/features) -> value. Merged over the variant preset and the page content (copy slots still carry the text they map); the host validates the merged props against the item's props schema (x-host-checks: props_invalid). Pointers do not overlap (no key is a prefix path of another)."
+    },
     "block1": {
       "type": "object",
       "additionalProperties": false,
@@ -456,6 +510,9 @@
         },
         "copy": {
           "$ref": "#/$defs/copy"
+        },
+        "props": {
+          "$ref": "#/$defs/props"
         },
         "children": {
           "type": "array",

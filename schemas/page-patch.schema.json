@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/page-patch.schema.json",
   "title": "Page patch page-patch/v1 — edit operations on a page spec",
   "x-page-patch-profile": "page-patch/v1",
-  "x-page-spec-version": "1.2.0",
+  "x-page-spec-version": "1.3.0",
   "description": "An edit of a page-spec/v1 page as an ordered list of operations, applied in order to a copy of the base page; the whole patch is rejected if any operation fails. Unchanged blocks keep their content. Slot validation: set / add / replace may only write copy keys and row fields the target kind renders (page-spec x-page-slots); rows beyond the kind's limit are rejected. The result must be a valid page-spec/v1 page. baseRevision, when sent, must equal the page revision the patch was made for.",
   "type": "object",
   "additionalProperties": false,

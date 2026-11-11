@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added (page-spec 1.3.0, additive): optional `props` on a top-level block (`$defs/props`, `$defs/propValue`): JSON Pointers of the props of the registry item its catalog variant renders (registry.buildy.tw/props/v0.json: `/actions/secondary`, `/content/card/title`, `/content/features`) -> plain JSON values (strings are safe text; `PAGE_PROPS_POINTER_PATTERN_V1`, `PAGE_PROPS_LIMITS_V1`). The host merges them over the variant preset and the page content and validates the merged props against the item's props schema (`x-host-checks`: `props_invalid`, `PAGE_HOST_CHECKS_V1`). Rows carry no props. Every 1.2.0 page validates unchanged (buildytech/chat ADR 0024 inspector P1).
+- Added (session 1.6.0, additive): a history entry may carry `op` (`SESSION_REVISION_OPS_V1`: set_field, set_variant, add, move, remove, insert, replace) and `path` (JSON Pointer of the field or row in the block's render props), never a value. Every 1.0.0 to 1.5.0 file validates unchanged.
+
 - Added (session 1.5.0, additive): a plan op may carry `catalogBlock` (replace: the Stock catalog block that takes the block's place, same kind) and `dropped` (the block's text fields the new catalog block does not render). Every 1.0.0 to 1.4.0 file validates unchanged (buildytech/chat ADR 0023).
 - Added (page-spec 1.2.0, additive): page-patch/v1 `replace` takes an optional `catalogBlock` (`$defs/catalogBlock` of the page spec): another Stock catalog block of the same kind in the same place (block.hero -> block.storehero); the host keeps id, kind and title and carries the text the new block renders. Every 1.1.0 patch validates unchanged.
 

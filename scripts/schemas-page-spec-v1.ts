@@ -9,7 +9,7 @@ import {
   PAGE_SCENARIOS_V1, PAGE_SECTION_KINDS_V1, PAGE_SLOTS_V1, PAGE_SLUG_PATTERN_V1, PAGE_SPEC_PROFILE_V1,
   PAGE_SPEC_SCHEMA_URL_V1, PAGE_SPEC_VERSION_V1, PAGE_STATUSES_V1, PAGE_UNIVERSAL_SLOTS_V1,
   PAGE_CATALOG_BLOCK_PATTERN_V1, PAGE_CATALOG_LIMITS_V1, PAGE_HREF_PATTERN_V1, PAGE_ICON_MAX_LENGTH_V1, PAGE_ICON_PATTERN_V1,
-  PAGE_VARIANT_PATTERN_V1,
+  PAGE_VARIANT_PATTERN_V1, PAGE_PROPS_POINTER_PATTERN_V1, PAGE_PROPS_LIMITS_V1, PAGE_HOST_CHECKS_V1,
 } from "../src/page-spec-v1.ts";
 
 const L = PAGE_LIMITS_V1;
@@ -49,6 +49,26 @@ const catalogBlock = { type: "string", pattern: PAGE_CATALOG_BLOCK_PATTERN_V1, m
 const variant = { type: "string", pattern: PAGE_VARIANT_PATTERN_V1, maxLength: PAGE_CATALOG_LIMITS_V1.maxVariantLength, description: "Catalog variant of catalogBlock (block.<name>/<variant> is the catalog asset id); the host renders the registry organism with the variant's props. Optional (1.1.0). The host rejects a variant its pinned catalog does not have." };
 const copy = { type: "object", additionalProperties: false, properties: copyProps, description: "Copy of a block by closed key. Which keys a kind renders: x-page-slots." };
 
+const P = PAGE_PROPS_LIMITS_V1;
+const propValue = {
+  description: "A props override value (1.3.0): plain JSON (strings are safe text); the host checks it against the props schema of the block's registry item.",
+  anyOf: [
+    { allOf: [{ $ref: "#/$defs/safeText" }], maxLength: L.maxCopyLength },
+    { type: "number" },
+    { type: "boolean" },
+    { type: "null" },
+    { type: "array", maxItems: P.maxListItems, items: { $ref: "#/$defs/propValue" } },
+    { type: "object", maxProperties: P.maxObjectKeys, propertyNames: { pattern: "^[A-Za-z][A-Za-z0-9_]{0,47}$" }, additionalProperties: { $ref: "#/$defs/propValue" } },
+  ],
+};
+const props = {
+  type: "object",
+  maxProperties: P.maxEntries,
+  propertyNames: { pattern: PAGE_PROPS_POINTER_PATTERN_V1, maxLength: P.maxPointerLength },
+  additionalProperties: { $ref: "#/$defs/propValue" },
+  description: "Props overrides of a top-level block (1.3.0, optional): JSON Pointer of a prop of the registry item its catalog variant renders (registry.buildy.tw/props/v0.json: /actions/secondary, /content/card/title, /content/features) -> value. Merged over the variant preset and the page content (copy slots still carry the text they map); the host validates the merged props against the item's props schema (x-host-checks: props_invalid). Pointers do not overlap (no key is a prefix path of another).",
+};
+
 // Depth is part of the shape: block1 (top level) .. block4 (deepest; children must be empty). parsePage: too_deep.
 const blockAt = (depth: number) => ({
   type: "object",
@@ -62,6 +82,7 @@ const blockAt = (depth: number) => ({
     catalogBlock: { $ref: "#/$defs/catalogBlock" },
     variant: { $ref: "#/$defs/variant" },
     copy: { $ref: "#/$defs/copy" },
+    ...(depth === 1 ? { props: { $ref: "#/$defs/props" } } : {}),
     children: depth < L.maxDepth
       ? { type: "array", items: { $ref: `#/$defs/block${depth + 1}` }, maxItems: L.maxBlocks }
       : { type: "array", maxItems: 0, description: `Depth ${L.maxDepth} is the deepest level (too_deep).` },
@@ -137,6 +158,7 @@ export const pageSpec = {
   "x-page-spec-version": PAGE_SPEC_VERSION_V1,
   "description": "The primary artifact of a BuildY page: an agent proposes it (propose_layout), the host validates it against the Stock catalog, saves it, and regenerates code from it for a UI8Kit target (Svelte today). History, edits (page-patch/v1) and rollback work on this JSON; code is never the source. Root: the page (identical to buildytech/chat Page DTO, layout.version 1: every saved page validates unchanged). $defs: provenance, record and store describe the browser page store. Not a Codex v0.4 entry. After the schema, consumers run x-program-checks (duplicate ids, block count, payload size). x-page-slots lists the copy keys each kind renders and the rows of list kinds; a saved page may hold other copy keys, a patch may only write slots.",
   "x-program-checks": [...PAGE_PROGRAM_CHECKS_V1],
+  "x-host-checks": [...PAGE_HOST_CHECKS_V1],
   "x-limits": { ...L },
   "x-page-slots": slots,
   "$ref": "#/$defs/page",
@@ -147,6 +169,8 @@ export const pageSpec = {
     copy,
     catalogBlock,
     variant,
+    propValue,
+    props,
     block1: blockAt(1), block2: blockAt(2), block3: blockAt(3), block4: blockAt(4),
     page,
     provenance,

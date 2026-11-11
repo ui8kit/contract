@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.5.0",
+  "x-session-version": "1.6.0",
   "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
@@ -910,6 +910,24 @@
         "blockId": {
           "type": "string",
           "maxLength": 200
+        },
+        "op": {
+          "enum": [
+            "set_field",
+            "set_variant",
+            "add",
+            "move",
+            "remove",
+            "insert",
+            "replace"
+          ],
+          "description": "1.6.0, optional: what the revision did. set_field: one field written (path names it); set_variant; add; move; remove; insert: a duplicate or a new list row; replace: a block or list swapped, a reset to the Stock sample."
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^(?:/[A-Za-z0-9_~.-]{1,48}){0,12}$",
+          "description": "1.6.0, optional: JSON Pointer of the field or row in the block's render props (/actions/cta, /content/features/2). Never a value."
         }
       }
     },

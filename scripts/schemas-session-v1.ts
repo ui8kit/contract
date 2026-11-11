@@ -5,7 +5,7 @@
 import {
   SESSION_PREFS_LAYOUT_FLAGS_V1, SESSION_PREFS_LAYOUT_SIZES_V1, SESSION_PREFS_MAX_SIZE_V1,
   SESSION_COMMIT_PATTERN_V1, SESSION_SKIN_PATTERN_V1, SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_ID_PATTERN_V1, SESSION_LIMITS_V1,
-  SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PLAN_OPS_V1, SESSION_PLAN_STATUSES_V1, SESSION_PROGRAM_CHECKS_V1,
+  SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PLAN_OPS_V1, SESSION_PLAN_STATUSES_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_REVISION_OPS_V1,
   SESSION_PROPOSAL_ORIGINS_V1, SESSION_PROPOSAL_STATUSES_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
 } from "../src/session-v1.ts";
@@ -108,6 +108,8 @@ const revisionEntry = closed({
   cause: { enum: [...SESSION_REVISION_CAUSES_V1], description: "apply: a proposal became the page; edit: one committed inspector edit or block operation (typing in one field is one edit); undo / redo: an inspector step. An import keeps the revisions of the file." },
   pageId: short,
   blockId: short,
+  op: { enum: [...SESSION_REVISION_OPS_V1], description: "1.6.0, optional: what the revision did. set_field: one field written (path names it); set_variant; add; move; remove; insert: a duplicate or a new list row; replace: a block or list swapped, a reset to the Stock sample." },
+  path: { type: "string", maxLength: 200, pattern: "^(?:/[A-Za-z0-9_~.-]{1,48}){0,12}$", description: "1.6.0, optional: JSON Pointer of the field or row in the block's render props (/actions/cta, /content/features/2). Never a value." },
 }, ["revision", "at", "cause"], "One page revision: every committed change of the applied page adds one entry; an unchanged value adds none.");
 
 const collectionItems = (description: string) => ({ type: "array", maxItems: COLLECTION_LIMITS_V1.maxItems, items: { $ref: `${COLLECTION_SCHEMA_URL_V1}#/$defs/item` }, description });

@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const PAGE_SPEC_PROFILE_V1 = "page-spec/v1";
-export const PAGE_SPEC_VERSION_V1 = "1.2.0";
+export const PAGE_SPEC_VERSION_V1 = "1.3.0";
 export const PAGE_SPEC_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-spec.schema.json`;
 export const PAGE_PATCH_PROFILE_V1 = "page-patch/v1";
 export const PAGE_PATCH_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-patch.schema.json`;
@@ -80,6 +80,18 @@ export const PAGE_DATETIME_PATTERN_V1 = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d
 export const PAGE_PROGRAM_CHECKS_V1 = ["duplicate_id", "too_many_blocks", "too_large"] as const;
 
 /**
+ * Block props overrides (1.3.0): `props` of a top-level block maps JSON Pointers of the props of the registry item its
+ * catalog variant renders (registry.buildy.tw/props/v0.json, e.g. `/actions/secondary`, `/content/features`) to
+ * values. The host merges them over the variant preset and the page content and validates the merged props against
+ * that item's props schema (`x-host-checks`: props_invalid, a pointer the schema does not have or a value it
+ * rejects). Consumers without the registry schema keep the map as it is.
+ */
+export const PAGE_PROPS_POINTER_PATTERN_V1 = "^(?:/(?:[A-Za-z][A-Za-z0-9_]{0,47}|[0-9]{1,2}))+$";
+export const PAGE_PROPS_LIMITS_V1 = { maxEntries: 64, maxPointerLength: 200, maxListItems: 24, maxObjectKeys: 32 } as const;
+/** Checks that need the host's registry props schema (not the page alone). */
+export const PAGE_HOST_CHECKS_V1 = ["props_invalid"] as const;
+
+/**
  * Slots: the copy keys each kind renders (Preview + generated code) and, for list kinds, the row kind and row limit.
  * `badge` (demo-data marker) is a slot of every kind. title and summary are slots of every kind.
  * A saved page may carry other copy keys (older pages); a patch may only write slots (slot validation).
@@ -133,7 +145,9 @@ export type PagePatchOpNameV1 = (typeof PAGE_PATCH_OPS_V1)[number];
 export const PAGE_PATCH_LIMITS_V1 = { maxOps: 24, maxItems: 12 } as const;
 
 export type PageBlockCopyV1 = { [K in PageCopyKeyV1]?: string };
-export interface PageBlockV1 { id: string; kind: PageBlockKindV1; title: string; summary: string; catalogBlock?: string; variant?: string; copy?: PageBlockCopyV1; children?: PageBlockV1[] }
+/** A props override value (1.3.0): plain JSON; strings are page safe text. */
+export type PagePropValueV1 = string | number | boolean | null | PagePropValueV1[] | { [key: string]: PagePropValueV1 };
+export interface PageBlockV1 { id: string; kind: PageBlockKindV1; title: string; summary: string; catalogBlock?: string; variant?: string; copy?: PageBlockCopyV1; props?: Record<string, PagePropValueV1>; children?: PageBlockV1[] }
 export interface PageSpecV1 {
   id: string; slug: string; status: PageStatusV1; title: string;
   layout: { version: typeof PAGE_LAYOUT_VERSION_V1; blocks: PageBlockV1[] };

@@ -9,7 +9,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import { pagePatch, pageSpec } from "../scripts/schemas-page-spec-v1.ts";
 import {
   PAGE_BLOCK_KINDS_V1, PAGE_CHILD_KINDS_V1, PAGE_COPY_KEYS_V1, PAGE_ITEM_SLOTS_V1, PAGE_LAYOUT_VERSION_V1, PAGE_LIMITS_V1,
-  PAGE_PATCH_OPS_V1, PAGE_PATCH_SCHEMA_URL_V1, PAGE_PROGRAM_CHECKS_V1, PAGE_SECTION_KINDS_V1, PAGE_SLOTS_V1,
+  PAGE_PATCH_OPS_V1, PAGE_PATCH_SCHEMA_URL_V1, PAGE_PROGRAM_CHECKS_V1, PAGE_HOST_CHECKS_V1, PAGE_PROPS_LIMITS_V1, PAGE_SECTION_KINDS_V1, PAGE_SLOTS_V1,
   PAGE_SPEC_PROFILE_V1, PAGE_SPEC_SCHEMA_URL_V1, PAGE_STATUSES_V1,
 } from "../src/page-spec-v1.ts";
 
@@ -154,4 +154,40 @@ describe("page-patch/v1", () => {
     expect(errs(patch, { ops: [{ op: "replace", blockId: "block-hero", kind: "hero", catalogBlock: "block.storehero", variant: "overlay" }] })).toEqual([]));
   test("minimal patch", () => expect(errs(patch, ok)).toEqual([]));
   for (const [name, p] of bad) test(`rejects: ${name}`, () => expect(patch(p)).toBe(false));
+});
+
+describe("page-spec/v1 1.3.0: block props overrides", () => {
+  const base = () => read(`${specDir}/conformance-cases.json`);
+  const minimal = () => ({
+    id: "page-draft", slug: "home", status: "draft", title: "New page",
+    layout: { version: 1, blocks: [{ id: "block-hero", kind: "hero", title: "Hero", summary: "Lede", catalogBlock: "block.herosplit", variant: "miniCards" }] },
+    seo: {}, locale: "en", createdAt: "2026-11-11T10:00:00.000Z", updatedAt: "2026-11-11T10:00:00.000Z",
+  });
+  const withProps = (props: unknown, at = 0) => {
+    const p: any = minimal();
+    if (at === 0) p.layout.blocks[0].props = props;
+    else p.layout.blocks[0].children = [{ id: "row-1", kind: "feature", title: "R", summary: "S", props }];
+    return p;
+  };
+  test("a page without props validates unchanged (1.2.0 pages)", () => expect(errs(page, minimal())).toEqual([]));
+  test("pointers of the registry props -> plain JSON values", () =>
+    expect(errs(page, withProps({
+      "/actions/secondary": "Talk to us", "/actions/mode": "two", "/level": 2,
+      "/content/card": { title: "Fast", text: "Ships in a day", icon: "zap" },
+      "/content/features": [{ id: "f1", title: "One", text: "First" }], "/content/proof": null,
+    }))).toEqual([]));
+  const bad: Array<[string, unknown, number?]> = [
+    ["not a pointer", { "actions.secondary": "x" }],
+    ["empty pointer", { "": "x" }],
+    ["unsafe text", { "/actions/secondary": "<script>" }],
+    ["unsafe url", { "/actions/secondaryHref": "javascript:alert(1)" }],
+    ["bad object key", { "/content/card": { "ti tle": "x" } }],
+    ["props on a row", { "/title": "x" }, 1],
+  ];
+  for (const [name, props, at] of bad) test(`rejects: ${name}`, () => expect(page(withProps(props, at ?? 0))).toBe(false));
+  test("x-host-checks names props_invalid; the constants agree", () => {
+    expect(pageSpec["x-host-checks"]).toEqual([...PAGE_HOST_CHECKS_V1]);
+    expect(pageSpec.$defs.props.maxProperties).toBe(PAGE_PROPS_LIMITS_V1.maxEntries);
+    void base;
+  });
 });

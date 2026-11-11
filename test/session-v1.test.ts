@@ -9,7 +9,7 @@ import { pageSpec } from "../scripts/schemas-page-spec-v1.ts";
 import { sessionSchema } from "../scripts/schemas-session-v1.ts";
 import { collectionSchema } from "../scripts/schemas-collection-v1.ts";
 import {
-  SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_LIMITS_V1, SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1,
+  SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_LIMITS_V1, SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_REVISION_OPS_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
 } from "../src/session-v1.ts";
 
@@ -204,5 +204,26 @@ describe("session buildy:v1 1.4.0: Ask page plan", () => {
     expect(errs(withPlan({ ...plan, ops: [...plan.ops, swap] }))).toEqual([]);
     expect(file(withPlan({ ...plan, ops: [{ ...swap, dropped: [1] }] }))).toBe(false);
     expect(file(withPlan({ ...plan, ops: [{ ...swap, catalogBlock: 7 }] }))).toBe(false);
+  });
+});
+
+describe("session buildy:v1 1.6.0: history op and path", () => {
+  const base = read(`${dir}/exported-chat.json`);
+  const withEntry = (entry: Record<string, unknown>) => {
+    const x = clone(base);
+    const s = x.sessions.find((c: { history?: unknown[] }) => c.history?.length);
+    s.history[s.history.length - 1] = { ...s.history[s.history.length - 1], ...entry };
+    return x;
+  };
+  test("old entries (no op / path) still validate", () => expect(errs(base)).toEqual([]));
+  test("an entry names what it did and where, never a value", () => {
+    for (const op of SESSION_REVISION_OPS_V1) expect(errs(withEntry({ op, path: "/content/features/2" }))).toEqual([]);
+    expect(errs(withEntry({ op: "set_field", path: "/actions/cta" }))).toEqual([]);
+    expect(errs(withEntry({ op: "set_variant" }))).toEqual([]);
+  });
+  test("bad op, a non-pointer path or a value are rejected", () => {
+    expect(file(withEntry({ op: "type" }))).toBe(false);
+    expect(file(withEntry({ path: "actions.cta" }))).toBe(false);
+    expect(file(withEntry({ value: "Hello" }))).toBe(false);
   });
 });
