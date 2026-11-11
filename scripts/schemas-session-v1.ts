@@ -108,7 +108,7 @@ const revisionEntry = closed({
   cause: { enum: [...SESSION_REVISION_CAUSES_V1], description: "apply: a proposal became the page; edit: one committed inspector edit or block operation (typing in one field is one edit); undo / redo: an inspector step. An import keeps the revisions of the file." },
   pageId: short,
   blockId: short,
-  op: { enum: [...SESSION_REVISION_OPS_V1], description: "1.6.0, optional: what the revision did. set_field: one field written (path names it); set_variant; add; move; remove; insert: a duplicate or a new list row; replace: a block or list swapped, a reset to the Stock sample." },
+  op: { enum: [...SESSION_REVISION_OPS_V1], description: "1.6.0, optional: what the revision did. set_field: one field written (path names it); set_variant; add; move; remove; insert: a duplicate or a new list row; replace: a block or list swapped, a reset to the Stock sample. 1.7.0: set_family (the page's screen family changed, derived or pinned; its own step)." },
   path: { type: "string", maxLength: 200, pattern: "^(?:/[A-Za-z0-9_~.-]{1,48}){0,12}$", description: "1.6.0, optional: JSON Pointer of the field or row in the block's render props (/actions/cta, /content/features/2). Never a value." },
 }, ["revision", "at", "cause"], "One page revision: every committed change of the applied page adds one entry; an unchanged value adds none.");
 

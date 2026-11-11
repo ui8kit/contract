@@ -9,7 +9,7 @@ import {
   PAGE_SCENARIOS_V1, PAGE_SECTION_KINDS_V1, PAGE_SLOTS_V1, PAGE_SLUG_PATTERN_V1, PAGE_SPEC_PROFILE_V1,
   PAGE_SPEC_SCHEMA_URL_V1, PAGE_SPEC_VERSION_V1, PAGE_STATUSES_V1, PAGE_UNIVERSAL_SLOTS_V1,
   PAGE_CATALOG_BLOCK_PATTERN_V1, PAGE_CATALOG_LIMITS_V1, PAGE_HREF_PATTERN_V1, PAGE_ICON_MAX_LENGTH_V1, PAGE_ICON_PATTERN_V1,
-  PAGE_VARIANT_PATTERN_V1, PAGE_PROPS_POINTER_PATTERN_V1, PAGE_PROPS_LIMITS_V1, PAGE_HOST_CHECKS_V1,
+  PAGE_VARIANT_PATTERN_V1, PAGE_PROPS_POINTER_PATTERN_V1, PAGE_PROPS_LIMITS_V1, PAGE_HOST_CHECKS_V1, PAGE_FAMILIES_V1,
 } from "../src/page-spec-v1.ts";
 
 const L = PAGE_LIMITS_V1;
@@ -123,6 +123,8 @@ const provenance = {
     scenarioId: { enum: [...PAGE_SCENARIOS_V1, null] },
     missing: { type: "array", items: { type: "string", maxLength: 200 }, description: "Catalog block labels of the screen that the host cannot render." },
     assembler: { type: "string", maxLength: 80 },
+    family: { enum: [...PAGE_FAMILIES_V1, null], description: "1.4.0, optional, advisory: the page's screen family, derived from its composition after every operation (role majority; mixed -> generic) unless familyPinned. Never rejects a block." },
+    familyPinned: { type: "boolean", description: "1.4.0, optional: the author pinned family; the host stops deriving it until the pin is reset." },
   },
 };
 const pageOrNull = { anyOf: [{ $ref: "#/$defs/page" }, { type: "null" }] };

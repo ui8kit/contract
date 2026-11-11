@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added (page-spec 1.4.0, additive): optional `family` (`PAGE_FAMILIES_V1`: dashboard, landing, food-grill, restaurant, generic, or null) and `familyPinned` on `$defs/provenance`: the page's screen family, advisory only, derived by the host from the page composition after every operation (role majority; mixed -> generic) unless the author pinned it. It never rejects a block. Every 1.3.0 record validates unchanged (buildytech/chat ADR 0027).
+- Added (session 1.7.0, additive): history `op` may be `set_family` (the page's screen family changed, derived or pinned; its own undo step). Every 1.0.0 to 1.6.0 file validates unchanged.
+
 - Added (page-spec 1.3.0, additive): optional `props` on a top-level block (`$defs/props`, `$defs/propValue`): JSON Pointers of the props of the registry item its catalog variant renders (registry.buildy.tw/props/v0.json: `/actions/secondary`, `/content/card/title`, `/content/features`) -> plain JSON values (strings are safe text; `PAGE_PROPS_POINTER_PATTERN_V1`, `PAGE_PROPS_LIMITS_V1`). The host merges them over the variant preset and the page content and validates the merged props against the item's props schema (`x-host-checks`: `props_invalid`, `PAGE_HOST_CHECKS_V1`). Rows carry no props. Every 1.2.0 page validates unchanged (buildytech/chat ADR 0024 inspector P1).
 - Added (session 1.6.0, additive): a history entry may carry `op` (`SESSION_REVISION_OPS_V1`: set_field, set_variant, add, move, remove, insert, replace) and `path` (JSON Pointer of the field or row in the block's render props), never a value. Every 1.0.0 to 1.5.0 file validates unchanged.
 

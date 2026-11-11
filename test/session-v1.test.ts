@@ -227,3 +227,18 @@ describe("session buildy:v1 1.6.0: history op and path", () => {
     expect(file(withEntry({ value: "Hello" }))).toBe(false);
   });
 });
+
+describe("session buildy:v1 1.7.0: set_family history op", () => {
+  const base = read(`${dir}/exported-chat.json`);
+  const withEntry = (entry: Record<string, unknown>) => {
+    const x = clone(base);
+    const s = x.sessions.find((c: { history?: unknown[] }) => c.history?.length);
+    s.history[s.history.length - 1] = { ...s.history[s.history.length - 1], ...entry };
+    return x;
+  };
+  test("a family change is its own entry", () => {
+    expect(SESSION_REVISION_OPS_V1).toContain("set_family");
+    expect(errs(withEntry({ op: "set_family" }))).toEqual([]);
+  });
+  test("version 1.7.0", () => expect(SESSION_VERSION_V1).toBe("1.7.0"));
+});

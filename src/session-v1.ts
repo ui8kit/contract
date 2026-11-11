@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.6.0";
+export const SESSION_VERSION_V1 = "1.7.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -42,9 +42,10 @@ export const SESSION_REVISION_CAUSES_V1 = ["apply", "edit", "undo", "redo"] as c
 export type SessionRevisionCauseV1 = (typeof SESSION_REVISION_CAUSES_V1)[number];
 /**
  * What a revision did (1.6.0, optional): set_field (one field written, `path` names it), set_variant, add, move,
- * remove, insert (a duplicate or a new list row), replace (a block or a list swapped, a reset to the Stock sample).
+ * remove, insert (a duplicate or a new list row), replace (a block or a list swapped, a reset to the Stock sample);
+ * 1.7.0: set_family (the page's screen family changed, derived or pinned; its own step, undo reverts it).
  */
-export const SESSION_REVISION_OPS_V1 = ["set_field", "set_variant", "add", "move", "remove", "insert", "replace"] as const;
+export const SESSION_REVISION_OPS_V1 = ["set_field", "set_variant", "add", "move", "remove", "insert", "replace", "set_family"] as const;
 export type SessionRevisionOpV1 = (typeof SESSION_REVISION_OPS_V1)[number];
 
 /** Host records copied as they are (objects without a closed key set in this profile). */

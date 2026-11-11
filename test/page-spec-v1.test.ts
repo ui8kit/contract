@@ -10,7 +10,7 @@ import { pagePatch, pageSpec } from "../scripts/schemas-page-spec-v1.ts";
 import {
   PAGE_BLOCK_KINDS_V1, PAGE_CHILD_KINDS_V1, PAGE_COPY_KEYS_V1, PAGE_ITEM_SLOTS_V1, PAGE_LAYOUT_VERSION_V1, PAGE_LIMITS_V1,
   PAGE_PATCH_OPS_V1, PAGE_PATCH_SCHEMA_URL_V1, PAGE_PROGRAM_CHECKS_V1, PAGE_HOST_CHECKS_V1, PAGE_PROPS_LIMITS_V1, PAGE_SECTION_KINDS_V1, PAGE_SLOTS_V1,
-  PAGE_SPEC_PROFILE_V1, PAGE_SPEC_SCHEMA_URL_V1, PAGE_STATUSES_V1,
+  PAGE_SPEC_PROFILE_V1, PAGE_SPEC_SCHEMA_URL_V1, PAGE_STATUSES_V1, PAGE_FAMILIES_V1,
 } from "../src/page-spec-v1.ts";
 
 const ajv = new Ajv2020({ strict: false, allErrors: true });
@@ -190,4 +190,20 @@ describe("page-spec/v1 1.3.0: block props overrides", () => {
     expect(pageSpec.$defs.props.maxProperties).toBe(PAGE_PROPS_LIMITS_V1.maxEntries);
     void base;
   });
+});
+
+describe("page-spec/v1 1.4.0: advisory screen family in provenance", () => {
+  const prov = at("provenance");
+  const base = { screenId: "screen.theme-dashboard-console/home", scenarioId: "dashboard", missing: [] };
+  test("provenance without family validates unchanged (1.3.0 records)", () => expect(errs(prov, base)).toEqual([]));
+  test("derived and pinned families", () => {
+    for (const family of [...PAGE_FAMILIES_V1, null]) expect(errs(prov, { ...base, family })).toEqual([]);
+    expect(errs(prov, { ...base, family: "generic", familyPinned: false })).toEqual([]);
+    expect(errs(prov, { ...base, family: "restaurant", familyPinned: true })).toEqual([]);
+  });
+  test("rejects an unknown family or a non-boolean pin", () => {
+    expect(prov({ ...base, family: "bakery" })).toBe(false);
+    expect(prov({ ...base, familyPinned: "yes" })).toBe(false);
+  });
+  test("the store blob still validates", () => expect(errs(at("store"), read(`${specDir}/store.json`))).toEqual([]));
 });

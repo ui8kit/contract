@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const PAGE_SPEC_PROFILE_V1 = "page-spec/v1";
-export const PAGE_SPEC_VERSION_V1 = "1.3.0";
+export const PAGE_SPEC_VERSION_V1 = "1.4.0";
 export const PAGE_SPEC_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-spec.schema.json`;
 export const PAGE_PATCH_PROFILE_V1 = "page-patch/v1";
 export const PAGE_PATCH_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-patch.schema.json`;
@@ -57,6 +57,14 @@ export type PageCopyKeyV1 = (typeof PAGE_COPY_KEYS_V1)[number];
 
 export const PAGE_STATUSES_V1 = ["draft", "pending", "scheduled", "published", "archived", "trashed"] as const;
 export type PageStatusV1 = (typeof PAGE_STATUSES_V1)[number];
+
+/**
+ * Screen family of a page (1.4.0, provenance only, advisory): derived by the host from the page's composition after
+ * every operation (the role majority among dashboard / landing / food-grill / restaurant; mixed -> generic), or pinned
+ * by the author. It never rejects a block: it ranks the feed, suggests a preset and the sections to start from.
+ */
+export const PAGE_FAMILIES_V1 = ["dashboard", "landing", "food-grill", "restaurant", "generic"] as const;
+export type PageFamilyV1 = (typeof PAGE_FAMILIES_V1)[number];
 
 /** Host scenario a page was started from (provenance only). */
 export const PAGE_SCENARIOS_V1 = ["dashboard", "landing", "website"] as const;
@@ -155,7 +163,7 @@ export interface PageSpecV1 {
   locale: string; createdAt: string; updatedAt: string;
 }
 /** Where a spec came from: the Stock screen it was assembled from (null = none recorded). */
-export interface PageProvenanceV1 { screenId: string | null; scenarioId: PageScenarioV1 | null; missing: string[]; assembler?: string }
+export interface PageProvenanceV1 { screenId: string | null; scenarioId: PageScenarioV1 | null; missing: string[]; assembler?: string; family?: PageFamilyV1 | null; familyPinned?: boolean }
 /** One chat's pages in the browser store (key `buildy:v1:pages`, migrated from `buildytech-creator-pages-v1`). */
 export interface PageRecordV1 {
   applied?: PageSpecV1 | null; candidate?: PageSpecV1 | null;
