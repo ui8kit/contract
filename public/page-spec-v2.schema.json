@@ -55,16 +55,36 @@
       "maxLength": 40,
       "description": "A published variant of the item (registry.buildy.tw/variants/v0.json): a named preset of the layout axes of its props (extra, media, columns, tone). Optional: the item's default variant. The host rejects a variant the item does not have (unknown_variant)."
     },
+    "propText": {
+      "type": "string",
+      "description": "Plain text of a prop. As safeText of page-spec/v1 (control characters, `<` `>`, dangerous URL schemes are rejected) except that `{` and `}` are allowed: registry presets carry templates such as `?paged={0}`.",
+      "pattern": "^[^<>\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F]*$",
+      "not": {
+        "anyOf": [
+          {
+            "pattern": "^[\\u0000-\\u0020]*[jJ][\\u0000-\\u0020]*[aA][\\u0000-\\u0020]*[vV][\\u0000-\\u0020]*[aA][\\u0000-\\u0020]*[sS][\\u0000-\\u0020]*[cC][\\u0000-\\u0020]*[rR][\\u0000-\\u0020]*[iI][\\u0000-\\u0020]*[pP][\\u0000-\\u0020]*[tT][\\u0000-\\u0020]*:"
+          },
+          {
+            "pattern": "^[\\u0000-\\u0020]*[dD][\\u0000-\\u0020]*[aA][\\u0000-\\u0020]*[tT][\\u0000-\\u0020]*[aA][\\u0000-\\u0020]*:"
+          },
+          {
+            "pattern": "^[\\u0000-\\u0020]*[vV][\\u0000-\\u0020]*[bB][\\u0000-\\u0020]*[sS][\\u0000-\\u0020]*[cC][\\u0000-\\u0020]*[rR][\\u0000-\\u0020]*[iI][\\u0000-\\u0020]*[pP][\\u0000-\\u0020]*[tT][\\u0000-\\u0020]*:"
+          },
+          {
+            "pattern": "^[\\u0000-\\u0020]*[fF][\\u0000-\\u0020]*[iI][\\u0000-\\u0020]*[lL][\\u0000-\\u0020]*[eE][\\u0000-\\u0020]*:"
+          },
+          {
+            "pattern": "^\\s*(?![hH][tT][tT][pP][sS]?://)[A-Za-z][A-Za-z0-9+.\\-]*://"
+          }
+        ]
+      },
+      "maxLength": 2000
+    },
     "propValue": {
-      "description": "A prop value: plain JSON; strings are safe text. The item's props schema (registry.buildy.tw/props/v0.json) decides what is valid for each prop (x-host-checks props_invalid).",
+      "description": "A prop value: plain JSON; strings are plain text (propText). The item's props schema (registry.buildy.tw/props/v0.json) decides what is valid for each prop (x-host-checks props_invalid).",
       "anyOf": [
         {
-          "allOf": [
-            {
-              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
-            }
-          ],
-          "maxLength": 2000
+          "$ref": "#/$defs/propText"
         },
         {
           "type": "number"

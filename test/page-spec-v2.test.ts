@@ -67,6 +67,13 @@ describe("page-spec/v2 documents", () => {
     const tooMany = Object.fromEntries(Array.from({ length: 65 }, (_, i) => [`word${i}`, ""]));
     expect((errs(page, { version: 2, slug: "home", title: "Home", locale: "en", blocks: [{ id: "block-menu", item: "menu-board", props: { labels: tooMany } }] }) ?? []).length).toBeGreaterThan(0);
   });
+  test("a prop string may hold { } (registry templates such as ?paged={0}); markup and URL schemes stay rejected", () => {
+    const withProp = (value: string) => ({ version: 2, slug: "home", title: "Home", locale: "en", blocks: [{ id: "block-posts", item: "post-grid", props: { pager: { url: value } } }] });
+    expect(errs(page, withProp("?paged={0}"))).toEqual([]);
+    for (const value of ["<b>x</b>", "javascript:alert(1)", "a\u0001b"]) expect((errs(page, withProp(value)) ?? []).length).toBeGreaterThan(0);
+    // titles and other fields keep the strict safeText
+    expect((errs(page, { version: 2, slug: "home", title: "{x}", locale: "en", blocks: [{ id: "block-a", item: "hero-split" }] }) ?? []).length).toBeGreaterThan(0);
+  });
   const bad: Array<[string, (d: any) => void]> = [
     ["v1 layout", (d) => { d.layout = { version: 1, blocks: [] }; }],
     ["no version", (d) => { delete d.version; }],

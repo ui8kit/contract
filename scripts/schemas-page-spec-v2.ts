@@ -9,6 +9,7 @@ import {
   PAGE_SPEC_SCHEMA_URL_V2, PAGE_SPEC_VERSION_V2, PAGE_STATUSES_V2, PAGE_VARIANT_PATTERN_V2,
 } from "../src/page-spec-v2.ts";
 import { PAGE_SPEC_SCHEMA_URL_V1 } from "../src/page-spec-v1.ts";
+import { pageSpec as pageSpecV1 } from "./schemas-page-spec-v1.ts";
 
 const L = PAGE_LIMITS_V2;
 // Plain text is the safeText of page-spec/v1 (one definition: control characters, markup, dangerous URL schemes).
@@ -20,10 +21,17 @@ const id = { type: "string", pattern: PAGE_ID_PATTERN_V2, maxLength: L.maxIdLeng
 const item = { type: "string", pattern: PAGE_ITEM_PATTERN_V2, maxLength: L.maxItemLength, description: "Registry item name as used by `npx ui8kit add <item>` (hero-split, feature-grid, site-footer). The host rejects an item its registry does not have (unknown_item) or cannot render (no_renderer)." };
 const variant = { type: "string", pattern: PAGE_VARIANT_PATTERN_V2, maxLength: L.maxVariantLength, description: "A published variant of the item (registry.buildy.tw/variants/v0.json): a named preset of the layout axes of its props (extra, media, columns, tone). Optional: the item's default variant. The host rejects a variant the item does not have (unknown_variant)." };
 
+// A prop string is the safeText of v1 except `{` `}`: registry presets carry templates such as `?paged={0}`, and props are data (the export writes JSON), not markup.
+const propText = {
+  ...(pageSpecV1 as unknown as { $defs: { safeText: Record<string, unknown> } }).$defs.safeText,
+  description: "Plain text of a prop. As safeText of page-spec/v1 (control characters, `<` `>`, dangerous URL schemes are rejected) except that `{` and `}` are allowed: registry presets carry templates such as `?paged={0}`.",
+  pattern: "^[^<>\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F]*$",
+  maxLength: L.maxTextLength,
+};
 const propValue = {
-  description: "A prop value: plain JSON; strings are safe text. The item's props schema (registry.buildy.tw/props/v0.json) decides what is valid for each prop (x-host-checks props_invalid).",
+  description: "A prop value: plain JSON; strings are plain text (propText). The item's props schema (registry.buildy.tw/props/v0.json) decides what is valid for each prop (x-host-checks props_invalid).",
   anyOf: [
-    text(L.maxTextLength),
+    { $ref: "#/$defs/propText" },
     { type: "number" },
     { type: "boolean" },
     { type: "null" },
@@ -90,7 +98,7 @@ export const pageSpecV2 = {
   "x-host-checks": [...PAGE_HOST_CHECKS_V2],
   "x-limits": { ...L },
   "$ref": "#/$defs/page",
-  "$defs": { id, item, variant, propValue, props, block, seo, page, record },
+  "$defs": { id, item, variant, propText, propValue, props, block, seo, page, record },
 };
 
 const pointer = { type: "string", pattern: PAGE_PATCH_PATH_PATTERN_V2, maxLength: PAGE_PATCH_LIMITS_V2.maxPathLength };
