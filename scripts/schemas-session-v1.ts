@@ -6,11 +6,12 @@ import {
   SESSION_PREFS_LAYOUT_FLAGS_V1, SESSION_PREFS_LAYOUT_SIZES_V1, SESSION_PREFS_MAX_SIZE_V1,
   SESSION_COMMIT_PATTERN_V1, SESSION_SKIN_PATTERN_V1, SESSION_FORMAT_V1, SESSION_HOSTS_V1, SESSION_ID_PATTERN_V1, SESSION_LIMITS_V1,
   SESSION_MODES_V1, SESSION_OPEN_RECORDS_V1, SESSION_PLAN_OPS_V1, SESSION_PLAN_STATUSES_V1, SESSION_PROGRAM_CHECKS_V1, SESSION_REVISION_OPS_V1,
-  SESSION_PROPOSAL_ORIGINS_V1, SESSION_PROPOSAL_STATUSES_V1,
+  SESSION_PROPOSAL_ORIGINS_V1, SESSION_PROPOSAL_STATUSES_V1, SESSION_DIFF_CHANGES_V1,
   SESSION_REVISION_CAUSES_V1, SESSION_ROLES_V1, SESSION_SCHEMA_URL_V1, SESSION_VERSION_V1,
 } from "../src/session-v1.ts";
 import { COLLECTION_DIGEST_PATTERN_V1, COLLECTION_ID_PATTERN_V1, COLLECTION_LIMITS_V1, COLLECTION_SCHEMA_URL_V1 } from "../src/collection-v1.ts";
 import { PAGE_DATETIME_PATTERN_V1, PAGE_LIMITS_V1, PAGE_SCENARIOS_V1, PAGE_SPEC_SCHEMA_URL_V1 } from "../src/page-spec-v1.ts";
+import { PAGE_SPEC_SCHEMA_URL_V2 } from "../src/page-spec-v2.ts";
 
 const L = SESSION_LIMITS_V1;
 const str = (max: number, description?: string) => ({ type: "string", maxLength: max, ...(description ? { description } : {}) });
@@ -31,6 +32,17 @@ const commit = { type: "string", pattern: SESSION_COMMIT_PATTERN_V1, description
 const mode = { enum: [...SESSION_MODES_V1], description: "Ask reads the catalog and answers; Build changes the page." };
 const revision = { type: ["integer", "null"], minimum: 0, description: "Revision of the applied page of the chat (null: no applied page). Equals page.revision (program check page_revision_mismatch)." };
 
+const diffEntry = closed({
+  scope: { enum: ["page", "block"], description: "page: a page field (title, slug, locale, seo); block: a section." },
+  change: { enum: [...SESSION_DIFF_CHANGES_V1] },
+  id: short,
+  item: short,
+  variant: short,
+  from: { type: "integer", minimum: 0 },
+  to: { type: "integer", minimum: 0 },
+  paths: { type: "array", maxItems: 200, items: str(200), description: "changed: JSON Pointers (page fields, or props of the block) that differ." },
+}, ["scope", "change"], "One change of a page proposal (1.8.0): what a write_page proposal does to the base page, per block and per page field. Never a value.");
+
 const proposal = closed({
   applied: { type: "boolean" },
   status: { enum: [...SESSION_PROPOSAL_STATUSES_V1] },
@@ -44,7 +56,10 @@ const proposal = closed({
   locale: str(PAGE_LIMITS_V1.maxLocaleLength),
   demoData: { type: "boolean" },
   catalogRefs: open("Catalog refs the program recomputed from the pinned Stock catalog (catalogDigest, pinnedCommit, screen, blocks)."),
-  origin: { enum: [...SESSION_PROPOSAL_ORIGINS_V1], description: "ask-card: Apply variant on an Ask block card; ask-plan (1.4.0): Apply in Build on an Ask page plan. Both make the proposal without a model call." },
+  origin: { enum: [...SESSION_PROPOSAL_ORIGINS_V1], description: "ask-card: Apply variant on an Ask block card; ask-plan (1.4.0): Apply in Build on an Ask page plan; ask-proposal (1.8.0): Apply in Build on an Ask page-spec/v2 proposal. All make the proposal without a model call." },
+  baseRevision: { type: "integer", minimum: 0, description: "1.8.0: the page revision the proposal was made for." },
+  diff: { type: "array", maxItems: 200, items: ref("diffEntry"), description: "1.8.0: the proposal as a diff against the base page (per block: added, removed, moved, changed)." },
+  page: { $ref: `${PAGE_SPEC_SCHEMA_URL_V2}#/$defs/page`, description: "1.8.0: the page a write_page proposal produces (page-spec/v2 document). An Ask message keeps it here (Ask never touches the page); Apply in Build makes it the pending Build proposal." },
   changes: closed({ added: list, kept: list, removed: list }, ["added", "kept", "removed"], "Blocks added, kept unchanged and removed versus the base page of a follow-up turn (block ids; hosts before 1.4.0 wrote block kinds)."),
 }, ["applied"], "A page proposal of a Build turn. The page itself is the record's candidate / lastProposed.");
 
@@ -138,7 +153,7 @@ const session = closed({
   collection: ref("collection"),
   usage: open("Usage summed over the runs of the chat."),
   messages: { type: "array", maxItems: L.maxMessages, items: ref("message") },
-  page: { anyOf: [{ $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/record` }, { type: "null" }], description: "The chat's pages: a page-spec/v1 record (applied page, pending candidate, last proposal, their provenance, revision)." },
+  page: { anyOf: [{ $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/record` }, { $ref: `${PAGE_SPEC_SCHEMA_URL_V2}#/$defs/record` }, { type: "null" }], description: "The chat's pages: a page-spec/v1 record or (1.8.0) a page-spec/v2 record (applied page, pending candidate, last proposal, their provenance, revision). A host that reads a v1 record migrates it to v2." },
   history: { type: "array", maxItems: L.maxHistory, items: ref("revisionEntry"), description: `Revision history of the applied page, oldest first (the last ${L.maxHistory} entries).` },
 }, ["id", "title", "updatedAt", "messages"], "One chat.");
 
@@ -192,5 +207,5 @@ export const sessionSchema = {
     settings: ref("settings"),
     prefs: ref("prefs"),
   },
-  "$defs": { datetime, id, commit, mode, revision, proposal, run, artifact, planItem, planOp, plan, message, revisionEntry, collection, session, app, pins, settings, prefs },
+  "$defs": { datetime, id, commit, mode, revision, diffEntry, proposal, run, artifact, planItem, planOp, plan, message, revisionEntry, collection, session, app, pins, settings, prefs },
 };

@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.7.0",
+  "x-session-version": "1.8.0",
   "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
@@ -108,6 +108,61 @@
       "minimum": 0,
       "description": "Revision of the applied page of the chat (null: no applied page). Equals page.revision (program check page_revision_mismatch)."
     },
+    "diffEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "change"
+      ],
+      "description": "One change of a page proposal (1.8.0): what a write_page proposal does to the base page, per block and per page field. Never a value.",
+      "properties": {
+        "scope": {
+          "enum": [
+            "page",
+            "block"
+          ],
+          "description": "page: a page field (title, slug, locale, seo); block: a section."
+        },
+        "change": {
+          "enum": [
+            "added",
+            "removed",
+            "moved",
+            "changed"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "item": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "variant": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "from": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "to": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "paths": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": "changed: JSON Pointers (page fields, or props of the block) that differ."
+        }
+      }
+    },
     "proposal": {
       "type": "object",
       "additionalProperties": false,
@@ -183,9 +238,27 @@
         "origin": {
           "enum": [
             "ask-card",
-            "ask-plan"
+            "ask-plan",
+            "ask-proposal"
           ],
-          "description": "ask-card: Apply variant on an Ask block card; ask-plan (1.4.0): Apply in Build on an Ask page plan. Both make the proposal without a model call."
+          "description": "ask-card: Apply variant on an Ask block card; ask-plan (1.4.0): Apply in Build on an Ask page plan; ask-proposal (1.8.0): Apply in Build on an Ask page-spec/v2 proposal. All make the proposal without a model call."
+        },
+        "baseRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "1.8.0: the page revision the proposal was made for."
+        },
+        "diff": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/diffEntry"
+          },
+          "description": "1.8.0: the proposal as a diff against the base page (per block: added, removed, moved, changed)."
+        },
+        "page": {
+          "$ref": "https://schema.buildy.tw/page-spec-v2.schema.json#/$defs/page",
+          "description": "1.8.0: the page a write_page proposal produces (page-spec/v2 document). An Ask message keeps it here (Ask never touches the page); Apply in Build makes it the pending Build proposal."
         },
         "changes": {
           "type": "object",
@@ -1075,10 +1148,13 @@
               "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/record"
             },
             {
+              "$ref": "https://schema.buildy.tw/page-spec-v2.schema.json#/$defs/record"
+            },
+            {
               "type": "null"
             }
           ],
-          "description": "The chat's pages: a page-spec/v1 record (applied page, pending candidate, last proposal, their provenance, revision)."
+          "description": "The chat's pages: a page-spec/v1 record or (1.8.0) a page-spec/v2 record (applied page, pending candidate, last proposal, their provenance, revision). A host that reads a v1 record migrates it to v2."
         },
         "history": {
           "type": "array",

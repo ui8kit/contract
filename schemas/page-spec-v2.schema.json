@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.buildy.tw/page-spec-v2.schema.json",
+  "title": "Page spec page-spec/v2 — a page as registry items with their props",
+  "x-page-spec-profile": "page-spec/v2",
+  "x-page-spec-version": "2.0.0",
+  "description": "A BuildY page as ONE document: { version: 2, title, slug, locale, seo, blocks: [{ id, item, variant, props }] }. `item` is the registry item of `npx ui8kit add`, `props` are exactly the props of its component, `variant` names the preset of its layout axes. An agent reads it, reads the props schema of an item and writes a new version or an RFC 6902 patch (page-patch-v2.schema.json); the host validates and answers with compiler-style errors { path, expected, got }. Replaces the kind / copy / children model of page-spec/v1 (still published). After the schema, consumers run x-program-checks, then the registry checks x-host-checks.",
+  "x-program-checks": [
+    "duplicate_id",
+    "too_many_blocks",
+    "too_large",
+    "too_deep"
+  ],
+  "x-host-checks": [
+    "unknown_item",
+    "unknown_variant",
+    "no_renderer",
+    "props_invalid",
+    "header_not_first",
+    "footer_not_last"
+  ],
+  "x-limits": {
+    "maxBlocks": 64,
+    "maxIdLength": 63,
+    "maxSlugLength": 48,
+    "maxTitleLength": 160,
+    "maxItemLength": 80,
+    "maxVariantLength": 40,
+    "maxTextLength": 2000,
+    "maxSeoLength": 200,
+    "maxLocaleLength": 16,
+    "maxJsonChars": 200000,
+    "maxDatetimeLength": 40,
+    "maxPropKeys": 32,
+    "maxListItems": 24,
+    "maxDepth": 8
+  },
+  "$ref": "#/$defs/page",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,62}$",
+      "maxLength": 63,
+      "description": "Lowercase ASCII id of a block, unique in the whole page (page id included; program check duplicate_id). Safe in generated code (data-block-id)."
+    },
+    "item": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 80,
+      "description": "Registry item name as used by `npx ui8kit add <item>` (hero-split, feature-grid, site-footer). The host rejects an item its registry does not have (unknown_item) or cannot render (no_renderer)."
+    },
+    "variant": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9-]*$",
+      "maxLength": 40,
+      "description": "A published variant of the item (registry.buildy.tw/variants/v0.json): a named preset of the layout axes of its props (extra, media, columns, tone). Optional: the item's default variant. The host rejects a variant the item does not have (unknown_variant)."
+    },
+    "propValue": {
+      "description": "A prop value: plain JSON; strings are safe text. The item's props schema (registry.buildy.tw/props/v0.json) decides what is valid for each prop (x-host-checks props_invalid).",
+      "anyOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 2000
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "$ref": "#/$defs/propValue"
+          }
+        },
+        {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_]{0,47}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/propValue"
+          }
+        }
+      ]
+    },
+    "props": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9_]{0,47}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/propValue"
+      },
+      "description": "Exactly the props of the registry item's component (what `<Item {...props} />` receives, and what the exported code writes). Nothing else lives in a block: no copy slots, no rows, no children. A host that inserts a block without props fills the sample props of the variant (the preset of its layout axes plus the minimum the props schema requires); layout axes are props like any other."
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "item"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "item": {
+          "$ref": "#/$defs/item"
+        },
+        "variant": {
+          "$ref": "#/$defs/variant"
+        },
+        "props": {
+          "$ref": "#/$defs/props"
+        }
+      },
+      "description": "One section of the page: a registry item, the variant it was picked as and its props."
+    },
+    "seo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 200
+        },
+        "description": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 200
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "slug",
+        "title",
+        "locale",
+        "blocks"
+      ],
+      "properties": {
+        "version": {
+          "const": 2,
+          "description": "Document version: 2."
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "minLength": 1,
+          "maxLength": 48,
+          "description": "Ordinary page slug, no query or UTM variants."
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "pending",
+            "scheduled",
+            "published",
+            "archived",
+            "trashed"
+          ],
+          "description": "Lifecycle (optional; a host defaults a new page to draft)."
+        },
+        "title": {
+          "allOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/safeText"
+            }
+          ],
+          "maxLength": 160,
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "locale": {
+          "type": "string",
+          "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$",
+          "maxLength": 16,
+          "description": "BCP 47 language of the page copy; follows the language the author writes in."
+        },
+        "seo": {
+          "$ref": "#/$defs/seo"
+        },
+        "createdAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$",
+          "maxLength": 40
+        },
+        "updatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$",
+          "maxLength": 40
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          },
+          "maxItems": 64,
+          "description": "Sections in render order. The exported project (page file + the block files `npx ui8kit add` writes) is generated from this list."
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One chat's pages in the browser store: the applied page, the pending candidate and the last proposal (page-spec/v2 documents) with their provenance (page-spec/v1 provenance: the Stock screen the page started from and the advisory screen family, never a rule).",
+      "properties": {
+        "applied": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/page"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/page"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastProposed": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/page"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appliedProvenance": {
+          "anyOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/provenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidateProvenance": {
+          "anyOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/provenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastProposedProvenance": {
+          "anyOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec.schema.json#/$defs/provenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedBlockId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 63
+        },
+        "revision": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

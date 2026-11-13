@@ -1,0 +1,12 @@
+{
+  "base": "landing-fitness.json",
+  "patch": [
+    { "op": "replace", "path": "/blocks/1/variant", "value": "statsCards" },
+    { "op": "replace", "path": "/blocks/1/props/title", "value": "Plans that fit your week" },
+    { "op": "add", "path": "/blocks/2", "value": { "id": "block-steps", "item": "steps-row", "variant": "row" } },
+    { "op": "move", "from": "/blocks/2", "path": "/blocks/1" },
+    { "op": "replace", "path": "/locale", "value": "ru" },
+    { "op": "add", "path": "/seo/description", "value": "Short description" },
+    { "op": "remove", "path": "/blocks/0/props/links/1" }
+  ]
+}

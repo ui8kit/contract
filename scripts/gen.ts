@@ -1,11 +1,12 @@
 // Writes schemas/*.schema.json and the static schema site in public/ (served by Vercel as-is).
-// The Codex v0.4 core, the view profile view/v1 the page spec profiles page-spec/v1 + page-patch/v1, the session profile buildy:v1 and the collection profile buildy-collection:v1 are published, at stable unversioned URLs: https://schema.buildy.tw/<name>.schema.json.
+// The Codex v0.4 core, the view profile view/v1 the page spec profiles page-spec/v1 + page-patch/v1, the page spec profiles page-spec/v2 + page-patch/v2, the session profile buildy:v1 and the collection profile buildy-collection:v1 are published, at stable unversioned URLs: https://schema.buildy.tw/<name>.schema.json.
 // Versioned URLs start at v0.5.
 import fs from "node:fs";
 import path from "node:path";
 import { ALL_V04 } from "./schemas-v04.ts";
 import { view } from "./schemas-view-v1.ts";
 import { pagePatch, pageSpec } from "./schemas-page-spec-v1.ts";
+import { pagePatchV2, pageSpecV2 } from "./schemas-page-spec-v2.ts";
 import { sessionSchema } from "./schemas-session-v1.ts";
 import { collectionSchema } from "./schemas-collection-v1.ts";
 import { SCHEMA_BASE_URL } from "../src/codex.ts";
@@ -28,11 +29,11 @@ export function render(): Record<string, string> {
   // Page spec profile page-spec/v1 and its edit operations page-patch/v1 (src/page-spec-v1.ts): BuildY page documents.
   // Session profile buildy:v1 (src/session-v1.ts): a portable BuildY session file.
   // Collection profile buildy-collection:v1 (src/collection-v1.ts): Stock screens and blocks handed to BuildY.
-  for (const [name, schema] of [["page-spec", pageSpec], ["page-patch", pagePatch], ["session", sessionSchema], ["collection", collectionSchema]] as const) {
+  for (const [name, schema] of [["page-spec", pageSpec], ["page-patch", pagePatch], ["page-spec-v2", pageSpecV2], ["page-patch-v2", pagePatchV2], ["session", sessionSchema], ["collection", collectionSchema]] as const) {
     out[`schemas/${name}.schema.json`] = json(schema);
     out[`public/${name}.schema.json`] = json(schema);
   }
-  const rows = [...Object.keys(ALL_V04), "view", "page-spec", "page-patch", "session", "collection"].map((n) => `      <tr><td>${n}</td><td><a href="/${n}.schema.json">${SCHEMA_BASE_URL}/${n}.schema.json</a></td></tr>`).join("\n");
+  const rows = [...Object.keys(ALL_V04), "view", "page-spec", "page-patch", "page-spec-v2", "page-patch-v2", "session", "collection"].map((n) => `      <tr><td>${n}</td><td><a href="/${n}.schema.json">${SCHEMA_BASE_URL}/${n}.schema.json</a></td></tr>`).join("\n");
   out["public/index.html"] = `<!doctype html>
 <html lang="en">
 <head>

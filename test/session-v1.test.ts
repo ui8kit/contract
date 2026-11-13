@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import { pageSpec } from "../scripts/schemas-page-spec-v1.ts";
+import { pageSpecV2 } from "../scripts/schemas-page-spec-v2.ts";
 import { sessionSchema } from "../scripts/schemas-session-v1.ts";
 import { collectionSchema } from "../scripts/schemas-collection-v1.ts";
 import {
@@ -15,6 +16,7 @@ import {
 
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 ajv.addSchema(pageSpec);
+ajv.addSchema(pageSpecV2);
 ajv.addSchema(collectionSchema);
 ajv.addSchema(sessionSchema);
 const file = ajv.getSchema(SESSION_SCHEMA_URL_V1)!;
@@ -240,5 +242,5 @@ describe("session buildy:v1 1.7.0: set_family history op", () => {
     expect(SESSION_REVISION_OPS_V1).toContain("set_family");
     expect(errs(withEntry({ op: "set_family" }))).toEqual([]);
   });
-  test("version 1.7.0", () => expect(SESSION_VERSION_V1).toBe("1.7.0"));
+  test("version 1.8.0 (the page is a v1 or v2 record)", () => expect(SESSION_VERSION_V1).toBe("1.8.0"));
 });

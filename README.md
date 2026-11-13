@@ -66,6 +66,10 @@ The old `/v0.3/…` and `/latest/…` paths are removed.
 - The profile has its own version (`x-view-profile: view/v1`, `x-view-version`). Minor versions only add things.
 - `fixtures/view/*.json` holds one example per page type; `test/view-v1.test.ts` validates them.
 
+## Page spec page-spec/v2 and page patch page-patch/v2
+
+`schemas/page-spec-v2.schema.json` (`https://schema.buildy.tw/page-spec-v2.schema.json`) and `schemas/page-patch-v2.schema.json` (`https://schema.buildy.tw/page-patch-v2.schema.json`), source `src/page-spec-v2.ts` + `scripts/schemas-page-spec-v2.ts`. A page is one document, equal to what a host exports: `{ version: 2, title, slug, locale, seo, blocks: [{ id, item, variant, props }] }`, where `item` is the registry item name of `npx ui8kit add`, `variant` one of its published variants and `props` exactly the props of its component (the host validates them against `registry.buildy.tw/props/v0.json`). There is no kind, copy slot, children list or screen family in the document. Edits are RFC 6902 JSON Patches (`page-patch/v2`) or a full document; a failure is reported as compiler-style `{ path, expected, got }`. `page-spec/v1` below stays published unchanged, side by side. Fixtures: `fixtures/page-spec-v2/`, `fixtures/page-patch-v2/`; `test/page-spec-v2.test.ts`.
+
 ## Page spec page-spec/v1 and page patch page-patch/v1
 
 `schemas/page-spec.schema.json` (`https://schema.buildy.tw/page-spec.schema.json`) and `schemas/page-patch.schema.json` (`https://schema.buildy.tw/page-patch.schema.json`), source `src/page-spec-v1.ts` + `scripts/schemas-page-spec-v1.ts`, describe the page document a BuildY agent proposes and a host saves. It is not a Codex v0.4 entry.

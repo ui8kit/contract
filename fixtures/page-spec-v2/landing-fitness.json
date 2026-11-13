@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "id": "page-draft",
+  "slug": "home",
+  "status": "draft",
+  "title": "Pulse fitness",
+  "locale": "en",
+  "seo": { "title": "Pulse: train smarter", "description": "A fictional fitness app: plans, tracking and a friendly community." },
+  "createdAt": "2026-11-13T12:00:00.000Z",
+  "updatedAt": "2026-11-13T12:00:00.000Z",
+  "blocks": [
+    {
+      "id": "block-nav",
+      "item": "site-header",
+      "variant": "inline",
+      "props": { "id": "site-header", "labels": { "brand": "Pulse" }, "links": [{ "id": "plans", "label": "Plans", "href": "#plans" }, { "id": "how", "label": "How it works", "href": "#how" }] }
+    },
+    {
+      "id": "block-hero",
+      "item": "hero-split",
+      "variant": "quoteStats",
+      "props": {
+        "id": "hero",
+        "title": "Train smarter with Pulse",
+        "lead": "Plans that adapt to your week.",
+        "extra": "quote",
+        "media": "card",
+        "mediaSide": "end",
+        "tone": "default",
+        "actions": { "primary": "Start free", "primaryHref": "#plans" },
+        "content": { "proof": "4.8 average rating", "stats": [{ "id": "s1", "value": "120k", "label": "members" }] }
+      }
+    },
+    {
+      "id": "block-footer",
+      "item": "site-footer",
+      "variant": "columns",
+      "props": { "id": "footer", "labels": { "brand": "Pulse" } }
+    }
+  ]
+}

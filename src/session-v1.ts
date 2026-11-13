@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.7.0";
+export const SESSION_VERSION_V1 = "1.8.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -26,7 +26,13 @@ export type SessionHostV1 = (typeof SESSION_HOSTS_V1)[number];
 export const SESSION_PROPOSAL_STATUSES_V1 = ["pending", "applied", "discarded", "superseded"] as const;
 
 /** What made a proposal without a model call: an Ask block card (ask-card) or an Ask page plan (ask-plan, 1.4.0). */
-export const SESSION_PROPOSAL_ORIGINS_V1 = ["ask-card", "ask-plan"] as const;
+export const SESSION_PROPOSAL_ORIGINS_V1 = ["ask-card", "ask-plan", "ask-proposal"] as const;
+
+/**
+ * Block-level change kinds of a page proposal diff (1.8.0): the page-spec/v2 proposal of Ask and Build shown as a diff
+ * per block (added, removed, moved, changed = item / variant / props differ) and per page field (scope page).
+ */
+export const SESSION_DIFF_CHANGES_V1 = ["added", "removed", "moved", "changed"] as const;
 
 /** Ops of an Ask page plan (1.4.0): page-patch/v1 ops on blocks of the chat's page. */
 export const SESSION_PLAN_OPS_V1 = ["set_variant", "set", "set_items", "add", "replace", "remove", "move"] as const;
@@ -81,7 +87,7 @@ export type SessionPinsV1 = {
 
 export type SessionAppV1 = { name: string; version: string; host: SessionHostV1; commit?: string };
 
-/** One chat. `page` is a page-spec/v1 record; `pageRevision` equals `page.revision`. */
+/** One chat. `page` is a page-spec/v1 record or (1.8.0) a page-spec/v2 record; `pageRevision` equals `page.revision`. */
 export type SessionChatV1 = {
   id: string;
   title: string;
