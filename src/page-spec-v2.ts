@@ -26,7 +26,7 @@ export const PAGE_PROP_KEY_PATTERN_V2 = "^[A-Za-z][A-Za-z0-9_]{0,47}$";
 export const PAGE_LIMITS_V2 = {
   maxBlocks: 64, maxIdLength: 63, maxSlugLength: 48, maxTitleLength: 160, maxItemLength: 80, maxVariantLength: 40,
   maxTextLength: 2000, maxSeoLength: 200, maxLocaleLength: 16, maxJsonChars: 200_000, maxDatetimeLength: 40,
-  maxPropKeys: 32, maxListItems: 24, maxDepth: 8,
+  maxPropKeys: 64, maxListItems: 24, maxDepth: 8,
 } as const;
 
 /** Patch limits: operations per patch and the shape of a path. */

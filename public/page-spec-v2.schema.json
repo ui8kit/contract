@@ -31,7 +31,7 @@
     "maxLocaleLength": 16,
     "maxJsonChars": 200000,
     "maxDatetimeLength": 40,
-    "maxPropKeys": 32,
+    "maxPropKeys": 64,
     "maxListItems": 24,
     "maxDepth": 8
   },
@@ -84,7 +84,7 @@
         },
         {
           "type": "object",
-          "maxProperties": 32,
+          "maxProperties": 64,
           "propertyNames": {
             "pattern": "^[A-Za-z][A-Za-z0-9_]{0,47}$"
           },
@@ -96,7 +96,7 @@
     },
     "props": {
       "type": "object",
-      "maxProperties": 32,
+      "maxProperties": 64,
       "propertyNames": {
         "pattern": "^[A-Za-z][A-Za-z0-9_]{0,47}$"
       },

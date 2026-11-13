@@ -61,6 +61,12 @@ describe("page-spec/v2 documents", () => {
   test("the fixture validates", () => expect(errs(page, doc())).toEqual([]));
   test("the minimal document validates (host-managed fields and variant are optional)", () =>
     expect(errs(page, { version: 2, slug: "home", title: "Home", locale: "en", blocks: [{ id: "block-hero", item: "hero-split" }] })).toEqual([]));
+  test("props may carry the 34 UI words of a dish block (up to 64 keys per object)", () => {
+    const labels = Object.fromEntries(Array.from({ length: 34 }, (_, i) => [`word${i}`, ""]));
+    expect(errs(page, { version: 2, slug: "home", title: "Home", locale: "en", blocks: [{ id: "block-menu", item: "menu-board", props: { labels } }] })).toEqual([]);
+    const tooMany = Object.fromEntries(Array.from({ length: 65 }, (_, i) => [`word${i}`, ""]));
+    expect((errs(page, { version: 2, slug: "home", title: "Home", locale: "en", blocks: [{ id: "block-menu", item: "menu-board", props: { labels: tooMany } }] }) ?? []).length).toBeGreaterThan(0);
+  });
   const bad: Array<[string, (d: any) => void]> = [
     ["v1 layout", (d) => { d.layout = { version: 1, blocks: [] }; }],
     ["no version", (d) => { delete d.version; }],
