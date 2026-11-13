@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added (page-spec 1.5.0, additive): page-patch/v1 `add` takes an optional `catalogBlock` (`$defs/catalogBlock` of the page spec): the Stock catalog block to add, a block of the given `kind` (block.steps, block.pricing); the host checks kind, variant and renderer, and with it the page may hold several blocks of one kind. Without it `add` is unchanged (the host picks the page's sample block of that kind). Every 1.4.0 patch validates unchanged (buildytech/chat ADR 0033).
+
 - Added (page-spec 1.4.0, additive): optional `family` (`PAGE_FAMILIES_V1`: dashboard, landing, food-grill, restaurant, generic, or null) and `familyPinned` on `$defs/provenance`: the page's screen family, advisory only, derived by the host from the page composition after every operation (role majority; mixed -> generic) unless the author pinned it. It never rejects a block. Every 1.3.0 record validates unchanged (buildytech/chat ADR 0027).
 - Added (session 1.7.0, additive): history `op` may be `set_family` (the page's screen family changed, derived or pinned; its own undo step). Every 1.0.0 to 1.6.0 file validates unchanged.
 

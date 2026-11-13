@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const PAGE_SPEC_PROFILE_V1 = "page-spec/v1";
-export const PAGE_SPEC_VERSION_V1 = "1.4.0";
+export const PAGE_SPEC_VERSION_V1 = "1.5.0";
 export const PAGE_SPEC_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-spec.schema.json`;
 export const PAGE_PATCH_PROFILE_V1 = "page-patch/v1";
 export const PAGE_PATCH_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/page-patch.schema.json`;
@@ -177,7 +177,7 @@ export type PagePatchItemV1 = { label: string; detail?: string; value?: string; 
 export type PagePatchOpV1 =
   | { op: "set"; blockId: string; field: "title" | "summary" | PageCopyKeyV1; value: string | null }
   | { op: "set_items"; blockId: string; items: PagePatchItemV1[] }
-  | { op: "add"; kind: PageSectionKindV1; at?: number; title?: string; variant?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
+  | { op: "add"; kind: PageSectionKindV1; catalogBlock?: string; at?: number; title?: string; variant?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
   | { op: "replace"; blockId: string; kind: PageSectionKindV1; catalogBlock?: string; title?: string; variant?: string; copy?: PageBlockCopyV1; items?: PagePatchItemV1[] }
   | { op: "remove"; blockId: string }
   | { op: "move"; blockId: string; to: number }

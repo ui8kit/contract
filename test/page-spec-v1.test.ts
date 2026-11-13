@@ -140,7 +140,7 @@ describe("page-patch/v1", () => {
     ["extra key on op", { ops: [{ op: "remove", blockId: "block-cta", why: "x" }] }],
     ["variant with a space", { ops: [{ op: "set_variant", blockId: "block-features", variant: "grid two" }] }],
     ["icon not a Lucide name shape", { ops: [{ op: "set_items", blockId: "block-features", items: [{ label: "a", icon: "<svg>" }] }] }],
-    ["catalogBlock from the caller", { ops: [{ op: "add", kind: "features", catalogBlock: "block.features" }] }],
+    ["add catalogBlock not a block id", { ops: [{ op: "add", kind: "features", catalogBlock: "steps" }] }],
     ["replace catalogBlock not a block id", { ops: [{ op: "replace", blockId: "block-hero", kind: "hero", catalogBlock: "storehero" }] }],
   ];
   const catalogOps = { ops: [
@@ -152,6 +152,8 @@ describe("page-patch/v1", () => {
   test("catalog variant, icon and href ops (1.1.0)", () => expect(errs(patch, catalogOps)).toEqual([]));
   test("replace by another catalog block of the same kind (1.2.0)", () =>
     expect(errs(patch, { ops: [{ op: "replace", blockId: "block-hero", kind: "hero", catalogBlock: "block.storehero", variant: "overlay" }] })).toEqual([]));
+  test("add a Stock catalog block, several of one kind (1.5.0)", () =>
+    expect(errs(patch, { ops: [{ op: "add", kind: "features", catalogBlock: "block.steps", variant: "row", at: 3, title: "How it works" }, { op: "add", kind: "features", catalogBlock: "block.pricing", variant: "grid" }] })).toEqual([]));
   test("minimal patch", () => expect(errs(patch, ok)).toEqual([]));
   for (const [name, p] of bad) test(`rejects: ${name}`, () => expect(patch(p)).toBe(false));
 });
