@@ -139,6 +139,7 @@ const collection = closed({
 
 const session = closed({
   id: ref("id"),
+  projectId: { ...ref("id"), description: "1.9.0, additive: the project (the page record, skin, collection and revision history) this chat works on. Absent: the project id is `id` (every 1.0.0 to 1.8.0 file). The `page` record and the revision history belong to the project, so two sessions of one project must not both carry a `page` (program check duplicate_project_page)." },
   title: str(L.maxTitleLength),
   createdAt: ref("datetime"),
   updatedAt: ref("datetime"),
@@ -152,10 +153,10 @@ const session = closed({
   skin: { anyOf: [{ type: "string", pattern: SESSION_SKIN_PATTERN_V1 }, { type: "null" }], description: "Skin of the page (1.1.0, additive): the id of the registry item theme-<skin> (npx ui8kit add theme-<skin> writes styles/skins/<skin>.css; the page wears it with data-skin=\"<skin>\"). Null or absent: the default theme. A host that does not have the skin keeps the value and shows the default theme." },
   collection: ref("collection"),
   usage: open("Usage summed over the runs of the chat."),
-  messages: { type: "array", maxItems: L.maxMessages, items: ref("message") },
+  messages: { type: "array", maxItems: L.maxMessages, items: ref("message"), description: "The chat extension (ext.chat), optional since 1.9.0: a project with a page and no chat has no messages. Every 1.0.0 to 1.8.0 file carries it and validates unchanged." },
   page: { anyOf: [{ $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/record` }, { $ref: `${PAGE_SPEC_SCHEMA_URL_V2}#/$defs/record` }, { type: "null" }], description: "The chat's pages: a page-spec/v1 record or (1.8.0) a page-spec/v2 record (applied page, pending candidate, last proposal, their provenance, revision). A host that reads a v1 record migrates it to v2." },
   history: { type: "array", maxItems: L.maxHistory, items: ref("revisionEntry"), description: `Revision history of the applied page, oldest first (the last ${L.maxHistory} entries).` },
-}, ["id", "title", "updatedAt", "messages"], "One chat.");
+}, ["id", "title", "updatedAt"], "One session: a project (page, skin, collection, revision history) with an optional chat (messages, mode, usage).");
 
 const app = closed({
   name: short,
@@ -189,7 +190,7 @@ export const sessionSchema = {
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": SESSION_FORMAT_V1,
   "x-session-version": SESSION_VERSION_V1,
-  "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
+  "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: sessions: a project (page, skin, revision history) with an optional chat (messages and Ask / Build mode, optional since 1.9.0), each session's page-spec/v1 or v2 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [...SESSION_PROGRAM_CHECKS_V1],
   "x-open-records": [...SESSION_OPEN_RECORDS_V1],
   "x-limits": { ...L },

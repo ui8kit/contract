@@ -242,5 +242,26 @@ describe("session buildy:v1 1.7.0: set_family history op", () => {
     expect(SESSION_REVISION_OPS_V1).toContain("set_family");
     expect(errs(withEntry({ op: "set_family" }))).toEqual([]);
   });
-  test("version 1.8.0 (the page is a v1 or v2 record)", () => expect(SESSION_VERSION_V1).toBe("1.8.0"));
+  });
+
+describe("session buildy:v1 1.9.0: a project without a chat, projectId", () => {
+  const base = read(`${dir}/exported-chat.json`);
+  const withSession = (patch: (s: Record<string, any>) => void) => {
+    const x = clone(base);
+    patch(x.sessions[0]);
+    return x;
+  };
+  test("version 1.9.0", () => expect(SESSION_VERSION_V1).toBe("1.9.0"));
+  test("messages are optional: a session with a page and no chat validates", () => {
+    expect(errs(withSession((s) => { delete s.messages; delete s.mode; }))).toEqual([]);
+    expect((sessionSchema.$defs as Record<string, any>).session.required).toEqual(["id", "title", "updatedAt"]);
+  });
+  test("every older file (messages present, no projectId) validates unchanged", () => {
+    for (const f of fixtures) expect(errs(read(`${dir}/${f}`))).toEqual([]);
+  });
+  test("projectId is an id; a bad one is refused", () => {
+    expect(errs(withSession((s) => { s.projectId = "project-1"; }))).toEqual([]);
+    expect(errs(withSession((s) => { s.projectId = "not an id"; }))).not.toEqual([]);
+    expect(SESSION_PROGRAM_CHECKS_V1).toContain("duplicate_project_page");
+  });
 });

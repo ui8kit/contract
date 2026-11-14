@@ -3,13 +3,14 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.8.0",
-  "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: chats with their messages and Ask / Build mode, each chat's page-spec/v1 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
+  "x-session-version": "1.9.0",
+  "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: sessions: a project (page, skin, revision history) with an optional chat (messages and Ask / Build mode, optional since 1.9.0), each session's page-spec/v1 or v2 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
     "page_revision_mismatch",
     "history_not_monotonic",
-    "selected_session_unknown"
+    "selected_session_unknown",
+    "duplicate_project_page"
   ],
   "x-open-records": [
     "usage",
@@ -1057,13 +1058,16 @@
       "required": [
         "id",
         "title",
-        "updatedAt",
-        "messages"
+        "updatedAt"
       ],
-      "description": "One chat.",
+      "description": "One session: a project (page, skin, collection, revision history) with an optional chat (messages, mode, usage).",
       "properties": {
         "id": {
           "$ref": "#/$defs/id"
+        },
+        "projectId": {
+          "$ref": "#/$defs/id",
+          "description": "1.9.0, additive: the project (the page record, skin, collection and revision history) this chat works on. Absent: the project id is `id` (every 1.0.0 to 1.8.0 file). The `page` record and the revision history belong to the project, so two sessions of one project must not both carry a `page` (program check duplicate_project_page)."
         },
         "title": {
           "type": "string",
@@ -1140,7 +1144,8 @@
           "maxItems": 2000,
           "items": {
             "$ref": "#/$defs/message"
-          }
+          },
+          "description": "The chat extension (ext.chat), optional since 1.9.0: a project with a page and no chat has no messages. Every 1.0.0 to 1.8.0 file carries it and validates unchanged."
         },
         "page": {
           "anyOf": [

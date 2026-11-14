@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.8.0";
+export const SESSION_VERSION_V1 = "1.9.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -87,9 +87,15 @@ export type SessionPinsV1 = {
 
 export type SessionAppV1 = { name: string; version: string; host: SessionHostV1; commit?: string };
 
-/** One chat. `page` is a page-spec/v1 record or (1.8.0) a page-spec/v2 record; `pageRevision` equals `page.revision`. */
+/**
+ * One session: a project (page, skin, collection, revision history) with an optional chat extension (messages, mode,
+ * usage). `page` is a page-spec/v1 record or (1.8.0) a page-spec/v2 record; `pageRevision` equals `page.revision`.
+ * 1.9.0: `messages` is optional (a project without a chat) and `projectId` names the project (absent: `id`).
+ */
 export type SessionChatV1 = {
   id: string;
+  /** 1.9.0: the project of the session; absent: `id`. The page record and history belong to the project. */
+  projectId?: string;
   title: string;
   updatedAt: string;
   createdAt?: string;
@@ -105,7 +111,7 @@ export type SessionChatV1 = {
   /** Collection the chat was opened from (1.3.0, optional): the buildy-collection:v1 items found in the host snapshot and the ones it skipped. */
   collection?: SessionCollectionV1;
   usage?: Record<string, unknown>;
-  messages: Record<string, unknown>[];
+  messages?: Record<string, unknown>[];
   page?: Record<string, unknown> | null;
   history?: SessionRevisionEntryV1[];
 };
@@ -152,9 +158,10 @@ export type SessionPrefsV1 = { layout?: SessionPrefsLayoutV1 };
 /**
  * Checks a JSON Schema cannot express; every importer runs them after the schema: session ids unique in the file,
  * `pageRevision` equal to `page.revision`, history revisions never decreasing and never above the page revision
- * (revisions made before the history existed have no entry), `selectedSessionId` naming a session of the file.
+ * (revisions made before the history existed have no entry), `selectedSessionId` naming a session of the file and
+ * (1.9.0) no two sessions of one project (`projectId ?? id`) both carrying a `page` (duplicate_project_page).
  */
 export const SESSION_PROGRAM_CHECKS_V1 = [
-  "duplicate_session_id", "page_revision_mismatch", "history_not_monotonic", "selected_session_unknown",
+  "duplicate_session_id", "page_revision_mismatch", "history_not_monotonic", "selected_session_unknown", "duplicate_project_page",
 ] as const;
 export type SessionProgramCheckV1 = (typeof SESSION_PROGRAM_CHECKS_V1)[number];
