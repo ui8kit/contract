@@ -251,7 +251,7 @@ describe("session buildy:v1 1.9.0: a project without a chat, projectId", () => {
     patch(x.sessions[0]);
     return x;
   };
-  test("version 1.9.0", () => expect(SESSION_VERSION_V1).toBe("1.9.0"));
+  test("version is 1.10.0 or later", () => expect(SESSION_VERSION_V1).toMatch(/^1\.(9|1\d)\./));
   test("messages are optional: a session with a page and no chat validates", () => {
     expect(errs(withSession((s) => { delete s.messages; delete s.mode; }))).toEqual([]);
     expect((sessionSchema.$defs as Record<string, any>).session.required).toEqual(["id", "title", "updatedAt"]);
@@ -263,5 +263,37 @@ describe("session buildy:v1 1.9.0: a project without a chat, projectId", () => {
     expect(errs(withSession((s) => { s.projectId = "project-1"; }))).toEqual([]);
     expect(errs(withSession((s) => { s.projectId = "not an id"; }))).not.toEqual([]);
     expect(SESSION_PROGRAM_CHECKS_V1).toContain("duplicate_project_page");
+  });
+});
+
+describe("session buildy:v1 1.10.0: ext.chat, side pane prefs", () => {
+  const base = read(`${dir}/exported-chat.json`);
+  const withSession = (patch: (s: Record<string, any>) => void) => {
+    const x = clone(base);
+    patch(x.sessions[0]);
+    return x;
+  };
+  test("version 1.10.0", () => expect(SESSION_VERSION_V1).toBe("1.10.0"));
+  test("the chat keys move to ext.chat; the flat keys stay valid (additive)", () => {
+    const moved = withSession((s) => {
+      s.ext = { chat: { messages: s.messages, mode: s.mode, usage: s.usage ?? {}, selectedModelId: "m-1" } };
+      delete s.messages; delete s.mode; delete s.usage; delete s.selectedModelId;
+    });
+    expect(errs(moved)).toEqual([]);
+    expect(errs(base)).toEqual([]);
+  });
+  test("ext.chat is closed and checked; another extension is any object under a lower-case name", () => {
+    expect(errs(withSession((s) => { s.ext = { chat: { mode: "nope" } }; }))).not.toEqual([]);
+    expect(errs(withSession((s) => { s.ext = { chat: { unknown: 1 } }; }))).not.toEqual([]);
+    expect(errs(withSession((s) => { s.ext = { chat: { messages: [{ id: "x" }] } }; }))).not.toEqual([]);
+    expect(errs(withSession((s) => { s.ext = { review: { notes: ["a"] } }; }))).toEqual([]);
+    expect(errs(withSession((s) => { s.ext = { Review: {} }; }))).not.toEqual([]);
+    expect(errs(withSession((s) => { s.ext = { review: "text" }; }))).not.toEqual([]);
+  });
+  test("prefs: sideWidth and sideCollapsed next to the old chatWidth and chatCollapsed", () => {
+    const withPrefs = (layout: Record<string, unknown>) => ({ ...clone(base), prefs: { layout } });
+    expect(errs(withPrefs({ sideWidth: 320, sideCollapsed: true }))).toEqual([]);
+    expect(errs(withPrefs({ chatWidth: 320, chatCollapsed: true }))).toEqual([]);
+    expect(errs(withPrefs({ sideWidth: "wide" }))).not.toEqual([]);
   });
 });

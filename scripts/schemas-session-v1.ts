@@ -137,25 +137,33 @@ const collection = closed({
   missing: collectionItems("Items the host's snapshot does not have: skipped and named in a note, never substituted."),
 }, ["id", "title", "items"], "Collection the chat was opened from (1.3.0, additive): a Stock collection buildy-collection:v1 (docs/collection-intake.md).");
 
+const chatExt = closed({
+  mode: ref("mode"),
+  selectedModelId: short,
+  usage: open("Usage summed over the runs of the chat."),
+  messages: { type: "array", maxItems: L.maxMessages, items: ref("message") },
+}, [], "The chat extension (ext.chat, 1.10.0): what the chat keeps with a project.");
+
 const session = closed({
   id: ref("id"),
   projectId: { ...ref("id"), description: "1.9.0, additive: the project (the page record, skin, collection and revision history) this chat works on. Absent: the project id is `id` (every 1.0.0 to 1.8.0 file). The `page` record and the revision history belong to the project, so two sessions of one project must not both carry a `page` (program check duplicate_project_page)." },
   title: str(L.maxTitleLength),
   createdAt: ref("datetime"),
   updatedAt: ref("datetime"),
-  mode: ref("mode"),
+  mode: { ...ref("mode"), description: "Deprecated since 1.10.0: use ext.chat.mode. Still valid." },
   scenarioId: { enum: [...PAGE_SCENARIOS_V1, null] },
   screenId: orNull(short),
-  selectedModelId: short,
+  selectedModelId: { ...short, description: "Deprecated since 1.10.0: use ext.chat.selectedModelId. Still valid." },
   pageId: short,
   pageBound: { type: "boolean" },
   pageRevision: revision,
   skin: { anyOf: [{ type: "string", pattern: SESSION_SKIN_PATTERN_V1 }, { type: "null" }], description: "Skin of the page (1.1.0, additive): the id of the registry item theme-<skin> (npx ui8kit add theme-<skin> writes styles/skins/<skin>.css; the page wears it with data-skin=\"<skin>\"). Null or absent: the default theme. A host that does not have the skin keeps the value and shows the default theme." },
   collection: ref("collection"),
-  usage: open("Usage summed over the runs of the chat."),
-  messages: { type: "array", maxItems: L.maxMessages, items: ref("message"), description: "The chat extension (ext.chat), optional since 1.9.0: a project with a page and no chat has no messages. Every 1.0.0 to 1.8.0 file carries it and validates unchanged." },
+  usage: open("Deprecated since 1.10.0: use ext.chat.usage. Still valid. Usage summed over the runs of the chat."),
+  messages: { type: "array", maxItems: L.maxMessages, items: ref("message"), description: "Deprecated since 1.10.0: use ext.chat.messages. Still valid. The chat extension (ext.chat), optional since 1.9.0: a project with a page and no chat has no messages. Every 1.0.0 to 1.8.0 file carries it and validates unchanged." },
   page: { anyOf: [{ $ref: `${PAGE_SPEC_SCHEMA_URL_V1}#/$defs/record` }, { $ref: `${PAGE_SPEC_SCHEMA_URL_V2}#/$defs/record` }, { type: "null" }], description: "The chat's pages: a page-spec/v1 record or (1.8.0) a page-spec/v2 record (applied page, pending candidate, last proposal, their provenance, revision). A host that reads a v1 record migrates it to v2." },
   history: { type: "array", maxItems: L.maxHistory, items: ref("revisionEntry"), description: `Revision history of the applied page, oldest first (the last ${L.maxHistory} entries).` },
+  ext: { type: "object", maxProperties: 16, propertyNames: { pattern: "^[a-z][a-z0-9-]{0,31}$" }, properties: { chat: ref("chatExt") }, additionalProperties: { type: "object" }, description: "1.10.0, additive: extensions of the project by name; each is an object a module owns. ext.chat is the chat (mode, selectedModelId, usage, messages); the flat keys of the same names are deprecated and stay valid. A host keeps the extensions it does not know." },
 }, ["id", "title", "updatedAt"], "One session: a project (page, skin, collection, revision history) with an optional chat (messages, mode, usage).");
 
 const app = closed({
@@ -178,8 +186,9 @@ const settings = closed({
 }, [], "Non-secret preferences of the host.");
 
 const layoutProps: Record<string, unknown> = {};
-for (const key of SESSION_PREFS_LAYOUT_SIZES_V1) layoutProps[key] = { type: "integer", minimum: 0, maximum: SESSION_PREFS_MAX_SIZE_V1 };
-for (const key of SESSION_PREFS_LAYOUT_FLAGS_V1) layoutProps[key] = { type: "boolean" };
+const OLD_PANE = "Deprecated since 1.10.0: the name of the left panel before it hosted more than the chat; use sideWidth / sideCollapsed. Still valid.";
+for (const key of SESSION_PREFS_LAYOUT_SIZES_V1) layoutProps[key] = { type: "integer", minimum: 0, maximum: SESSION_PREFS_MAX_SIZE_V1, ...(key === "chatWidth" ? { description: OLD_PANE } : {}) };
+for (const key of SESSION_PREFS_LAYOUT_FLAGS_V1) layoutProps[key] = { type: "boolean", ...(key === "chatCollapsed" ? { description: OLD_PANE } : {}) };
 const prefs = closed({
   layout: closed(layoutProps, [], "Shell layout: pane sizes (CSS px) and collapsed states. A host clamps sizes to its own ranges and ignores what it does not show."),
 }, [], "Layout preferences of the user (1.2.0): the host's buildy:v1:prefs. Optional; a file without it keeps the importer's layout.");
@@ -208,5 +217,5 @@ export const sessionSchema = {
     settings: ref("settings"),
     prefs: ref("prefs"),
   },
-  "$defs": { datetime, id, commit, mode, revision, diffEntry, proposal, run, artifact, planItem, planOp, plan, message, revisionEntry, collection, session, app, pins, settings, prefs },
+  "$defs": { datetime, id, commit, mode, revision, diffEntry, proposal, run, artifact, planItem, planOp, plan, message, revisionEntry, collection, chatExt, session, app, pins, settings, prefs },
 };

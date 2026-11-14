@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.9.0";
+export const SESSION_VERSION_V1 = "1.10.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -87,10 +87,23 @@ export type SessionPinsV1 = {
 
 export type SessionAppV1 = { name: string; version: string; host: SessionHostV1; commit?: string };
 
+/** Name of the chat extension (`session.ext.chat`, 1.10.0). */
+export const SESSION_EXT_CHAT_V1 = "chat";
+
+/** The chat extension of a session (1.10.0): what the chat keeps with a project. The flat keys of the same names stay valid (deprecated, 1.0.0 to 1.9.0 files). */
+export type SessionExtChatV1 = {
+  mode?: SessionModeV1;
+  selectedModelId?: string;
+  usage?: Record<string, unknown>;
+  messages?: Record<string, unknown>[];
+};
+
 /**
  * One session: a project (page, skin, collection, revision history) with an optional chat extension (messages, mode,
  * usage). `page` is a page-spec/v1 record or (1.8.0) a page-spec/v2 record; `pageRevision` equals `page.revision`.
  * 1.9.0: `messages` is optional (a project without a chat) and `projectId` names the project (absent: `id`).
+ * 1.10.0: `ext` holds the extensions of the project by name; `ext.chat` is where the chat keeps `mode`, `selectedModelId`,
+ * `usage` and `messages`. The flat keys of the same names are deprecated and stay valid.
  */
 export type SessionChatV1 = {
   id: string;
@@ -114,6 +127,8 @@ export type SessionChatV1 = {
   messages?: Record<string, unknown>[];
   page?: Record<string, unknown> | null;
   history?: SessionRevisionEntryV1[];
+  /** 1.10.0: extensions of the project by name (`ext.chat`: the chat). A host keeps the ones it does not know. */
+  ext?: { chat?: SessionExtChatV1; [name: string]: Record<string, unknown> | undefined };
 };
 
 /**
@@ -143,10 +158,13 @@ export type SessionFileV1 = {
   prefs?: SessionPrefsV1;
 };
 
-/** Pane sizes in CSS px (integers); each host clamps them to its own ranges when it applies a file. */
-export const SESSION_PREFS_LAYOUT_SIZES_V1 = ["navWidth", "chatWidth", "inspectorWidth", "layersHeight", "treeWidth"] as const;
-/** Collapsed states of the side panels; `focus` is the preview-only mode (every side panel shown as a rail). */
-export const SESSION_PREFS_LAYOUT_FLAGS_V1 = ["navCollapsed", "chatCollapsed", "inspectorCollapsed", "layersCollapsed", "treeCollapsed", "focus"] as const;
+/**
+ * Pane sizes in CSS px (integers); each host clamps them to its own ranges when it applies a file. 1.10.0: `sideWidth` is the
+ * left panel (Blocks, Sections and any module tab); `chatWidth` is the same pane under its old name, deprecated, still valid.
+ */
+export const SESSION_PREFS_LAYOUT_SIZES_V1 = ["navWidth", "sideWidth", "chatWidth", "inspectorWidth", "layersHeight", "treeWidth"] as const;
+/** Collapsed states of the side panels (`sideCollapsed` since 1.10.0; `chatCollapsed` is the old name, deprecated); `focus` is the preview-only mode (every side panel shown as a rail). */
+export const SESSION_PREFS_LAYOUT_FLAGS_V1 = ["navCollapsed", "sideCollapsed", "chatCollapsed", "inspectorCollapsed", "layersCollapsed", "treeCollapsed", "focus"] as const;
 /** Upper bound of a stored pane size (px); a host's own maximum is lower. */
 export const SESSION_PREFS_MAX_SIZE_V1 = 4096;
 

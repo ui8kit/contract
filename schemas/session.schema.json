@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.9.0",
+  "x-session-version": "1.10.0",
   "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: sessions: a project (page, skin, revision history) with an optional chat (messages and Ask / Build mode, optional since 1.9.0), each session's page-spec/v1 or v2 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
@@ -1052,6 +1052,31 @@
         }
       }
     },
+    "chatExt": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The chat extension (ext.chat, 1.10.0): what the chat keeps with a project.",
+      "properties": {
+        "mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "usage": {
+          "type": "object",
+          "description": "Usage summed over the runs of the chat. Host record, copied as it is (open object)."
+        },
+        "messages": {
+          "type": "array",
+          "maxItems": 2000,
+          "items": {
+            "$ref": "#/$defs/message"
+          }
+        }
+      }
+    },
     "session": {
       "type": "object",
       "additionalProperties": false,
@@ -1080,7 +1105,8 @@
           "$ref": "#/$defs/datetime"
         },
         "mode": {
-          "$ref": "#/$defs/mode"
+          "$ref": "#/$defs/mode",
+          "description": "Deprecated since 1.10.0: use ext.chat.mode. Still valid."
         },
         "scenarioId": {
           "enum": [
@@ -1103,7 +1129,8 @@
         },
         "selectedModelId": {
           "type": "string",
-          "maxLength": 200
+          "maxLength": 200,
+          "description": "Deprecated since 1.10.0: use ext.chat.selectedModelId. Still valid."
         },
         "pageId": {
           "type": "string",
@@ -1137,7 +1164,7 @@
         },
         "usage": {
           "type": "object",
-          "description": "Usage summed over the runs of the chat. Host record, copied as it is (open object)."
+          "description": "Deprecated since 1.10.0: use ext.chat.usage. Still valid. Usage summed over the runs of the chat. Host record, copied as it is (open object)."
         },
         "messages": {
           "type": "array",
@@ -1145,7 +1172,7 @@
           "items": {
             "$ref": "#/$defs/message"
           },
-          "description": "The chat extension (ext.chat), optional since 1.9.0: a project with a page and no chat has no messages. Every 1.0.0 to 1.8.0 file carries it and validates unchanged."
+          "description": "Deprecated since 1.10.0: use ext.chat.messages. Still valid. The chat extension (ext.chat), optional since 1.9.0: a project with a page and no chat has no messages. Every 1.0.0 to 1.8.0 file carries it and validates unchanged."
         },
         "page": {
           "anyOf": [
@@ -1168,6 +1195,22 @@
             "$ref": "#/$defs/revisionEntry"
           },
           "description": "Revision history of the applied page, oldest first (the last 500 entries)."
+        },
+        "ext": {
+          "type": "object",
+          "maxProperties": 16,
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9-]{0,31}$"
+          },
+          "properties": {
+            "chat": {
+              "$ref": "#/$defs/chatExt"
+            }
+          },
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "1.10.0, additive: extensions of the project by name; each is an object a module owns. ext.chat is the chat (mode, selectedModelId, usage, messages); the flat keys of the same names are deprecated and stay valid. A host keeps the extensions it does not know."
         }
       }
     },
@@ -1289,10 +1332,16 @@
               "minimum": 0,
               "maximum": 4096
             },
-            "chatWidth": {
+            "sideWidth": {
               "type": "integer",
               "minimum": 0,
               "maximum": 4096
+            },
+            "chatWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096,
+              "description": "Deprecated since 1.10.0: the name of the left panel before it hosted more than the chat; use sideWidth / sideCollapsed. Still valid."
             },
             "inspectorWidth": {
               "type": "integer",
@@ -1312,8 +1361,12 @@
             "navCollapsed": {
               "type": "boolean"
             },
-            "chatCollapsed": {
+            "sideCollapsed": {
               "type": "boolean"
+            },
+            "chatCollapsed": {
+              "type": "boolean",
+              "description": "Deprecated since 1.10.0: the name of the left panel before it hosted more than the chat; use sideWidth / sideCollapsed. Still valid."
             },
             "inspectorCollapsed": {
               "type": "boolean"
