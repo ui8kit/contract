@@ -15,9 +15,7 @@
     "unknown_item",
     "unknown_variant",
     "no_renderer",
-    "props_invalid",
-    "header_not_first",
-    "footer_not_last"
+    "props_invalid"
   ],
   "x-limits": {
     "maxBlocks": 64,

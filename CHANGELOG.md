@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Changed (page-spec 2.0.2, relaxes a rule): the host checks `header_not_first` and `footer_not_last` are removed from `PAGE_HOST_CHECKS_V2` and `x-host-checks` of `page-spec-v2.schema.json`: a page has no position or count rule for header-like and footer-like items (a banner above a header, several headers, a footer in the middle are valid). The role stays registry metadata, informational only. Every 2.0.x document validates unchanged; a host that still reports the two codes is merely stricter than the contract (buildytech/chat ADR 0037).
 - Changed (page-spec 2.0.1, relaxes a limit): `PAGE_V2_LIMITS.maxPropKeys` 32 -> 64 (an object in `props`, and `props` itself): registry blocks such as the dish menus carry 34 UI words in one `labels` object. Every 2.0.0 document validates unchanged (buildytech/chat ADR 0034).
 - Changed (page-spec 2.0.1, relaxes a rule): a prop string may contain `{` and `}` (`$defs/propText`: safeText of page-spec/v1 without the braces): registry presets carry templates such as `?paged={0}` and props are data, not markup. `<` `>`, control characters and dangerous URL schemes stay rejected; titles, slugs and other fields keep safeText.
 

@@ -49,10 +49,11 @@ export const PAGE_PROGRAM_CHECKS_V2 = ["duplicate_id", "too_many_blocks", "too_l
 /**
  * Checks that need the host's registry (not the page alone): the item exists (unknown_item), the variant is one of its
  * published variants (unknown_variant), the registry renders the item (no_renderer), the props pass the item's props
- * schema (props_invalid: path, expected, got), a header-like item is first and a footer-like item last when the page has
- * one (header_not_first, footer_not_last; the role comes from the registry metadata of the item, never from the page).
+ * schema (props_invalid: path, expected, got). There is NO position or count rule: a header-like or footer-like item may
+ * stand anywhere, any number of times (a banner above a header, two headers, a footer in the middle); the header / footer
+ * role of an item is registry metadata for hosts to show, never a check (2.0.2 removed header_not_first, footer_not_last).
  */
-export const PAGE_HOST_CHECKS_V2 = ["unknown_item", "unknown_variant", "no_renderer", "props_invalid", "header_not_first", "footer_not_last"] as const;
+export const PAGE_HOST_CHECKS_V2 = ["unknown_item", "unknown_variant", "no_renderer", "props_invalid"] as const;
 
 export type PagePropValueV2 = string | number | boolean | null | PagePropValueV2[] | { [key: string]: PagePropValueV2 };
 export interface PageBlockV2 { id: string; item: string; variant?: string; props?: Record<string, PagePropValueV2> }
