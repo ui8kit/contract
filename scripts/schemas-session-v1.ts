@@ -68,6 +68,7 @@ const run = closed({
   policyVersion: short, modelCatalogVersion: short, trialPolicyVersion: short, catalogDigest: short,
   path: short, tools: list, runId: short,
   usage: open("Token usage of the run as the provider reported it (status, steps, token counts, cost availability)."),
+  rejected: open("1.11.0, additive: the last write the host rejected in a turn that ended without an accepted write: the first issues ({ path, code, expected, got }) and the rejected document (or, when it is large, the block the first issue points at), for diagnosis. Small; no prompts, keys or provider payloads."),
 }, ["modelId"], "The model run that produced an assistant message. Never holds prompts, keys or provider payloads.");
 
 const artifact = closed({

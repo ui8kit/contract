@@ -3,7 +3,7 @@
   "$id": "https://schema.buildy.tw/session.schema.json",
   "title": "BuildY session buildy:v1 — portable chats, modes, pages, revisions and catalog pins",
   "x-session-format": "buildy:v1",
-  "x-session-version": "1.10.0",
+  "x-session-version": "1.11.0",
   "description": "A portable BuildY session file. A host exports it, any BuildY host imports it (Browser, Desktop, WordPress) and Lab opens it for review: sessions: a project (page, skin, revision history) with an optional chat (messages and Ask / Build mode, optional since 1.9.0), each session's page-spec/v1 or v2 record with its revision and revision history, and the catalog pins (Stock content commit, registry source commit). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records.",
   "x-program-checks": [
     "duplicate_session_id",
@@ -15,6 +15,7 @@
   "x-open-records": [
     "usage",
     "run.usage",
+    "run.rejected",
     "proposal.catalogRefs"
   ],
   "x-limits": {
@@ -357,6 +358,10 @@
         "usage": {
           "type": "object",
           "description": "Token usage of the run as the provider reported it (status, steps, token counts, cost availability). Host record, copied as it is (open object)."
+        },
+        "rejected": {
+          "type": "object",
+          "description": "1.11.0, additive: the last write the host rejected in a turn that ended without an accepted write: the first issues ({ path, code, expected, got }) and the rejected document (or, when it is large, the block the first issue points at), for diagnosis. Small; no prompts, keys or provider payloads. Host record, copied as it is (open object)."
         }
       }
     },

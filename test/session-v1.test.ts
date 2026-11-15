@@ -273,7 +273,7 @@ describe("session buildy:v1 1.10.0: ext.chat, side pane prefs", () => {
     patch(x.sessions[0]);
     return x;
   };
-  test("version 1.10.0", () => expect(SESSION_VERSION_V1).toBe("1.10.0"));
+  test("version is 1.10.0 or later", () => expect(SESSION_VERSION_V1).toMatch(/^1\.1\d\./));
   test("the chat keys move to ext.chat; the flat keys stay valid (additive)", () => {
     const moved = withSession((s) => {
       s.ext = { chat: { messages: s.messages, mode: s.mode, usage: s.usage ?? {}, selectedModelId: "m-1" } };
@@ -295,5 +295,21 @@ describe("session buildy:v1 1.10.0: ext.chat, side pane prefs", () => {
     expect(errs(withPrefs({ sideWidth: 320, sideCollapsed: true }))).toEqual([]);
     expect(errs(withPrefs({ chatWidth: 320, chatCollapsed: true }))).toEqual([]);
     expect(errs(withPrefs({ sideWidth: "wide" }))).not.toEqual([]);
+  });
+});
+
+describe("session buildy:v1 1.11.0: run.rejected", () => {
+  const base = read(`${dir}/exported-chat.json`);
+  const withRun = (rejected: unknown) => {
+    const x = clone(base);
+    const message = x.sessions[0].messages.find((m: Record<string, any>) => m.role === "assistant") ?? x.sessions[0].messages[0];
+    message.run = { modelId: "m-1", rejected };
+    return x;
+  };
+  test("version 1.11.0", () => expect(SESSION_VERSION_V1).toBe("1.11.0"));
+  test("a run may keep the last rejected write (open object); other run keys stay closed", () => {
+    expect(errs(withRun({ code: "write_stuck", issues: [{ path: "/blocks/0/props/x", code: "props_invalid", expected: "a name", got: "y" }] }))).toEqual([]);
+    expect(errs(withRun("text"))).not.toEqual([]);
+    expect(errs(base)).toEqual([]);
   });
 });

@@ -9,7 +9,7 @@
 import { SCHEMA_BASE_URL } from "./codex.js";
 
 export const SESSION_FORMAT_V1 = "buildy:v1";
-export const SESSION_VERSION_V1 = "1.10.0";
+export const SESSION_VERSION_V1 = "1.11.0";
 export const SESSION_SCHEMA_URL_V1 = `${SCHEMA_BASE_URL}/session.schema.json`;
 
 /** Composer mode of a chat (ADR 0011 of buildytech/chat): Ask reads the catalog, Build changes the page. */
@@ -55,7 +55,7 @@ export const SESSION_REVISION_OPS_V1 = ["set_field", "set_variant", "add", "move
 export type SessionRevisionOpV1 = (typeof SESSION_REVISION_OPS_V1)[number];
 
 /** Host records copied as they are (objects without a closed key set in this profile). */
-export const SESSION_OPEN_RECORDS_V1 = ["usage", "run.usage", "proposal.catalogRefs"] as const;
+export const SESSION_OPEN_RECORDS_V1 = ["usage", "run.usage", "run.rejected", "proposal.catalogRefs"] as const;
 
 export const SESSION_ID_PATTERN_V1 = "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$";
 /** Skin id (registry item `theme-<id>` of registry.buildy.tw, from the CodeGen-X skins index). */
