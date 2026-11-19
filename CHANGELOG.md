@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 (2026-11-19)
+
+- Added (block-contract 1.0.0, new profile): `schemas/block-contract.schema.json` (`https://schema.buildy.tw/block-contract.schema.json`), source `src/block-contract-v1.ts` + `scripts/schemas-block-contract-v1.ts`: the contract of one block of the simple line (codegen-x packages/prototypes, registry.buildy.tw/contracts/<item>/<version>.json). `variants[].settings` is optional: the variant's own setting defaults (`align` start | center | end, `padding`, `level`) over `settings[*].default`; a saved page-spec/v2 block overrides them in `props`. Program checks `BLOCK_CONTRACT_PROGRAM_CHECKS_V1`, `variantSettingsV1`, fixtures (hero-simple, team-simple) and `test/block-contract-v1.test.ts`. Additive: no existing schema changes.
+- This release ships the page-spec/v2 and page-patch/v2 schemas (`schemas/page-spec-v2.schema.json`, `schemas/page-patch-v2.schema.json`) and every change listed below, which were on main but not in 0.3.0.
 
 - Added (session 1.11.0, additive): `run.rejected` on the run record of an assistant message (open object): the last write the host rejected in a turn that ended without an accepted write, with its first issues and the rejected document (or the block of the first issue when it is large), so an exported session can be diagnosed. Every 1.0.0 to 1.10.0 file validates unchanged (buildytech/chat).
 - Added (session 1.10.0, additive): `ext` on a session, the extensions of the project by name (`^[a-z][a-z0-9-]{0,31}$`, each an object a module owns, a host keeps the ones it does not know). `ext.chat` (`$defs/chatExt`, closed) is where the chat keeps `mode`, `selectedModelId`, `usage` and `messages`; the flat session keys of the same names are deprecated and stay valid, so every 1.0.0 to 1.9.0 file validates unchanged. `prefs.layout` gets `sideWidth` and `sideCollapsed` for the left panel (Blocks, Sections and module tabs); `chatWidth` and `chatCollapsed` are the same pane under its old name, deprecated and still valid (buildytech/chat ADR 0044).

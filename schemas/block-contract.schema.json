@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.buildy.tw/block-contract.schema.json",
+  "title": "Block contract block-contract/v1 — one block of the simple line for a builder",
+  "x-block-contract-version": "1.0.0",
+  "description": "What a builder needs to drive one block without reading its code (codegen-x packages/prototypes, registry.buildy.tw/contracts/<item>/<version>.json): the registry item, the content model and its schema, the layout variants (with their own setting defaults), the settings, the modes and the places. A saved block is a page-spec/v2 block { id, item, variant, props }; the settings live in props. After the schema, readers run x-program-checks. Every object is closed.",
+  "x-program-checks": [
+    "default_variant_unknown",
+    "variant_axis_unknown",
+    "variant_axis_value",
+    "default_mode_unknown"
+  ],
+  "x-limits": {
+    "maxVariants": 64,
+    "maxPlaces": 64,
+    "maxFields": 16,
+    "maxAxes": 8,
+    "maxAxisValues": 16,
+    "maxShortLength": 200
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "item",
+    "version",
+    "block",
+    "organism",
+    "line",
+    "model",
+    "modelSchema",
+    "axes",
+    "defaults",
+    "variants",
+    "defaultVariant",
+    "settings",
+    "modes",
+    "defaultMode",
+    "places",
+    "wireframe"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "item": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 64,
+      "description": "The registry item (npx ui8kit add <item>)."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The contract version of the item (the path <item>/<version>.json)."
+    },
+    "block": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "organism": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "line": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "model": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*@[1-9][0-9]*$",
+      "maxLength": 64
+    },
+    "modelSchema": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 16,
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "maxLength": 40
+      }
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/variant"
+      }
+    },
+    "defaultVariant": {
+      "type": "string",
+      "pattern": "^[a-z][A-Za-z0-9]*$",
+      "maxLength": 40
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/setting"
+      }
+    },
+    "modes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "enum": [
+          "wireframe",
+          "clean"
+        ]
+      }
+    },
+    "defaultMode": {
+      "enum": [
+        "wireframe",
+        "clean"
+      ]
+    },
+    "places": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/place"
+      }
+    },
+    "wireframe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items"
+      ],
+      "description": "The wireframe draws this many placeholder items of a list.",
+      "properties": {
+        "items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        }
+      }
+    }
+  },
+  "$defs": {
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "axes"
+      ],
+      "description": "A layout variant: a named preset of the axes; any valid content renders fully in every variant.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$",
+          "maxLength": 40
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "axes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "description": "The value of every layout axis (media side, column count, surface). Never content."
+        },
+        "settings": {
+          "$ref": "#/$defs/variantSettings"
+        }
+      }
+    },
+    "variantSettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional: the variant's own setting defaults, over settings[*].default. A saved block's props (page-spec/v2) override them. Not a variant of its own: the variants stay layout-only.",
+      "properties": {
+        "align": {
+          "enum": [
+            "start",
+            "center",
+            "end"
+          ],
+          "description": "The alignment the variant starts with (logical: start / end follow dir). A centred composition (a wide picture on top) starts centred."
+        },
+        "padding": {
+          "enum": [
+            "compact",
+            "standard",
+            "spacious"
+          ]
+        },
+        "level": {
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        }
+      }
+    },
+    "setting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "description": "A setting: a presentation choice per placed block, saved inside props, never a variant axis.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "TypeScript type of the value (`1 | 2 | 3`, `\"start\" | \"center\" | \"end\"`, `string`)."
+        },
+        "default": {
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        }
+      }
+    },
+    "place": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "place",
+        "kind",
+        "fields"
+      ],
+      "description": "One region of the block and the fields of the model it draws (JSON Pointers; `*` is an index of `list`).",
+      "properties": {
+        "place": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "kind": {
+          "enum": [
+            "heading",
+            "text",
+            "badge",
+            "action",
+            "media"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:/(?:[A-Za-z0-9_-]+|\\*))+$",
+            "maxLength": 200
+          }
+        },
+        "list": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    }
+  }
+}

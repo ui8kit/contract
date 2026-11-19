@@ -110,6 +110,15 @@ The old `/v0.3/…` and `/latest/…` paths are removed.
 - The schema stays inside the keyword subset of the chat's browser validator (a test guards it).
 - How the chat takes a collection: `docs/collection-intake.md`. `fixtures/collection/` holds a real collection and a minimal one; `test/collection-v1.test.ts` validates them and rejects broken files.
 
+## Block contract block-contract/v1
+
+`schemas/block-contract.schema.json` (`https://schema.buildy.tw/block-contract.schema.json`), source `src/block-contract-v1.ts` + `scripts/schemas-block-contract-v1.ts`, describes the contract of one block of the simple line that codegen-x `packages/prototypes` generates and the registry publishes (`https://registry.buildy.tw/contracts/<item>/<version>.json`): what a builder needs to drive the block without reading its code.
+
+- Root: `item`, `version`, `block`, `organism`, `line`, `model` + `modelSchema`, `axes` / `defaults`, `variants`, `defaultVariant`, `settings` (`{ type, default? }` per setting), `modes` / `defaultMode`, `places` (`{ place, kind, fields, list? }`, fields are JSON Pointers, `*` an index of `list`), `wireframe.items`. Every object is closed.
+- `variants[]`: `{ id, label, axes, settings? }`. The optional `settings` are the variant's own setting defaults over `settings[*].default`: `align` (`start` | `center` | `end`, logical), `padding` (`compact` | `standard` | `spacious`), `level` (1–3). A centred composition (HeroSimple `mediaTop`) starts with `align: "center"`. A saved block (page-spec/v2 `{ id, item, variant, props }`) overrides them in `props`; the variants stay layout-only. `variantSettingsV1(contract, variant)` gives the start values.
+- After the schema, readers run `x-program-checks` (`BLOCK_CONTRACT_PROGRAM_CHECKS_V1`: `default_variant_unknown`, `variant_axis_unknown`, `variant_axis_value`, `default_mode_unknown`; `blockContractProgramIssuesV1`).
+- `fixtures/block-contract/` holds the published hero-simple and team-simple contracts; `test/block-contract-v1.test.ts` validates them and rejects broken ones (a physical `align`, an unknown setting).
+
 ## Issue codes
 
 `validateCollectionV04` returns `IssueV04[]` = `{ code, path, message, severity? }`. Errors have no `severity`; warnings carry `severity: "warning"` and never make a record invalid. The registry is `ISSUE_CODES_V04` (code → meaning) with `WARNING_CODES_V04`; a test proves every emitted code is registered and listed here. Match on `code`, never on `message` (messages may be reworded in any release).

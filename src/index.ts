@@ -23,3 +23,5 @@ export * from "./page-spec-v1.js";
 export * from "./session-v1.js";
 // Collection profile buildy-collection:v1: Stock screens and block variants handed to BuildY (schemas/collection.schema.json).
 export * from "./collection-v1.js";
+// Block contract profile block-contract/v1: one block of the simple line for a builder (schemas/block-contract.schema.json).
+export * from "./block-contract-v1.js";
