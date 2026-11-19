@@ -1,0 +1,286 @@
+{
+  "$schema": "https://schema.buildy.tw/session-v2.schema.json",
+  "format": "buildy:v2",
+  "exportedAt": "2026-11-20T09:05:00.000Z",
+  "app": {
+    "name": "buildy-chat",
+    "version": "0.0.0",
+    "host": "browser"
+  },
+  "pins": {
+    "registry": {
+      "url": "https://registry.buildy.tw",
+      "sourceCommit": "716764ea0b500c25c3f2f15e74de540f2f71176e"
+    },
+    "prototypes": {
+      "repo": "ui8kit/prototypes",
+      "commit": "716764ea0b500c25c3f2f15e74de540f2f71176e"
+    },
+    "catalogDigest": "sha256:db74aa8db8a3a81690fd275f29b0eafedb19508759963251a711df5fb6bbd27d"
+  },
+  "selectedSessionId": "session-studio",
+  "sessions": [
+    {
+      "id": "session-studio",
+      "title": "Quiet Rooms Studio",
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "updatedAt": "2026-11-20T09:03:00.000Z",
+      "pageId": "page-draft",
+      "pageBound": true,
+      "pageRevision": 2,
+      "skin": null,
+      "page": {
+        "applied": {
+          "version": 2,
+          "id": "page-draft",
+          "slug": "quiet-rooms",
+          "status": "draft",
+          "title": "Quiet Rooms Studio",
+          "locale": "en",
+          "seo": {
+            "title": "Quiet Rooms Studio: interiors for small flats",
+            "description": "A two-person interior studio for small flats: plans, materials and calm rooms."
+          },
+          "createdAt": "2026-11-20T09:00:00.000Z",
+          "updatedAt": "2026-11-20T09:02:10.000Z",
+          "blocks": [
+            {
+              "id": "hero",
+              "item": "hero-simple",
+              "variant": "mediaEnd",
+              "props": {
+                "badge": "Interior studio",
+                "title": "Calm rooms for small flats",
+                "description": "We plan, pick materials and see the work through, so a 40 m² flat feels like more.",
+                "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200",
+                "imageAlt": "A light living room with a sofa and plants",
+                "actionLabel": "Book a call",
+                "actionHref": "#contact"
+              }
+            },
+            {
+              "id": "team",
+              "item": "team-simple",
+              "variant": "cards3",
+              "props": {
+                "title": "The studio",
+                "description": "Three people, one flat at a time.",
+                "members": [
+                  {
+                    "id": "anna",
+                    "title": "Anna Petrova",
+                    "description": "Lead designer"
+                  },
+                  {
+                    "id": "ilya",
+                    "title": "Ilya Sorokin",
+                    "description": "Plans and drawings"
+                  },
+                  {
+                    "id": "mira",
+                    "title": "Mira Kim",
+                    "description": "Materials and sourcing"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "candidate": null,
+        "lastProposed": {
+          "version": 2,
+          "id": "page-draft",
+          "slug": "quiet-rooms",
+          "status": "draft",
+          "title": "Quiet Rooms Studio",
+          "locale": "en",
+          "seo": {
+            "title": "Quiet Rooms Studio: interiors for small flats",
+            "description": "A two-person interior studio for small flats: plans, materials and calm rooms."
+          },
+          "createdAt": "2026-11-20T09:00:00.000Z",
+          "updatedAt": "2026-11-20T09:02:10.000Z",
+          "blocks": [
+            {
+              "id": "hero",
+              "item": "hero-simple",
+              "variant": "mediaEnd",
+              "props": {
+                "badge": "Interior studio",
+                "title": "Calm rooms for small flats",
+                "description": "We plan, pick materials and see the work through, so a 40 m² flat feels like more.",
+                "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200",
+                "imageAlt": "A light living room with a sofa and plants",
+                "actionLabel": "Book a call",
+                "actionHref": "#contact"
+              }
+            },
+            {
+              "id": "team",
+              "item": "team-simple",
+              "variant": "cards3",
+              "props": {
+                "title": "The studio",
+                "description": "Three people, one flat at a time.",
+                "members": [
+                  {
+                    "id": "anna",
+                    "title": "Anna Petrova",
+                    "description": "Lead designer"
+                  },
+                  {
+                    "id": "ilya",
+                    "title": "Ilya Sorokin",
+                    "description": "Plans and drawings"
+                  },
+                  {
+                    "id": "mira",
+                    "title": "Mira Kim",
+                    "description": "Materials and sourcing"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "appliedProvenance": null,
+        "candidateProvenance": null,
+        "lastProposedProvenance": null,
+        "selectedBlockId": "team",
+        "revision": 2
+      },
+      "history": [
+        {
+          "revision": 1,
+          "at": "2026-11-20T09:02:10.000Z",
+          "cause": "apply",
+          "pageId": "page-draft"
+        },
+        {
+          "revision": 2,
+          "at": "2026-11-20T09:03:00.000Z",
+          "cause": "edit",
+          "pageId": "page-draft",
+          "blockId": "team",
+          "op": "set_field",
+          "path": "/members/0/title"
+        }
+      ],
+      "ext": {
+        "chat": {
+          "mode": "build",
+          "selectedModelId": "grok-4-fast",
+          "usage": {
+            "runs": 1,
+            "inputTokens": 5120,
+            "outputTokens": 640
+          },
+          "messages": [
+            {
+              "id": "msg-1",
+              "role": "user",
+              "text": "A page for a small interior studio: hero and the team.",
+              "createdAt": "2026-11-20T09:01:00.000Z",
+              "mode": "build",
+              "selectedModelId": "grok-4-fast"
+            },
+            {
+              "id": "msg-2",
+              "role": "assistant",
+              "text": "Proposed: Quiet Rooms Studio (2 blocks).",
+              "createdAt": "2026-11-20T09:02:00.000Z",
+              "mode": "build",
+              "modelText": "Hero with a photo and a team of three.",
+              "proposal": {
+                "applied": true,
+                "status": "applied",
+                "source": "agent",
+                "liveModel": true,
+                "warnings": [],
+                "missing": [],
+                "title": "Quiet Rooms Studio",
+                "locale": "en",
+                "baseRevision": 0,
+                "diff": [
+                  {
+                    "scope": "block",
+                    "change": "added",
+                    "id": "hero",
+                    "item": "hero-simple",
+                    "variant": "mediaEnd",
+                    "to": 0
+                  },
+                  {
+                    "scope": "block",
+                    "change": "added",
+                    "id": "team",
+                    "item": "team-simple",
+                    "variant": "cards3",
+                    "to": 1
+                  }
+                ]
+              },
+              "run": {
+                "requestedModelId": "grok-4-fast",
+                "modelId": "grok-4-fast",
+                "modelLabel": "Grok 4 Fast",
+                "live": true,
+                "policyVersion": "1",
+                "modelCatalogVersion": "1",
+                "trialPolicyVersion": "1",
+                "tools": [
+                  "read_page",
+                  "search_catalog",
+                  "write_page"
+                ],
+                "usage": {
+                  "status": "ok",
+                  "steps": 3,
+                  "inputTokens": 5120,
+                  "outputTokens": 640,
+                  "costInUsdTicks": null
+                }
+              }
+            },
+            {
+              "id": "msg-3",
+              "role": "user",
+              "text": "What blocks does the page have?",
+              "createdAt": "2026-11-20T09:02:30.000Z",
+              "mode": "ask"
+            },
+            {
+              "id": "msg-4",
+              "role": "assistant",
+              "text": "Two: **Hero Simple** and **Team Simple**.",
+              "createdAt": "2026-11-20T09:02:40.000Z",
+              "mode": "ask",
+              "answer": {
+                "blocks": [
+                  "hero-simple",
+                  "team-simple"
+                ]
+              }
+            }
+          ]
+        },
+        "agent-runs": {
+          "msg-1": {
+            "attempts": 1
+          }
+        }
+      }
+    }
+  ],
+  "settings": {
+    "theme": "light"
+  },
+  "prefs": {
+    "layout": {
+      "navWidth": 240,
+      "sideWidth": 320,
+      "inspectorWidth": 304,
+      "focus": false
+    }
+  }
+}

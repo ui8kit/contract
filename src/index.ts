@@ -21,6 +21,8 @@ export * from "./view-v1.js";
 export * from "./page-spec-v1.js";
 // Session profile buildy:v1: a portable BuildY session file (schemas/session.schema.json).
 export * from "./session-v1.js";
+// Session profile buildy:v2: the session file of the simple line (schemas/session-v2.schema.json).
+export * from "./session-v2.js";
 // Collection profile buildy-collection:v1: Stock screens and block variants handed to BuildY (schemas/collection.schema.json).
 export * from "./collection-v1.js";
 // Block contract profile block-contract/v1: one block of the simple line for a builder (schemas/block-contract.schema.json).

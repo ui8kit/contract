@@ -1,0 +1,693 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.buildy.tw/session-v2.schema.json",
+  "title": "BuildY session buildy:v2 — portable projects, chats, pages, revisions and catalog pins",
+  "x-session-format": "buildy:v2",
+  "x-session-version": "2.0.0",
+  "description": "A portable BuildY session file of the simple line (buildytech/chat ADR 0059). A host exports it, any BuildY host imports it and Lab opens it for review: sessions: a project (page-spec/v2 record, skin, revision history) with its extensions (ext.chat: messages and Ask / Build mode), and the catalog pins (registry source commit, prototypes commit, catalog digest). Holds no credential. After the schema, importers run x-program-checks. Objects are closed except the host records in x-open-records. buildy:v1 files are a different profile (session.schema.json).",
+  "x-program-checks": [
+    "duplicate_session_id",
+    "page_revision_mismatch",
+    "history_not_monotonic",
+    "selected_session_unknown",
+    "duplicate_project_page"
+  ],
+  "x-open-records": [
+    "ext.chat.usage",
+    "run.usage",
+    "run.rejected"
+  ],
+  "x-limits": {
+    "maxSessions": 500,
+    "maxMessages": 2000,
+    "maxHistory": 500,
+    "maxTextLength": 200000,
+    "maxTitleLength": 160,
+    "maxListItems": 200,
+    "maxShortLength": 200,
+    "maxNoteLength": 4000
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "exportedAt",
+    "app",
+    "pins",
+    "sessions"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "format": {
+      "const": "buildy:v2"
+    },
+    "exportedAt": {
+      "$ref": "#/$defs/datetime"
+    },
+    "app": {
+      "$ref": "#/$defs/app"
+    },
+    "pins": {
+      "$ref": "#/$defs/pins"
+    },
+    "selectedSessionId": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sessions": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/$defs/session"
+      }
+    },
+    "settings": {
+      "$ref": "#/$defs/settings"
+    },
+    "prefs": {
+      "$ref": "#/$defs/prefs"
+    }
+  },
+  "$defs": {
+    "datetime": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$",
+      "maxLength": 40,
+      "description": "UTC ISO 8601 with Z (Date.prototype.toISOString)."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+      "description": "Host id of a session or a message (e.g. session-<uuid>, msg-<uuid>)."
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit (7 to 40 lowercase hex)."
+    },
+    "mode": {
+      "enum": [
+        "ask",
+        "build"
+      ],
+      "description": "Ask reads the page and the catalog and answers (read-only); Build changes the page."
+    },
+    "revision": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Revision of the applied page (null: no applied page). Equals page.revision (program check page_revision_mismatch)."
+    },
+    "diffEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "change"
+      ],
+      "description": "One change of a page proposal: what a write_page proposal does to the base page, per block and per page field. Never a value.",
+      "properties": {
+        "scope": {
+          "enum": [
+            "page",
+            "block"
+          ],
+          "description": "page: a page field (title, slug, locale, seo); block: a section."
+        },
+        "change": {
+          "enum": [
+            "added",
+            "removed",
+            "moved",
+            "changed"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "item": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "variant": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "from": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "to": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "paths": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": "changed: JSON Pointers (page fields, or props of the block) that differ."
+        }
+      }
+    },
+    "proposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applied"
+      ],
+      "description": "The page proposal of a Build turn. The page itself is the record's candidate / lastProposed; Ask makes none.",
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "applied",
+            "discarded",
+            "superseded"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "liveModel": {
+          "type": "boolean"
+        },
+        "warnings": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "missing": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 640
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "baseRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The page revision the proposal was made for."
+        },
+        "diff": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/diffEntry"
+          },
+          "description": "The proposal as a diff against the base page (per block: added, removed, moved, changed)."
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modelId"
+      ],
+      "description": "The model run that produced an assistant message. Never holds prompts, keys or provider payloads.",
+      "properties": {
+        "requestedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelLabel": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "live": {
+          "type": "boolean"
+        },
+        "policyVersion": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelCatalogVersion": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "trialPolicyVersion": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "catalogDigest": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "tools": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "runId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "usage": {
+          "type": "object",
+          "description": "Token usage of the run as the provider reported it (status, steps, token counts, cost availability). Host record, copied as it is (open object)."
+        },
+        "rejected": {
+          "type": "object",
+          "description": "The last write the host rejected in a turn that ended without an accepted write: the first issues ({ path, code, expected, got }) and the rejected document (or, when it is large, the block the first issue points at), for diagnosis. Small; no prompts, keys or provider payloads. Host record, copied as it is (open object)."
+        }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role",
+        "text",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "role": {
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 200000,
+          "description": "Message text. Assistant text answers are the model's Markdown (rendered as safe Markdown, never as HTML)."
+        },
+        "createdAt": {
+          "$ref": "#/$defs/datetime"
+        },
+        "mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "modelText": {
+          "type": "string",
+          "maxLength": 200000,
+          "description": "Build proposals: the model's own words next to the proposal summary (Markdown)."
+        },
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "blocks"
+          ],
+          "description": "A text answer: the catalog blocks the model read.",
+          "properties": {
+            "blocks": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "proposal": {
+          "$ref": "#/$defs/proposal"
+        },
+        "run": {
+          "$ref": "#/$defs/run"
+        }
+      }
+    },
+    "revisionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "at",
+        "cause"
+      ],
+      "description": "One page revision: every committed change of the applied page adds one entry; an unchanged value adds none.",
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "cause": {
+          "enum": [
+            "apply",
+            "edit",
+            "undo",
+            "redo"
+          ],
+          "description": "apply: a proposal became the page; edit: one committed inspector edit or block operation (typing in one field is one edit); undo / redo: an inspector step. An import keeps the revisions of the file."
+        },
+        "pageId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "blockId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "op": {
+          "enum": [
+            "set_field",
+            "set_variant",
+            "add",
+            "move",
+            "remove",
+            "insert",
+            "replace"
+          ],
+          "description": "Optional: what the revision did. set_field: one field written (path names it); set_variant; add; move; remove; insert: a duplicate or a new list row; replace: a block or a list swapped, or a reset to the sample props."
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 200,
+          "pattern": "^(?:/[A-Za-z0-9_~.-]{1,48}){0,12}$",
+          "description": "Optional: JSON Pointer of the field or row in the block's props (/title, /members/2). Never a value."
+        }
+      }
+    },
+    "chatExt": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The chat extension (ext.chat): what the chat keeps with a project.",
+      "properties": {
+        "mode": {
+          "$ref": "#/$defs/mode"
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "usage": {
+          "type": "object",
+          "description": "Usage summed over the runs of the chat. Host record, copied as it is (open object)."
+        },
+        "messages": {
+          "type": "array",
+          "maxItems": 2000,
+          "items": {
+            "$ref": "#/$defs/message"
+          }
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "updatedAt"
+      ],
+      "description": "One session: a project (page, skin, revision history) with its extensions; the chat is ext.chat.",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "projectId": {
+          "$ref": "#/$defs/id",
+          "description": "The project (the page record, skin and revision history) this session works on. Absent: the project id is `id`. The `page` record and the revision history belong to the project, so two sessions of one project must not both carry a `page` (program check duplicate_project_page)."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "createdAt": {
+          "$ref": "#/$defs/datetime"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/datetime"
+        },
+        "pageId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "pageBound": {
+          "type": "boolean"
+        },
+        "pageRevision": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Revision of the applied page (null: no applied page). Equals page.revision (program check page_revision_mismatch)."
+        },
+        "skin": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Skin of the page: the id of the registry item theme-<skin> (npx ui8kit add theme-<skin> writes styles/skins/<skin>.css; the page wears it with data-skin=\"<skin>\"). Null or absent: the default theme. A host that does not have the skin keeps the value and shows the default theme."
+        },
+        "page": {
+          "anyOf": [
+            {
+              "$ref": "https://schema.buildy.tw/page-spec-v2.schema.json#/$defs/record"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The project's page: a page-spec/v2 record (applied page, pending candidate, last proposal, their provenance, revision)."
+        },
+        "history": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/revisionEntry"
+          },
+          "description": "Revision history of the applied page, oldest first (the last 500 entries)."
+        },
+        "ext": {
+          "type": "object",
+          "maxProperties": 16,
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9-]{0,31}$"
+          },
+          "properties": {
+            "chat": {
+              "$ref": "#/$defs/chatExt"
+            }
+          },
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Extensions of the project by name; each is an object a module owns. ext.chat is the chat (mode, selectedModelId, usage, messages). A host keeps the extensions it does not know."
+        }
+      }
+    },
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "host"
+      ],
+      "description": "The app that wrote the file.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "host": {
+          "enum": [
+            "browser",
+            "desktop",
+            "wordpress"
+          ]
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "description": "Git commit (7 to 40 lowercase hex)."
+        }
+      }
+    },
+    "pins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry",
+        "prototypes"
+      ],
+      "description": "Catalog pins of the host when the file was written. An importer with other pins still opens the file; it re-validates pages against its own catalog.",
+      "properties": {
+        "registry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "sourceCommit"
+          ],
+          "description": "The commit the UI8Kit registry build was made from.",
+          "properties": {
+            "url": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "sourceCommit": {
+              "$ref": "#/$defs/commit"
+            }
+          }
+        },
+        "prototypes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo",
+            "commit"
+          ],
+          "description": "The prototypes (block wireframes and contracts) the catalog was generated from.",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "commit": {
+              "$ref": "#/$defs/commit"
+            }
+          }
+        },
+        "catalogDigest": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Non-secret preferences of the host.",
+      "properties": {
+        "theme": {
+          "enum": [
+            "light",
+            "dark"
+          ]
+        },
+        "selectedModelId": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "previewHideServiceLabels": {
+          "type": "boolean"
+        }
+      }
+    },
+    "prefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Layout preferences of the user. Optional; a file without it keeps the importer's layout.",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Shell layout: pane sizes (CSS px) and collapsed states. A host clamps sizes to its own ranges and ignores what it does not show.",
+          "properties": {
+            "navWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "sideWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "inspectorWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "layersHeight": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "treeWidth": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "navCollapsed": {
+              "type": "boolean"
+            },
+            "sideCollapsed": {
+              "type": "boolean"
+            },
+            "inspectorCollapsed": {
+              "type": "boolean"
+            },
+            "layersCollapsed": {
+              "type": "boolean"
+            },
+            "treeCollapsed": {
+              "type": "boolean"
+            },
+            "focus": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  }
+}

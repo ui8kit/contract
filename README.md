@@ -100,6 +100,16 @@ The old `/v0.3/…` and `/latest/…` paths are removed.
 - An importer with other pins still opens the file and re-validates every page against its own catalog.
 - `fixtures/session/` holds a real file exported from the chat and a minimal file; `test/session-v1.test.ts` validates them and rejects broken files.
 
+## Session buildy:v2
+
+`schemas/session-v2.schema.json` (`https://schema.buildy.tw/session-v2.schema.json`), source `src/session-v2.ts` + `scripts/schemas-session-v2.ts`, is the session file of the simple line (0.5.0). It holds no credential.
+
+- Root: `format` (`buildy:v2`), `exportedAt`, `app`, `pins` (`registry { url, sourceCommit }`, `prototypes { repo, commit }`, optional `catalogDigest`), `sessions`, optional `selectedSessionId`, `settings` and `prefs` (layout without the old `chatWidth` / `chatCollapsed`).
+- A session is a project: `page` (a page-spec/v2 `record` or null), `pageRevision`, `skin`, `history` (op without `set_family`) and `ext`; the chat is `ext.chat` (`mode`, `selectedModelId`, `usage`, `messages`). No flat chat keys, no `scenarioId` / `screenId`, no `collection`.
+- Messages carry no `artifacts` and no `plan`; a proposal (Build only) is `{ applied, status, source, liveModel, warnings, missing, title, locale, baseRevision, diff }`, the page itself is in the record.
+- Same `x-program-checks` and `x-limits` as buildy:v1; open records: `ext.chat.usage`, `run.usage`, `run.rejected`.
+- `fixtures/session-v2/` (studio, minimal); `test/session-v2.test.ts` also rejects every buildy:v1 legacy key.
+
 ## Collection buildy-collection:v1
 
 `schemas/collection.schema.json` (`https://schema.buildy.tw/collection.schema.json`), source `src/collection-v1.ts` + `scripts/schemas-collection-v1.ts`, describes a set of Stock screen pages and block variants a person gathers on Stock (app.codegen-x.com, Collections) and hands to BuildY (Open in BuildY, export / import). It holds no credential and no personal data.
